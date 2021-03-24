@@ -20,7 +20,24 @@ const app = new App({
 
 MessageHandler.init();
 
-app.message('create', CharacterWizard.start);
+app.command('/create', async ({ ack, body, client }) => {
+  await ack();
+
+  const wizard = new CharacterWizard(client, body);
+  await wizard.start();
+});
+
+app.action('reroll', async ({ ack, body, client }) => {
+  await ack();
+  console.log(body);
+  // await client.views.update({
+  //   view_id: body.view.id,
+  //   hash: body.view.hash,
+  //   view: {
+  //     type:
+  //   }
+  // })
+});
 
 // app.message('hello', MessageHandler.event);
 
