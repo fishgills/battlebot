@@ -1,57 +1,37 @@
-import { ConversationStore } from "@slack/bolt";
-import AWS from "aws-sdk";
-import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import { ConversationStore } from '@slack/bolt';
+import logger from './logger';
+import Conversation from './models/conversation';
 
 export class DynamoStore<ConversationState = any>
   implements ConversationStore<ConversationState> {
-  private docClient: DocumentClient;
-
-  private table = "conversations";
-
-  constructor() {
-    AWS.config.update({
-      region: "us-west-2",
+  set(
+    conversationId: string,
+    value: ConversationState,
+    expiresAt?: number,
+  ): Promise<unknown> {
+    return Conversation.create({
+      id: conversationId,
+      value: value,
+      expires: expiresAt,
     });
-
-    this.docClient = new AWS.DynamoDB.DocumentClient();
   }
-  // set(conversationId: string, value: ConversationState, expiresAt?: number): Promise<unknown>;
-  // get(conversationId: string): Promise<ConversationState>;
-  public async set(id: string, value: ConversationState): Promise<boolean> {
-    console.log(`set`, id, value);
-    try {
-      const result = await this.docClient.put({
-        TableName: this.table,
-        Item: {
-          id: id,
-          value,
+  get(conversationId: string): Promise<ConversationState> {
+    return new Promise(async (resolve, reject) => {
+      const entry = await Conversation.findOne({
+        where: {
+          id: conversationId,
         },
       });
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  }
-
-  public get(id: string): Promise<ConversationState> {
-    console.log("get", id);
-    return new Promise((resolve, reject) => {
-      this.docClient.get(
-        {
-          TableName: this.table,
-          Key: {
-            id,
-          },
-        },
-        (err, data) => {
-          if (err) {
-            reject(err);
-          }
-          console.log(data);
-          resolve((data as unknown) as ConversationState);
-        }
-      );
+      if (entry) {
+        // if (entry.expiresAt !== undefined && Date.now() > entry.expiresAt) {
+        //   reject(new Error('Conversation expired'));
+        // }
+        resolve(entry as any);
+      }
+      reject(new Error('Conversation not found'));
     });
   }
+
+  // set(conversationId: string, value: ConversationState, expiresAt?: number): Promise<unknown>;
+  // get(conversationId: string): Promise<ConversationState>;
 }
