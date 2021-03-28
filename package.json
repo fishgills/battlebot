@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node-dev --inspect --respawn src/index.ts"
+    "start": "cross-env ts-node-dev --inspect --respawn src/index.ts",
+    "prettier-format": "cross-env prettier --config .prettierrc 'src/**/*.ts' --write"
   },
   "author": "",
   "license": "ISC",
@@ -28,6 +29,9 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@types/validator": "^13.1.3"
+    "@types/validator": "^13.1.3",
+    "cross-env": "^7.0.3",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2"
   }
 }

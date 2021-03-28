@@ -7,7 +7,7 @@ const logFormat = winston.format.printf((info) => {
   const date = new Date();
   const dateSttring = `${chalk.gray(dateFormat(date, 'isoUtcDateTime'))}`;
   return `${dateSttring}-${info.level}: ${colorizeJson(
-    JSON.stringify(info.message, null, 2)
+    JSON.stringify(info.message, null, 2),
   )}`;
 });
 
@@ -18,8 +18,8 @@ export default winston.createLogger({
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.json(),
-        logFormat
-      )
-    })
-  ]
+        logFormat,
+      ),
+    }),
+  ],
 });
