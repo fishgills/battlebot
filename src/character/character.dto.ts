@@ -14,4 +14,19 @@ export class CharacterDto {
 
   @Field(() => GraphQLISODateTime)
   updated!: Date;
+
+  @Field()
+  str!: number;
+
+  @Field()
+  dex!: number;
+
+  @Field()
+  con!: number;
+
+  @FilterableField()
+  active!: boolean;
+
+  @FilterableField()
+  owner!: string;
 }

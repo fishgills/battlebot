@@ -14,6 +14,15 @@ export class CharacterEntity {
   id!: string;
 
   @Column()
+  str!: number;
+
+  @Column()
+  dex!: number;
+
+  @Column()
+  con!: number;
+
+  @Column()
   name!: string;
 
   @CreateDateColumn()
@@ -24,4 +33,10 @@ export class CharacterEntity {
 
   @OneToMany(() => ParticipantEntity, (participant) => participant.character)
   participating!: ParticipantEntity[];
+
+  @Column()
+  active!: boolean;
+
+  @Column()
+  owner!: string;
 }
