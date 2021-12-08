@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nodejs
+    spec:
+      containers:
+      - name: graphql
+        image: registry.gitlab.com/slackbot1/bot-backend/main:latest
+        ports:
+        - containerPort: 4000
