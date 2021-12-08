@@ -9,7 +9,8 @@ COPY package*.json /usr/src/app/
 RUN npm install
 
 COPY . /usr/src/app
+RUN npm run build
 
 ENV PORT 4000
 EXPOSE $PORT
-CMD [ "npm", "start" ]
+CMD [ "npm", "start:prod" ]
