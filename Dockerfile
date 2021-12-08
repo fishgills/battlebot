@@ -13,4 +13,4 @@ RUN npm run build
 
 ENV PORT 4000
 EXPOSE $PORT
-CMD [ "npm", "start:prod" ]
+CMD [ "npm", "run", "start:prod" ]
