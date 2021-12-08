@@ -1,6 +1,6 @@
 gitops:
   manifest_projects:
   # The `id` is the path to the Git repository holding your manifest files
-  - id: "slackbot1/ops"
+  - id: "slackbot1/bot-backend"
     paths:
     - glob: '/**/*.{yaml,yml,json}'
