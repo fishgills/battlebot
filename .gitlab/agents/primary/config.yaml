@@ -3,5 +3,9 @@ gitops:
     # The `id` is the path to the Git repository holding your manifest files
     - id: 'slackbot1/bot-backend'
       default_namespace: graphql-layer
+      prune: true
       paths:
         - glob: 'manifest.yml'
+observability:
+  logging:
+    level: debug
