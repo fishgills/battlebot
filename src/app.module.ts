@@ -23,6 +23,7 @@ import { ParticipantModule } from './participant/participant.module';
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
+      introspection: true,
     }),
     CharacterModule,
     BattleModule,

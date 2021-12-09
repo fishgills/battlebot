@@ -6,7 +6,7 @@ services:
 variables:
   REPOSITORY_URL: 946679114937.dkr.ecr.us-west-1.amazonaws.com/graphql-layer
   TASK_DEFINITION_NAME: graphql-task
-  CLUSTER_NAME: graphql-layer
+  CLUSTER_NAME: graphql
   SERVICE_NAME: graphql-service
 
 before_script:
