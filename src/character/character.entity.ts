@@ -13,14 +13,30 @@ export class CharacterEntity {
   @PrimaryGeneratedColumn()
   id!: string;
 
-  @Column()
+  @Column({
+    default: 0,
+  })
   str!: number;
 
-  @Column()
+  @Column({
+    default: 0,
+  })
   dex!: number;
 
-  @Column()
+  @Column({
+    default: 0,
+  })
   con!: number;
+
+  @Column({
+    default: 0,
+  })
+  level!: number;
+
+  @Column({
+    default: 0,
+  })
+  xp!: number;
 
   @Column()
   name!: string;
@@ -34,7 +50,9 @@ export class CharacterEntity {
   @OneToMany(() => ParticipantEntity, (participant) => participant.character)
   participating!: ParticipantEntity[];
 
-  @Column()
+  @Column({
+    default: true,
+  })
   active!: boolean;
 
   @Column()

@@ -6,15 +6,14 @@ import { AppService } from './app.service';
 import { CharacterModule } from './character/character.module';
 import { BattleModule } from './battle/battle.module';
 import { ParticipantModule } from './participant/participant.module';
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
       username: 'admin',
-      password: '3VPt38I6N6hVobb3GqO4',
+      password: process.env.DB_PASSWORD,
       database: 'botdb',
-      host: 'graphql-1.czt8rqiogmyl.us-west-1.rds.amazonaws.com',
+      host: process.env.DB_HOST,
       port: 3306,
       dropSchema: false,
       autoLoadEntities: true,

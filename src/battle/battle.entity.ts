@@ -19,7 +19,9 @@ export class BattleEntity {
   @UpdateDateColumn()
   updated: Date;
 
-  @Column()
+  @Column({
+    default: false,
+  })
   completed: boolean;
 
   @OneToMany(() => ParticipantEntity, (participant) => participant.battle)

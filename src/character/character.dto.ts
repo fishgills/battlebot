@@ -24,9 +24,17 @@ export class CharacterDto {
   @Field()
   con!: number;
 
+  @Field()
+  level!: number;
+
+  @Field()
+  xp!: number;
+
   @FilterableField()
   active!: boolean;
 
-  @FilterableField()
+  @FilterableField({
+    nullable: false,
+  })
   owner!: string;
 }
