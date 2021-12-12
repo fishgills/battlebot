@@ -9,6 +9,7 @@ import {
   JoinColumn,
   ManyToOne,
   ObjectType,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -26,7 +27,7 @@ export class ParticipantEntity {
   @PrimaryGeneratedColumn()
   id!: string;
 
-  @ManyToOne(
+  @OneToOne(
     (): ObjectType<CharacterEntity> => CharacterEntity,
     (character) => character.participating,
     {
@@ -40,19 +41,12 @@ export class ParticipantEntity {
   @Column({ nullable: false })
   characterId!: string;
 
-  @ManyToOne(
-    (): ObjectType<BattleEntity> => BattleEntity,
-    (battle) => battle.participants,
-    {
-      onDelete: 'CASCADE',
-      nullable: false,
-    },
-  )
+  @ManyToOne(() => BattleEntity, (battle) => battle.participants)
   @JoinColumn()
   battle: BattleEntity;
 
   @Column({ nullable: false })
-  battleId!: string;
+  battleId!: number;
 
   @Column({
     type: 'enum',

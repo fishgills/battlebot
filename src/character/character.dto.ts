@@ -30,6 +30,9 @@ export class CharacterDto {
   @Field()
   xp!: number;
 
+  @Field()
+  hp!: number;
+
   @FilterableField()
   active!: boolean;
 

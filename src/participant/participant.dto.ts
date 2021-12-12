@@ -17,8 +17,8 @@ export class ParticipantDto {
   @FilterableField(() => GraphQLISODateTime)
   updated!: Date;
 
-  @Field(() => String)
-  battleId!: string;
+  @Field(() => Number)
+  battleId!: number;
 
   @Field(() => String)
   characterId!: string;

@@ -1,7 +1,16 @@
-import { FilterableField, IDField } from '@nestjs-query/query-graphql';
+import {
+  FilterableField,
+  IDField,
+  UnPagedRelation,
+} from '@nestjs-query/query-graphql';
+
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
+import { ParticipantDto } from 'src/participant/participant.dto';
 
 @ObjectType('Battle')
+@UnPagedRelation('participants', () => ParticipantDto, {
+  disableRemove: true,
+})
 export class BattleDto {
   @IDField(() => ID)
   id: number;
@@ -14,4 +23,7 @@ export class BattleDto {
 
   @Field(() => GraphQLISODateTime)
   updated!: Date;
+
+  @Field()
+  test!: string;
 }

@@ -38,6 +38,11 @@ export class CharacterEntity {
   })
   xp!: number;
 
+  @Column({
+    default: 0,
+  })
+  hp!: number;
+
   @Column()
   name!: string;
 
