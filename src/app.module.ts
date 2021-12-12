@@ -6,11 +6,12 @@ import { AppService } from './app.service';
 import { CharacterModule } from './character/character.module';
 import { BattleModule } from './battle/battle.module';
 import { ParticipantModule } from './participant/participant.module';
+import { SlackModule } from './slack/slack.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      username: 'admin',
+      username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: 'botdb',
       host: process.env.DB_HOST,
@@ -27,6 +28,7 @@ import { ParticipantModule } from './participant/participant.module';
     CharacterModule,
     BattleModule,
     ParticipantModule,
+    SlackModule,
   ],
   controllers: [AppController],
   providers: [AppService],
