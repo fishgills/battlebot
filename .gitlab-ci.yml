@@ -51,7 +51,7 @@
 variables:
   CI_AWS_ECS_CLUSTER: graphql
   CI_AWS_ECS_SERVICE: graphql-service
-  CI_AWS_TASK_DEFINITION: graphql-task
+  CI_AWS_ECS_TASK_DEFINITION: graphql-task
 
 include:
   - template: AWS/Deploy-ECS.gitlab-ci.yml
