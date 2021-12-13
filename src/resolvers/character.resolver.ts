@@ -15,6 +15,8 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Service } from 'typedi';
 import { Participant } from '../entities/participant';
 import { CharacterInput } from './types/character-input';
+import { getHitPoints, modifier } from '../dnd';
+import { Dice, DiceRoll } from '@dice-roller/rpg-dice-roller';
 
 @Service()
 @Resolver((of) => Character)
@@ -41,7 +43,39 @@ export class CharacterResolver implements ResolverInterface<Character> {
     const char = this.charRepo.create({
       ...charInput,
     });
+    char.str = new DiceRoll('3d6').total;
+    char.dex = new DiceRoll('3d6').total;
+    char.con = new DiceRoll('3d6').total;
+    char.level = 1;
+    char.hp = 10 + modifier(char.con);
     return await this.charRepo.save(char);
+  }
+
+  @Mutation(() => Boolean)
+  async removeCharacter(@Arg('id') id: number) {
+    const result = await this.charRepo.delete({
+      id,
+    });
+    return !!result.affected;
+  }
+
+  @Mutation(() => Character)
+  async updateCharacter(
+    @Arg('id') id: number,
+    @Arg('input') input: CharacterInput,
+  ) {
+    const char = await this.charRepo.findOne(id);
+
+    if (input.con) {
+      input.hp = getHitPoints(char);
+    }
+    await this.charRepo.update(
+      {
+        id,
+      },
+      input,
+    );
+    return await this.charRepo.findOne(id);
   }
 
   @FieldResolver()

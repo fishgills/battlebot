@@ -14,9 +14,11 @@ import { Battle } from './battle';
 export class Participant {
   @Field((type) => ID)
   @PrimaryGeneratedColumn()
-  id!: string;
+  id!: number;
 
-  @ManyToOne((type) => Character)
+  @ManyToOne((type) => Character, {
+    onDelete: 'CASCADE',
+  })
   character: Character;
 
   @RelationId((p: Participant) => p.character)
@@ -24,7 +26,9 @@ export class Participant {
   @Field((type) => ID)
   characterId!: number;
 
-  @ManyToOne((type) => Battle)
+  @ManyToOne((type) => Battle, {
+    onDelete: 'CASCADE',
+  })
   battle: Battle;
 
   @RelationId((p: Participant) => p.battle)

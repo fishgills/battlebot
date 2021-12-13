@@ -14,7 +14,7 @@ import { Participant } from './participant';
 export class Character {
   @PrimaryGeneratedColumn()
   @Field((type) => ID)
-  id!: string;
+  id!: number;
 
   @Field()
   @Column({

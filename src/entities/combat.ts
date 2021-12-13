@@ -54,7 +54,9 @@ export class Combat {
   @Field((type) => ID)
   attackerId!: number;
 
-  @ManyToOne(() => Character, (character) => character.id)
+  @ManyToOne(() => Character, (character) => character.id, {
+    onDelete: 'CASCADE',
+  })
   @Field()
   defender!: Character;
 

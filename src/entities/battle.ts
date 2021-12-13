@@ -14,7 +14,7 @@ import { Participant } from './participant';
 export class Battle {
   @PrimaryGeneratedColumn()
   @Field((type) => ID)
-  id!: string;
+  id!: number;
 
   @Field()
   @CreateDateColumn()

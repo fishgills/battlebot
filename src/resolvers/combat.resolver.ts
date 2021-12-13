@@ -9,12 +9,13 @@ import {
   Root,
 } from 'type-graphql';
 import { Service } from 'typedi';
-import { DeepPartial, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Battle } from '../entities/battle';
 import { Participant } from '../entities/participant';
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Character } from '../entities/character';
+import { modifier } from '../dnd';
 
 type ShortCombat = Omit<
   Combat,
@@ -53,6 +54,9 @@ export class CombatResolver implements ResolverInterface<Combat> {
     const log: Combat[] = [];
 
     const battle = await this.bRepo.findOne(id);
+    if (battle.completed) {
+      throw new Error('Battle is completed already');
+    }
     const participants = await this.pRepo.find({
       relations: ['character'],
       where: {
@@ -66,7 +70,7 @@ export class CombatResolver implements ResolverInterface<Combat> {
       .map((value) => {
         const abilityRoll = new DiceRoll('d20');
         return {
-          initiative: abilityRoll.total + this.modifier(value.character.dex),
+          initiative: abilityRoll.total + modifier(value.character.dex),
           char: value.character,
         };
       })
@@ -85,13 +89,19 @@ export class CombatResolver implements ResolverInterface<Combat> {
     }
 
     const res = await this.repo.save(log);
+    this.bRepo.update(
+      {
+        id: battle.id,
+      },
+      {
+        completed: true,
+      },
+    );
     return res;
   }
 
   private returnLess = (arr: number[], target: number) =>
     arr.filter((n) => n < target);
-  private returnLarger = (arr: number[], target: number) =>
-    arr.filter((n) => n > target);
 
   private battleRound(
     [attacker, defender]: [Character, Character],
@@ -146,25 +156,21 @@ export class CombatResolver implements ResolverInterface<Combat> {
     };
     const attackRoll = new DiceRoll('d20').total;
     logEntry.attackRoll = attackRoll;
-    logEntry.attackModifier = this.modifier(char1.str);
+    logEntry.attackModifier = modifier(char1.str);
 
     if (
       (attackRoll > 1 &&
         logEntry.attackRoll + logEntry.attackModifier >
-          10 + this.modifier(char2.dex)) ||
+          10 + modifier(char2.dex)) ||
       attackRoll === 20
     ) {
       logEntry.hit = true;
       logEntry.damage = Math.max(
-        new DiceRoll('1d4').total + logEntry.attackModifier,
+        new DiceRoll('1d6').total + logEntry.attackModifier,
         0,
       );
       char2.hp = char2.hp - logEntry.damage;
     }
     return logEntry;
   }
-
-  private modifier = (value: number) => {
-    return Math.floor((value - 10) / 2);
-  };
 }
