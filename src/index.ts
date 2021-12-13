@@ -1,4 +1,5 @@
 import './config';
+import './tracer';
 import { buildSchema } from 'type-graphql';
 import { Container } from 'typedi';
 import { useContainer, createConnection } from 'typeorm';
