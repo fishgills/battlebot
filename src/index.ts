@@ -44,7 +44,7 @@ async function bootstrap() {
 
     const context: Context = {};
 
-    const server = new ApolloServer({ schema, context });
+    const server = new ApolloServer({ schema, context, introspection: true });
     const { url } = await server.listen(4000);
     console.log(`Server running: ${url}`);
   } catch (err) {
