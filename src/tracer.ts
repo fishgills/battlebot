@@ -1,17 +1,21 @@
 import tracer from 'dd-trace';
-
-import { execSync } from 'child_process';
+import axios from 'axios';
 
 // const getGitVersion = () => execSync('git rev-parse HEAD').toString().trim();
 
 // initialized in a different file to avoid hoisting.
 if (process.env.NODE_ENV === 'production') {
-  tracer.init({
+  const mytracer = tracer.init({
     env: process.env['DD_ENV'],
     service: 'GraphQL',
-    // version: getGitVersion(),
   });
-  tracer.use('graphql');
+  mytracer.use('graphql');
+
+  axios
+    .get('http://169.254.169.254/latest/meta-data/local-ipv4')
+    .then((resp) => {
+      mytracer.setUrl(`http://${resp.data}:8126`);
+    });
 }
 
 export default tracer;
