@@ -1,4 +1,3 @@
-import { ParticipantEntity } from 'src/participant/participant.entity';
 import {
   Column,
   CreateDateColumn,
@@ -7,59 +6,66 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Field, ID, ObjectType } from 'type-graphql';
+import { Participant } from './participant';
 
+@ObjectType()
 @Entity()
-export class CharacterEntity {
+export class Character {
   @PrimaryGeneratedColumn()
+  @Field((type) => ID)
   id!: string;
 
+  @Field()
   @Column({
     default: 0,
   })
   str!: number;
-
+  @Field()
   @Column({
     default: 0,
   })
   dex!: number;
-
+  @Field()
   @Column({
     default: 0,
   })
   con!: number;
-
+  @Field()
   @Column({
     default: 0,
   })
   level!: number;
-
+  @Field()
   @Column({
     default: 0,
   })
   xp!: number;
-
+  @Field()
   @Column({
     default: 0,
   })
   hp!: number;
-
+  @Field()
   @Column()
   name!: string;
-
+  @Field()
   @CreateDateColumn()
   created!: Date;
-
+  @Field()
   @UpdateDateColumn()
   updated!: Date;
 
-  @OneToMany(() => ParticipantEntity, (participant) => participant.character)
-  participating!: ParticipantEntity[];
-
+  @Field()
   @Column({
     default: true,
   })
   active!: boolean;
-
+  @Field()
   @Column()
   owner!: string;
+
+  @OneToMany((type) => Participant, (participant) => participant.character)
+  @Field((type) => [Participant])
+  participating!: Participant[];
 }
