@@ -9,6 +9,7 @@ import {
   FieldResolver,
   Root,
   ResolverInterface,
+  ID,
 } from 'type-graphql';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
@@ -31,6 +32,17 @@ export class CharacterResolver implements ResolverInterface<Character> {
   @Query((returns) => Character)
   async character(@Arg('id', (type) => Int) charId: number) {
     return this.charRepo.findOne(charId);
+  }
+
+  @Query(() => Character)
+  async characterByOwner(@Arg('owner', () => String) owner: string) {
+    const char = await this.charRepo.find({
+      where: {
+        owner,
+      },
+      take: 1,
+    });
+    return char[0] || {};
   }
 
   @Query(() => [Character])
@@ -61,7 +73,7 @@ export class CharacterResolver implements ResolverInterface<Character> {
 
   @Mutation(() => Character)
   async updateCharacter(
-    @Arg('id') id: number,
+    @Arg('id', () => ID) id: number,
     @Arg('input') input: CharacterInput,
   ) {
     const char = await this.charRepo.findOne(id);

@@ -13,55 +13,79 @@ import { Participant } from './participant';
 @Entity()
 export class Character {
   @PrimaryGeneratedColumn()
-  @Field((type) => ID)
+  @Field((type) => ID, {
+    nullable: true,
+  })
   id!: number;
 
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @Column({
     default: 0,
   })
   str!: number;
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @Column({
     default: 0,
   })
   dex!: number;
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @Column({
     default: 0,
   })
   con!: number;
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @Column({
     default: 0,
   })
   level!: number;
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @Column({
     default: 0,
   })
   xp!: number;
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @Column({
     default: 0,
   })
   hp!: number;
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @Column()
   name!: string;
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @CreateDateColumn()
   created!: Date;
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @UpdateDateColumn()
   updated!: Date;
 
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @Column({
     default: true,
   })
   active!: boolean;
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @Column()
   owner!: string;
 
