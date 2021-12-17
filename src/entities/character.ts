@@ -92,4 +92,12 @@ export class Character {
   @OneToMany((type) => Participant, (participant) => participant.character)
   @Field((type) => [Participant])
   participating!: Participant[];
+
+  @Field({
+    defaultValue: 0,
+  })
+  @Column({
+    default: 0,
+  })
+  rolls!: number;
 }

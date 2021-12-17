@@ -55,12 +55,17 @@ export class CharacterResolver implements ResolverInterface<Character> {
     const char = this.charRepo.create({
       ...charInput,
     });
-    char.str = new DiceRoll('3d6').total;
-    char.dex = new DiceRoll('3d6').total;
-    char.con = new DiceRoll('3d6').total;
+    this.rollCharacter(char);
     char.level = 1;
-    char.hp = 10 + modifier(char.con);
     return await this.charRepo.save(char);
+  }
+
+  private rollCharacter(char: Character) {
+    char.str = new DiceRoll('4d6kh3').total;
+    char.dex = new DiceRoll('4d6kh3').total;
+    char.con = new DiceRoll('4d6kh3').total;
+    char.rolls = char.rolls ? ++char.rolls : 1;
+    char.hp = 10 + modifier(char.con);
   }
 
   @Mutation(() => Boolean)
@@ -72,12 +77,21 @@ export class CharacterResolver implements ResolverInterface<Character> {
   }
 
   @Mutation(() => Character)
+  async reroll(@Arg('id', () => ID) id: number) {
+    const char = await this.charRepo.findOne(id);
+    this.rollCharacter(char);
+    await this.charRepo.update({ id }, char);
+    return await this.charRepo.findOne(id);
+  }
+
+  @Mutation(() => Character)
   async updateCharacter(
     @Arg('id', () => ID) id: number,
     @Arg('input') input: CharacterInput,
   ) {
     const char = await this.charRepo.findOne(id);
 
+    this.validateAbilities(input);
     if (input.con) {
       input.hp = getHitPoints(char);
     }
@@ -104,4 +118,6 @@ export class CharacterResolver implements ResolverInterface<Character> {
     }
     return ps;
   }
+
+  private validateAbilities(char: CharacterInput) {}
 }
