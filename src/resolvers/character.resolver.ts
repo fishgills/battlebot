@@ -79,6 +79,9 @@ export class CharacterResolver implements ResolverInterface<Character> {
   @Mutation(() => Character)
   async reroll(@Arg('id', () => ID) id: number) {
     const char = await this.charRepo.findOne(id);
+    if (char.rolls >= 5) {
+      throw new Error('Character already has rolled.');
+    }
     this.rollCharacter(char);
     await this.charRepo.update({ id }, char);
     return await this.charRepo.findOne(id);
