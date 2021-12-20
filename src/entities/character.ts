@@ -4,6 +4,7 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { Field, ID, ObjectType } from 'type-graphql';
@@ -11,6 +12,7 @@ import { Participant } from './participant';
 
 @ObjectType()
 @Entity()
+@Unique(['owner'])
 export class Character {
   @PrimaryGeneratedColumn()
   @Field((type) => ID, {
@@ -65,11 +67,13 @@ export class Character {
   })
   @Column()
   name!: string;
+
   @Field({
     nullable: true,
   })
   @CreateDateColumn()
   created!: Date;
+
   @Field({
     nullable: true,
   })
@@ -80,9 +84,10 @@ export class Character {
     nullable: true,
   })
   @Column({
-    default: true,
+    default: false,
   })
   active!: boolean;
+
   @Field({
     nullable: true,
   })
@@ -95,6 +100,7 @@ export class Character {
 
   @Field({
     defaultValue: 0,
+    nullable: true,
   })
   @Column({
     default: 0,
