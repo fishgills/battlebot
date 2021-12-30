@@ -8,6 +8,7 @@ import {
   FieldResolver,
   Root,
   ResolverInterface,
+  ID,
 } from 'type-graphql';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
@@ -45,9 +46,28 @@ export class BattleResolver implements ResolverInterface<Battle> {
   }
 
   @Mutation((returns) => Battle)
-  async addBattle() {
-    const obj = this.repo.create();
-    return await this.repo.save(obj);
+  async addBattle(
+    @Arg('attackerId', () => ID) attackerId: number,
+    @Arg('defenderId', () => ID) defenderId: number,
+  ): Promise<Battle> {
+    const chars = await this.cRepo.findByIds([attackerId, defenderId]);
+    if (chars.length !== 2) {
+      throw new Error('Characters not found for battle.');
+    }
+
+    let battle = await this.repo.create();
+    battle = await this.repo.save(battle);
+
+    const result = chars.forEach(async (char) => {
+      await this.pRepo.save([
+        this.pRepo.create({
+          battleId: battle.id,
+          characterId: char.id,
+        }),
+      ]);
+    });
+
+    return battle;
   }
 
   @FieldResolver()

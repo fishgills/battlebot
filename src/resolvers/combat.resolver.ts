@@ -2,6 +2,7 @@ import { Combat } from '../entities/combat';
 import {
   Arg,
   FieldResolver,
+  ID,
   Mutation,
   Query,
   Resolver,
@@ -50,7 +51,7 @@ export class CombatResolver implements ResolverInterface<Combat> {
   }
 
   @Mutation(() => [Combat])
-  async doCombat(@Arg('battleId') id: number) {
+  async doCombat(@Arg('battleId', () => ID) id: number) {
     const log: Combat[] = [];
 
     const battle = await this.bRepo.findOne(id);
@@ -85,7 +86,7 @@ export class CombatResolver implements ResolverInterface<Combat> {
       if (this.returnLess(healths, 1).length !== 0) {
         break;
       }
-      this.battleRound(order, battle, log);
+      this.battleRound(order[0], order[1], battle, log);
     }
 
     const res = await this.repo.save(log);
@@ -104,7 +105,8 @@ export class CombatResolver implements ResolverInterface<Combat> {
     arr.filter((n) => n < target);
 
   private battleRound(
-    [attacker, defender]: [Character, Character],
+    attacker: Character,
+    defender: Character,
     battle: Battle,
     log: Combat[],
   ) {
@@ -153,6 +155,7 @@ export class CombatResolver implements ResolverInterface<Combat> {
       attackRoll: 0,
       attackModifier: 0,
       damage: 0,
+      defenderHp: char2.hp,
     };
     const attackRoll = new DiceRoll('d20').total;
     logEntry.attackRoll = attackRoll;
@@ -170,6 +173,7 @@ export class CombatResolver implements ResolverInterface<Combat> {
         0,
       );
       char2.hp = char2.hp - logEntry.damage;
+      logEntry.defenderHp = char2.hp;
     }
     return logEntry;
   }
