@@ -1,0 +1,40 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CharacterModel {
+  id: String!
+  name: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+  combats: [CombatModel!]
+  str: Float
+  dex: Float
+  con: Float
+  level: Float
+  xp: Float
+  hp: Float
+  rolls: Float
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type CombatModel {
+  id: String!
+  participants: [CharacterModel!]
+}
+
+type Query {
+  characters: [CharacterModel!]!
+  combats: [CombatModel!]!
+}
+
+type Mutation {
+  createCharacter(name: String!): CharacterModel!
+  addCharacterToCombat(combatId: String!, characterId: String!): CharacterModel!
+  createCombat: CombatModel!
+  addCombatToCharacter(characterId: String!, combatId: String!): CombatModel!
+}

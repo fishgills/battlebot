@@ -1,0 +1,44 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CombatModel } from 'src/combat/combat.model';
+import { Repository } from 'typeorm';
+import { CharacterModel } from './character.model';
+import { CreateCharacterDTO } from './create-character.dto';
+@Injectable()
+export class CharacterService {
+  constructor(
+    @InjectRepository(CharacterModel)
+    private readonly charRepo: Repository<CharacterModel>,
+    @InjectRepository(CombatModel)
+    private readonly combatRepo: Repository<CombatModel>,
+  ) {}
+
+  create(createCharacterDto: CreateCharacterDTO): Promise<CharacterModel> {
+    return this.charRepo.save(createCharacterDto);
+  }
+
+  async findAll(): Promise<CharacterModel[]> {
+    return this.charRepo.find();
+  }
+
+  async findByIds(ids: string[]) {
+    return this.charRepo.findByIds(ids);
+  }
+
+  async addToCombat(charId: string, combatId: string) {
+    let foundCharacter = await this.charRepo.findOne(
+      {
+        id: charId,
+      },
+      {
+        relations: ['combats'],
+      },
+    );
+    let foundCombat = await this.combatRepo.findOne({ id: combatId });
+
+    if (foundCombat && foundCharacter) {
+      foundCharacter.combats.push(foundCombat);
+      return this.charRepo.save(foundCharacter);
+    }
+  }
+}

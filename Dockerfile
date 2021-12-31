@@ -1,6 +1,6 @@
 FROM node:16-alpine as ts-compiler
 
-WORKDIR /usr/src/app
+WORKDIR /tmp
 
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
@@ -14,21 +14,23 @@ ENV DB_HOST $DB_HOST
 ARG DB_PASSWORD
 ENV DB_PASSWORD $DB_PASSWORD
 
-COPY . /usr/src/app
+COPY . /tmp/
 RUN npm ci
 
 RUN npm run build
 
 FROM node:16-alpine as ts-remove
-WORKDIR /usr/src/app
-COPY --from=ts-compiler /usr/src/app/package*.json ./
+WORKDIR /tmp
+COPY --from=ts-compiler /tmp/package*.json ./
 RUN npm ci --only=production
 
 FROM node:16-alpine
-WORKDIR /usr/src/app
-COPY --from=ts-compiler /usr/src/app/dist ./
-COPY --from=ts-compiler /usr/src/app/package.json ./
-COPY --from=ts-remove /usr/src/app/node_modules ./node_modules
-ENV PORT 4000
+WORKDIR /tmp
+COPY --from=ts-compiler /tmp/dist ./dist/
+COPY --from=ts-compiler /tmp/package.json ./
+COPY --from=ts-remove /tmp/node_modules ./node_modules
+COPY --from=ts-compiler /tmp/docker-entrypoint.sh ./
+RUN chmod +rwx /tmp/docker-entrypoint.sh
+
 EXPOSE $PORT
-CMD [ "npm", "run", "start:prod" ]
+ENTRYPOINT ["/tmp/docker-entrypoint.sh"]
