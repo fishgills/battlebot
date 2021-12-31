@@ -6,12 +6,14 @@ import {
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { CombatModel } from '../combat/combat.model';
 
 @ObjectType()
 @Entity()
+@Unique(['owner'])
 export class CharacterModel {
   @Field()
   @PrimaryGeneratedColumn()
@@ -31,6 +33,10 @@ export class CharacterModel {
   @Column()
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Field()
+  @Column()
+  owner: string;
 
   @Field((type) => [CombatModel], { nullable: true })
   @ManyToMany((type) => CombatModel, (combat) => combat.participants, {

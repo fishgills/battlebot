@@ -2,6 +2,7 @@ import { Inject } from '@nestjs/common';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CharacterModel } from './character.model';
 import { CharacterService } from './character.service';
+import { CreateCharacterInput } from './create-character.dto';
 
 @Resolver((of) => CharacterModel)
 export class CharacterResolver {
@@ -15,10 +16,8 @@ export class CharacterResolver {
   }
 
   @Mutation((returns) => CharacterModel)
-  createCharacter(@Args('name') name: string) {
-    return this.charService.create({
-      name,
-    });
+  createCharacter(@Args('input') input: CreateCharacterInput) {
+    return this.charService.create(input);
   }
 
   @Mutation(() => CharacterModel, { name: 'addCharacterToCombat' })

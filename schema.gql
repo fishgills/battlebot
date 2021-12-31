@@ -7,6 +7,7 @@ type CharacterModel {
   name: String!
   created_at: DateTime!
   updated_at: DateTime!
+  owner: String!
   combats: [CombatModel!]
   str: Float
   dex: Float
@@ -22,9 +23,29 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type InitiativeRoll {
+  roll: Float!
+  modifier: Float!
+}
+
+type CombatRound {
+  attacker: CharacterModel!
+  defender: CharacterModel!
+  hit: Boolean!
+  damage: Float
+  attackRoll: Float!
+  attackModifier: Float!
+  defenderAC: Float!
+}
+
+type CombatLog {
+  combat: [CombatRound!]!
+}
+
 type CombatModel {
   id: String!
   participants: [CharacterModel!]
+  log: CombatLog
 }
 
 type Query {
@@ -33,8 +54,14 @@ type Query {
 }
 
 type Mutation {
-  createCharacter(name: String!): CharacterModel!
+  createCharacter(input: CreateCharacterInput!): CharacterModel!
   addCharacterToCombat(combatId: String!, characterId: String!): CharacterModel!
   createCombat: CombatModel!
+  start(combatId: String!): CombatLog!
   addCombatToCharacter(characterId: String!, combatId: String!): CombatModel!
+}
+
+input CreateCharacterInput {
+  name: String!
+  owner: String!
 }

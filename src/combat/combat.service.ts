@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CharacterModel } from 'src/characters/character.model';
+import { CombatLog } from 'src/dnd';
 import { Repository } from 'typeorm';
 import { CombatModel } from './combat.model';
-import { CreateCombatInput } from './dto/create-combat.input';
 
 @Injectable()
 export class CombatService {
@@ -19,8 +19,25 @@ export class CombatService {
     });
   }
 
-  async create() {
-    return await this.combatRepo.save({});
+  findOne(id: string) {
+    return this.combatRepo.findOneOrFail(id, {
+      relations: ['participants'],
+    });
+  }
+
+  updateLog(combatId: string, log: CombatLog) {
+    return this.combatRepo.update(
+      {
+        id: combatId,
+      },
+      {
+        log,
+      },
+    );
+  }
+
+  create() {
+    return this.combatRepo.save({});
   }
 
   async addToCharacter(combatId: string, charId: string) {
