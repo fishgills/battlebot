@@ -16,20 +16,39 @@ export class CharacterService {
   ) {}
 
   create(createCharacterDto: CreateCharacterInput): Promise<CharacterModel> {
-    const char = this.charRepo.create({
-      ...createCharacterDto,
-    });
+    const char = this.charRepo.create(createCharacterDto);
     this.rollCharacter(char);
     char.level = 1;
     return this.charRepo.save(char);
   }
 
-  async findAll(): Promise<CharacterModel[]> {
+  findAll(): Promise<CharacterModel[]> {
     return this.charRepo.find();
   }
 
-  async findByIds(ids: string[]) {
+  findByIds(ids: string[]) {
     return this.charRepo.findByIds(ids);
+  }
+
+  findByOwner(owner: string) {
+    return this.charRepo.findOneOrFail({
+      where: {
+        owner,
+      },
+    });
+  }
+
+  update(id: string, input: CreateCharacterInput) {
+    return this.charRepo.update(
+      {
+        id,
+      },
+      input,
+    );
+  }
+
+  findOne(id: string) {
+    return this.charRepo.findOne(id);
   }
 
   async addToCombat(charId: string, combatId: string) {
@@ -49,7 +68,7 @@ export class CharacterService {
     }
   }
 
-  private rollCharacter(char: CharacterModel) {
+  public rollCharacter(char: CharacterModel) {
     char.str = new DiceRoll('4d6kh3').total;
     char.dex = new DiceRoll('4d6kh3').total;
     char.con = new DiceRoll('4d6kh3').total;

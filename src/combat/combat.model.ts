@@ -19,6 +19,7 @@ export class CombatModel {
   })
   @Column({
     type: 'json',
+    nullable: true,
   })
   log: CombatLog;
 }

@@ -9,10 +9,7 @@ import { CombatService } from './combat.service';
 
 @Resolver((of) => CombatModel)
 export class CombatResolver {
-  constructor(
-    @Inject(CombatService) private combatService: CombatService,
-    @Inject(CharacterService) private charService: CharacterService,
-  ) {}
+  constructor(@Inject(CombatService) private combatService: CombatService) {}
 
   @Query((returns) => [CombatModel])
   async combats() {
@@ -122,6 +119,7 @@ export class CombatResolver {
         defender,
         defenderAC,
         hit: true,
+        defenderHealth: defender.hp,
         damage,
       };
     } else {
@@ -132,6 +130,7 @@ export class CombatResolver {
         attacker,
         defender,
         defenderAC,
+        defenderHealth: defender.hp,
         hit: false,
       };
     }

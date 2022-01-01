@@ -37,6 +37,8 @@ export class CombatRound {
   attackModifier: number;
   @Field()
   defenderAC: number;
+  @Field()
+  defenderHealth: number;
 }
 
 @ObjectType()
