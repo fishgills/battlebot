@@ -21,11 +21,12 @@ export class SlackInstallResolver {
   }
 
   @Mutation((returns) => SlackInstallModel)
-  createInstall(
+  async createInstall(
     @Args('input')
     input: CreateSlackInstallInput,
   ) {
-    return this.service.createInstall(input);
+    await this.service.createInstall(input);
+    return this.service.findOne(input.team_id);
   }
 
   @Mutation((returns) => String)
