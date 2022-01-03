@@ -8,4 +8,9 @@ export class CreateSlackInstallInput {
 
   @Field(() => GraphQLJSON)
   installObj: any;
+
+  @Field(() => String, {
+    nullable: true,
+  })
+  channelId: string;
 }

@@ -3,6 +3,7 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { CreateSlackInstallInput } from './create-install.dto';
 import { SlackInstallModel } from './install.model';
 import { SlackInstallService } from './install.service';
+import { UpdateSlackInstallInput } from './update-install.dto';
 
 @Resolver((of) => SlackInstallModel)
 export class SlackInstallResolver {
@@ -27,6 +28,11 @@ export class SlackInstallResolver {
   ) {
     await this.service.createInstall(input);
     return this.service.findOne(input.team_id);
+  }
+
+  @Mutation((returns) => SlackInstallModel)
+  updateInstall(@Args('input') input: UpdateSlackInstallInput) {
+    return this.service.update(input);
   }
 
   @Mutation((returns) => String)

@@ -20,4 +20,12 @@ export class SlackInstallModel {
   })
   @Field(() => GraphQLJSON)
   installObj: any;
+
+  @Column({
+    nullable: true,
+  })
+  @Field({
+    nullable: true,
+  })
+  channelId: string;
 }

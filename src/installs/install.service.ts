@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Unique } from 'typeorm';
 import { CreateSlackInstallInput } from './create-install.dto';
 import { SlackInstallModel } from './install.model';
+import { UpdateSlackInstallInput } from './update-install.dto';
 
 @Injectable()
 export class SlackInstallService {
@@ -25,6 +26,11 @@ export class SlackInstallService {
 
   public createInstall(input: CreateSlackInstallInput) {
     return this.slackRepo.upsert(input, ['team_id']);
+  }
+
+  async update(input: UpdateSlackInstallInput): Promise<SlackInstallModel> {
+    const found = await this.slackRepo.findOne(input.id);
+    return await this.slackRepo.save({ ...found, ...input });
   }
 
   public async deleteInstall(team_id: string) {

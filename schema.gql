@@ -53,6 +53,7 @@ type SlackInstallModel {
   id: String!
   team_id: String!
   installObj: JSON!
+  channelId: String
 }
 
 """
@@ -76,6 +77,7 @@ type Mutation {
   start(combatId: String!): CombatLog!
   addCombatToCharacter(characterId: String!, combatId: String!): CombatModel!
   createInstall(input: CreateSlackInstallInput!): SlackInstallModel!
+  updateInstall(input: UpdateSlackInstallInput!): SlackInstallModel!
   removeInstall(team_id: String!): String!
 }
 
@@ -87,4 +89,12 @@ input CreateCharacterInput {
 input CreateSlackInstallInput {
   team_id: String!
   installObj: JSON!
+  channelId: String
+}
+
+input UpdateSlackInstallInput {
+  team_id: String
+  installObj: JSON
+  channelId: String
+  id: String!
 }
