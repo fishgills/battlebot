@@ -8,7 +8,7 @@ import { CharacterModel } from './character.model';
 import { CreateCharacterInput } from './create-character.dto';
 @Injectable()
 export class CharacterService {
-  private relations = ['receivedRewards', 'givenRewards', 'combats'];
+  private relations = ['combats'];
   constructor(
     @InjectRepository(CharacterModel)
     private readonly charRepo: Repository<CharacterModel>,
@@ -58,7 +58,7 @@ export class CharacterService {
   }
 
   async addToCombat(charId: string, combatId: string) {
-    let foundCharacter = await this.charRepo.findOne(
+    const foundCharacter = await this.charRepo.findOne(
       {
         id: charId,
       },
@@ -66,7 +66,7 @@ export class CharacterService {
         relations: ['combats'],
       },
     );
-    let foundCombat = await this.combatRepo.findOne({ id: combatId });
+    const foundCombat = await this.combatRepo.findOne({ id: combatId });
 
     if (foundCombat && foundCharacter) {
       foundCharacter.combats.push(foundCombat);
