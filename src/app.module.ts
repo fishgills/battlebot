@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CharacterModule } from './characters/character.module';
 import { CombatModule } from './combat/combat.module';
 import { database } from './config/database.config';
+import { RewardModule } from './rewards/reward.module';
 import { SlackInstallModule } from './installs/install.module';
 
 @Module({
@@ -11,6 +12,7 @@ import { SlackInstallModule } from './installs/install.module';
     CharacterModule,
     CombatModule,
     SlackInstallModule,
+    RewardModule,
     TypeOrmModule.forRoot(database),
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',

@@ -1,6 +1,13 @@
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Inject } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { CharacterModel } from 'src/characters/character.model';
 import { CharacterService } from 'src/characters/character.service';
 import { CombatLog, CombatRound, modifier } from 'src/dnd';

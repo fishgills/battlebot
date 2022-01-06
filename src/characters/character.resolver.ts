@@ -1,5 +1,14 @@
 import { Inject } from '@nestjs/common';
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
+
 import { CharacterModel } from './character.model';
 import { CharacterService } from './character.service';
 import { CreateCharacterInput } from './create-character.dto';

@@ -47,6 +47,17 @@ type CombatModel {
   id: String!
   participants: [CharacterModel!]
   log: CombatLog
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type RewardModel {
+  id: String!
+  to: String!
+  from: String!
+  value: Float!
+  created_at: DateTime!
+  updated_at: DateTime!
 }
 
 type SlackInstallModel {
@@ -67,6 +78,9 @@ type Query {
   combats: [CombatModel!]!
   installs: [SlackInstallModel!]!
   install(team_id: String!): SlackInstallModel!
+  rewards: [RewardModel!]!
+  rewardsGivenToday(user: String!): Int!
+  getUserScore(listType: String = "from", userId: String!): [RewardModel!]!
 }
 
 type Mutation {
@@ -79,6 +93,7 @@ type Mutation {
   createInstall(input: CreateSlackInstallInput!): SlackInstallModel!
   updateInstall(input: UpdateSlackInstallInput!): SlackInstallModel!
   removeInstall(team_id: String!): String!
+  giveReward(input: CreateRewardInput!): Boolean!
 }
 
 input CreateCharacterInput {
@@ -97,4 +112,10 @@ input UpdateSlackInstallInput {
   installObj: JSON
   channelId: String
   id: String!
+}
+
+input CreateRewardInput {
+  from: String!
+  to: String!
+  value: Float
 }

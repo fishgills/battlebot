@@ -1,5 +1,6 @@
 import { CharacterModel } from 'src/characters/character.model';
 import { CombatModel } from 'src/combat/combat.model';
+import { RewardModel } from 'src/rewards/reward.model';
 import { SlackInstallModel } from 'src/installs/install.model';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
@@ -14,5 +15,5 @@ export const database: MysqlConnectionOptions = {
   synchronize: true,
   logging: true,
   cache: true,
-  entities: [CombatModel, CharacterModel, SlackInstallModel],
+  entities: [CombatModel, CharacterModel, SlackInstallModel, RewardModel],
 };

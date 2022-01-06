@@ -1,12 +1,19 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { CombatLog } from 'src/dnd';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { CharacterModel } from '../characters/character.model';
 
 @ObjectType()
 @Entity()
 export class CombatModel {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Field()
   id: string;
 
@@ -22,4 +29,12 @@ export class CombatModel {
     nullable: true,
   })
   log: CombatLog;
+  @Field()
+  @Column()
+  @CreateDateColumn()
+  created_at: Date;
+  @Field()
+  @Column()
+  @UpdateDateColumn()
+  updated_at: Date;
 }

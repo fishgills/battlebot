@@ -8,6 +8,7 @@ import { CharacterModel } from './character.model';
 import { CreateCharacterInput } from './create-character.dto';
 @Injectable()
 export class CharacterService {
+  private relations = ['receivedRewards', 'givenRewards', 'combats'];
   constructor(
     @InjectRepository(CharacterModel)
     private readonly charRepo: Repository<CharacterModel>,
@@ -23,15 +24,20 @@ export class CharacterService {
   }
 
   findAll(): Promise<CharacterModel[]> {
-    return this.charRepo.find();
+    return this.charRepo.find({
+      relations: this.relations,
+    });
   }
 
   findByIds(ids: string[]) {
-    return this.charRepo.findByIds(ids);
+    return this.charRepo.findByIds(ids, {
+      relations: this.relations,
+    });
   }
 
   findByOwner(owner: string) {
     return this.charRepo.findOneOrFail({
+      relations: this.relations,
       where: {
         owner,
       },
