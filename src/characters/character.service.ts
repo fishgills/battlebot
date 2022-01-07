@@ -1,14 +1,14 @@
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { subMinutes } from 'date-fns';
 import { CombatModel } from 'src/combat/combat.model';
 import { modifier } from 'src/dnd';
-import { Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, MoreThan, Repository } from 'typeorm';
 import { CharacterModel } from './character.model';
 import { CreateCharacterInput } from './create-character.dto';
 @Injectable()
 export class CharacterService {
-  private relations = ['combats'];
   constructor(
     @InjectRepository(CharacterModel)
     private readonly charRepo: Repository<CharacterModel>,
@@ -23,21 +23,20 @@ export class CharacterService {
     return this.charRepo.save(char);
   }
 
+  find(options?: FindManyOptions<CharacterModel>) {
+    return this.charRepo.find(options);
+  }
+
   findAll(): Promise<CharacterModel[]> {
-    return this.charRepo.find({
-      relations: this.relations,
-    });
+    return this.charRepo.find();
   }
 
   findByIds(ids: string[]) {
-    return this.charRepo.findByIds(ids, {
-      relations: this.relations,
-    });
+    return this.charRepo.findByIds(ids);
   }
 
   findByOwner(owner: string) {
     return this.charRepo.findOneOrFail({
-      relations: this.relations,
       where: {
         owner,
       },
@@ -53,25 +52,8 @@ export class CharacterService {
     );
   }
 
-  findOne(id: string) {
-    return this.charRepo.findOne(id);
-  }
-
-  async addToCombat(charId: string, combatId: string) {
-    const foundCharacter = await this.charRepo.findOne(
-      {
-        id: charId,
-      },
-      {
-        relations: ['combats'],
-      },
-    );
-    const foundCombat = await this.combatRepo.findOne({ id: combatId });
-
-    if (foundCombat && foundCharacter) {
-      foundCharacter.combats.push(foundCombat);
-      return this.charRepo.save(foundCharacter);
-    }
+  findOne(options: FindOneOptions<CharacterModel>) {
+    return this.charRepo.findOneOrFail(options);
   }
 
   public rollCharacter(char: CharacterModel) {

@@ -8,7 +8,8 @@ type CharacterModel {
   created_at: DateTime!
   updated_at: DateTime!
   owner: String!
-  combats: [CombatModel!]
+  attacking: [CombatModel!]
+  defending: [CombatModel!]
   str: Float
   dex: Float
   con: Float
@@ -45,8 +46,11 @@ type CombatLog {
 
 type CombatModel {
   id: String!
-  participants: [CharacterModel!]
-  log: CombatLog
+  attacker: CharacterModel
+  attackerId: String!
+  defender: CharacterModel
+  defenderId: String!
+  log: CombatLog!
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -86,10 +90,8 @@ type Query {
 type Mutation {
   reroll(id: String!): CharacterModel!
   createCharacter(input: CreateCharacterInput!): CharacterModel!
-  addCharacterToCombat(combatId: String!, characterId: String!): CharacterModel!
-  createCombat: CombatModel!
-  start(combatId: String!): CombatLog!
-  addCombatToCharacter(characterId: String!, combatId: String!): CombatModel!
+  createCombat(input: CreateCombatInput!): CombatModel!
+  start(input: CreateCombatInput!): CombatLog!
   createInstall(input: CreateSlackInstallInput!): SlackInstallModel!
   updateInstall(input: UpdateSlackInstallInput!): SlackInstallModel!
   removeInstall(team_id: String!): String!
@@ -99,6 +101,11 @@ type Mutation {
 input CreateCharacterInput {
   name: String!
   owner: String!
+}
+
+input CreateCombatInput {
+  attackerId: String!
+  defenderId: String!
 }
 
 input CreateSlackInstallInput {

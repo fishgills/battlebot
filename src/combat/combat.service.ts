@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CharacterModel } from 'src/characters/character.model';
 import { CombatLog } from 'src/dnd';
-import { Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { CombatModel } from './combat.model';
+import { CreateCombatInput } from './dto/create-combat.input';
 
 @Injectable()
 export class CombatService {
@@ -13,16 +14,12 @@ export class CombatService {
     private charRepo: Repository<CharacterModel>,
   ) {}
 
-  findAll() {
-    return this.combatRepo.find({
-      relations: ['participants'],
-    });
+  findAll(options?: FindManyOptions<CombatModel>) {
+    return this.combatRepo.find(options);
   }
 
-  findOne(id: string) {
-    return this.combatRepo.findOneOrFail(id, {
-      relations: ['participants'],
-    });
+  findOne(id: string, options?: FindOneOptions<CombatModel>) {
+    return this.combatRepo.findOneOrFail(id, options);
   }
 
   updateLog(combatId: string, log: CombatLog) {
@@ -36,28 +33,10 @@ export class CombatService {
     );
   }
 
-  create() {
-    return this.combatRepo.save({});
-  }
-
-  async addToCharacter(combatId: string, charId: string) {
-    let foundCombat = await this.combatRepo.findOne(
-      {
-        id: combatId,
-      },
-      {
-        relations: ['participants'],
-      },
-    );
-    let foundCharacter = await this.charRepo.findOne({
-      id: charId,
+  create(input: CreateCombatInput) {
+    return this.combatRepo.save({
+      attackerId: input.attackerId,
+      defenderId: input.defenderId,
     });
-
-    if (foundCombat && foundCharacter) {
-      foundCombat.participants.push(foundCharacter);
-      return this.combatRepo.save(foundCombat);
-    } else {
-      throw new Error(`Couldn't add combat to character`);
-    }
   }
 }

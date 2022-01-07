@@ -8,15 +8,21 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
+import { subMinutes } from 'date-fns';
 import { CharacterModel } from 'src/characters/character.model';
 import { CharacterService } from 'src/characters/character.service';
 import { CombatLog, CombatRound, modifier } from 'src/dnd';
+import { MoreThan } from 'typeorm';
 import { CombatModel } from './combat.model';
 import { CombatService } from './combat.service';
+import { CreateCombatInput } from './dto/create-combat.input';
 
 @Resolver((of) => CombatModel)
 export class CombatResolver {
-  constructor(@Inject(CombatService) private combatService: CombatService) {}
+  constructor(
+    @Inject(CombatService) private combatService: CombatService,
+    @Inject(CharacterService) private charService: CharacterService,
+  ) {}
 
   @Query((returns) => [CombatModel])
   async combats() {
@@ -24,25 +30,45 @@ export class CombatResolver {
   }
 
   @Mutation((returns) => CombatModel)
-  async createCombat() {
-    return await this.combatService.create();
+  async createCombat(
+    @Args('input')
+    input: CreateCombatInput,
+  ) {
+    return await this.combatService.create(input);
   }
 
   @Mutation(() => CombatLog)
   async start(
-    @Args('combatId', {
-      type: () => String,
-      nullable: false,
-    })
-    combatId: string,
+    @Args('input')
+    input: CreateCombatInput,
   ) {
-    const combat = await this.combatService.findOne(combatId);
-    if (combat.log) {
-      throw new Error(`Combat has already concluded for ${combatId}`);
+    const combatCount = await this.combatService.findAll({
+      where: [
+        {
+          attackerId: input.attackerId,
+          created_at: MoreThan(subMinutes(new Date(), 1).toISOString()),
+        },
+        {
+          defenderId: input.attackerId,
+          created_at: MoreThan(subMinutes(new Date(), 1).toISOString()),
+        },
+      ],
+    });
+
+    if (combatCount.length > 0) {
+      throw new Error(`Combat started too fast`);
     }
 
+    let combat = await this.combatService.create(input);
+
+    combat = await this.combatService.findOne(combat.id, {
+      relations: ['attacker', 'defender'],
+    });
+
     const log = new CombatLog();
-    combat.participants.sort((a, b) => {
+    const participants: CharacterModel[] = [combat.attacker, combat.defender];
+
+    participants.sort((a, b) => {
       const aRoll = new DiceRoll('d20');
       const bRoll = new DiceRoll('d20');
       const aTotal = aRoll.total + modifier(a.dex);
@@ -63,34 +89,24 @@ export class CombatResolver {
     while (max > 0) {
       max--;
       console.log(`Combat Rounds Left: ${max}`);
-      console.log(
-        combat.participants.map((c) => `${c.name}:${c.hp}`).join(' - '),
-      );
+      console.log(participants.map((c) => `${c.name}:${c.hp}`).join(' - '));
 
-      if (combat.participants.filter((c) => c.hp > 0).length !== 2) {
+      if (participants.filter((c) => c.hp > 0).length !== 2) {
         console.log(`Combat end due to defeat of character.`);
         break;
       }
-      this.battleRound(combat, log);
+      this.battleRound(participants, log);
     }
     await this.combatService.updateLog(combat.id, log);
     return log;
   }
 
-  private battleRound(combat: CombatModel, log: Partial<CombatLog>) {
-    const attackerResult = this.attack(
-      combat.participants[0],
-      combat.participants[1],
-      log,
-    );
-    if (combat.participants[1].hp <= 0) {
+  private battleRound(participants: CharacterModel[], log: Partial<CombatLog>) {
+    this.attack(participants[0], participants[1], log);
+    if (participants[1].hp <= 0) {
       return;
     }
-    const defenderResult = this.attack(
-      combat.participants[1],
-      combat.participants[0],
-      log,
-    );
+    this.attack(participants[1], participants[0], log);
   }
 
   private attack(
@@ -116,7 +132,11 @@ export class CombatResolver {
       attackRoll === 20
     ) {
       console.log('hit!');
-      const damage = Math.max(new DiceRoll('1d6').total + attackModifier, 0);
+      let roll = '1d6';
+      if (attackRoll == 20) {
+        roll = '2d6';
+      }
+      const damage = Math.max(new DiceRoll(roll).total + attackModifier, 0);
       console.log(damage, ' damage done.');
       defender.hp = defender.hp - damage;
       roundLog = {
@@ -145,22 +165,5 @@ export class CombatResolver {
       log.combat = [];
     }
     log.combat.push(roundLog);
-  }
-  @Mutation(() => CombatModel, {
-    name: 'addCombatToCharacter',
-  })
-  addtoCharater(
-    @Args('combatId', {
-      type: () => String,
-      nullable: false,
-    })
-    combatId: string,
-    @Args('characterId', {
-      type: () => String,
-      nullable: false,
-    })
-    charId: string,
-  ) {
-    return this.combatService.addToCharacter(combatId, charId);
   }
 }

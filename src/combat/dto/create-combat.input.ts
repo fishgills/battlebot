@@ -2,6 +2,9 @@ import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateCombatInput {
-  @Field()
-  initiator: string;
+  @Field(() => String)
+  attackerId: string;
+
+  @Field(() => String)
+  defenderId: string;
 }

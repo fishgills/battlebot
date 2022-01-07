@@ -4,7 +4,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,13 +21,24 @@ export class CombatModel {
   @Field()
   id: string;
 
-  @Field((type) => [CharacterModel], { nullable: true })
-  @ManyToMany((type) => CharacterModel, (character) => character.combats)
-  participants: CharacterModel[];
+  @Field((type) => CharacterModel, { nullable: true })
+  @ManyToOne((type) => CharacterModel, (character) => character.attacking)
+  @JoinColumn({ name: 'attacker_id' })
+  attacker: CharacterModel;
 
-  @Field({
-    nullable: true,
-  })
+  @Column({ type: 'uuid', name: 'attacker_id' })
+  @Field()
+  attackerId: string;
+
+  @Field((type) => CharacterModel, { nullable: true })
+  @ManyToOne((type) => CharacterModel, (character) => character.defending)
+  @JoinColumn({ name: 'defender_id' })
+  defender: CharacterModel;
+  @Field()
+  @Column({ type: 'uuid', name: 'defender_id' })
+  defenderId: string;
+
+  @Field()
   @Column({
     type: 'json',
     nullable: true,

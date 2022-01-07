@@ -1,12 +1,14 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { RewardModel } from 'src/rewards/reward.model';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
@@ -40,22 +42,18 @@ export class CharacterModel {
   @Column()
   owner: string;
 
-  @Field((type) => [CombatModel], { nullable: true })
-  @ManyToMany((type) => CombatModel, (combat) => combat.participants, {
-    cascade: true,
+  @OneToMany((type) => CombatModel, (combat) => combat.attacker, { lazy: true })
+  @Field(() => [CombatModel], {
+    nullable: true,
   })
-  @JoinTable({
-    name: 'character_combat',
-    joinColumn: {
-      name: 'character_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'combat_id',
-      referencedColumnName: 'id',
-    },
+  attacking: CombatModel[];
+
+  @OneToMany((type) => CombatModel, (combat) => combat.defender, { lazy: true })
+  @Field(() => [CombatModel], {
+    nullable: true,
   })
-  combats: CombatModel[];
+  defending: CombatModel[];
+
   @Field({
     nullable: true,
   })
@@ -107,3 +105,15 @@ export class CharacterModel {
   })
   rolls: number;
 }
+
+// @Entity('character_combat_link')
+// export class CharacterCombatLink {
+//   @CreateDateColumn()
+//   createdAt: Date;
+
+//   @PrimaryColumn('uuid')
+//   character_id: string;
+
+//   @PrimaryColumn('uuid')
+//   combat_id: string;
+// }

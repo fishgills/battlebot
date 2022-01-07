@@ -8,6 +8,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+import { CombatModel } from 'src/combat/combat.model';
 
 import { CharacterModel } from './character.model';
 import { CharacterService } from './character.service';
@@ -43,7 +44,11 @@ export class CharacterResolver {
     })
     id: string,
   ) {
-    const char = await this.charService.findOne(id);
+    const char = await this.charService.findOne({
+      where: {
+        id,
+      },
+    });
     if (char.rolls >= 5) {
       throw new Error('Character ran out of rolls');
     }
@@ -57,12 +62,12 @@ export class CharacterResolver {
     return this.charService.create(input);
   }
 
-  @Mutation(() => CharacterModel, { name: 'addCharacterToCombat' })
-  addToCombat(
-    @Args('characterId', { type: () => String, nullable: false })
-    characterId: string,
-    @Args('combatId', { type: () => String, nullable: false }) combatId: string,
-  ) {
-    return this.charService.addToCombat(characterId, combatId);
-  }
+  // @ResolveField(() => [CombatModel])
+  // async attacking(@Parent() char: CharacterModel) {
+  //   return await char.attacking;
+  // }
+  // @ResolveField(() => [CombatModel])
+  // async combats(@Parent() char: CharacterModel) {
+  //   return await char.combats;
+  // }
 }
