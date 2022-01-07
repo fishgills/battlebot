@@ -22,6 +22,6 @@ workflows:
             - aws-ecr/build-and-push-image
           family: "backend"
           cluster-name: "bot-cluster"
-          service-name: "backend-service"
+          service-name: "backend-fargate-spot"
           container-image-name-updates: "container=bot-backend,tag=${CIRCLE_BRANCH}_${CIRCLE_SHA1}"
 
