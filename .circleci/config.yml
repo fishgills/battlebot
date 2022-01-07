@@ -14,6 +14,7 @@ workflows:
           context:
             - EnvVariables
           repo: "battlebot-backend"
+          remote-docker-layer-caching: true
           tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
       - aws-ecs/deploy-service-update:
           context:
