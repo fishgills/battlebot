@@ -16,7 +16,7 @@ workflows:
       - aws-ecs/deploy-service-update:
           requires:
             - aws-ecr/build-and-push-image
-          family: "backend-service"
+          family: "backend"
           cluster-name: "bot-cluster"
-          container-image-name-updates: "container=backend,tag=${CIRCLE_SHA1}"
+          container-image-name-updates: "container=battlebot-backend,tag=${CIRCLE_SHA1}"
 
