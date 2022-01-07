@@ -12,12 +12,12 @@ workflows:
     jobs:
       - aws-ecr/build-and-push-image:
           context:
-            - EnvVars
+            - EnvVariables
           repo: "battlebot-backend"
           tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
       - aws-ecs/deploy-service-update:
           context:
-            - EnvVars
+            - EnvVariables
           requires:
             - aws-ecr/build-and-push-image
           family: "backend"
