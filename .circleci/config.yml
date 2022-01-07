@@ -11,5 +11,5 @@ workflows:
   build-and-deploy:
     jobs:
       - aws-ecr/build-and-push-image:
-          repo: "946679114937.dkr.ecr.us-west-2.amazonaws.com/battlebot-backend"
-          tag: "${CIRCLE_SHA1}"
+          repo: "battlebot-backend"
+          tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
