@@ -4,14 +4,13 @@ dotenv.config();
 import { App, BlockAction } from '@slack/bolt';
 import debug from 'debug';
 
-import { editCharacterModal } from './views/character';
-
-import { sdk } from './utils/gql';
 import { Logger } from './logger';
 import { Store } from './installation_store';
+import { sdk } from './utils/gql';
+import { editCharacterModal } from './views/character';
+import { isGenericMessageEvent } from './utils/helpers';
 import { Mention$ } from './mention_handler';
 import { Shield$ } from './shield_handler';
-import { isGenericMessageEvent } from './utils/helpers';
 
 const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
