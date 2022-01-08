@@ -7,6 +7,7 @@ workflows:
           repo: 'battlebot-slack'
           dockerfile: packages/bot/Dockerfile
           remote-docker-layer-caching: true
+          path: packages/bot
           tag: '${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest'
       - aws-ecs/deploy-service-update:
           context:
