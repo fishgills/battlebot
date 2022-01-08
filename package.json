@@ -1,32 +1,12 @@
 {
-  "name": "@battlebot",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "prepare": "husky install"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fishgills/battlebot.git"
-  },
+  "name": "root",
+  "private": true,
   "devDependencies": {
     "husky": "^7.0.0",
     "lerna": "^4.0.0",
     "lint-staged": "^12.1.7"
   },
-  "lint-staged": {
-    "manifest.json": "node src/tools/manifest.mjs",
-    "*.ts": "eslint --cache --fix"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/fishgills/battlebot/issues"
-  },
-  "homepage": "https://github.com/fishgills/battlebot#readme",
-  "workspaces": [
-    "packages/bot",
-    "packages/server"
-  ]
+  "scripts": {
+    "prepare": "husky install"
+  }
 }
