@@ -15,9 +15,10 @@ ARG CI
 ENV CI $CI
 
 COPY . /usr/src/app
-RUN npm ci
+RUN yarn install --frozen-lockfile
 
-RUN npm run build
+
+RUN yarn build
 
 FROM node:16-alpine as ts-remove
 ARG CI
@@ -26,7 +27,7 @@ WORKDIR /usr/src/app
 COPY --from=ts-compiler /usr/src/app/package*.json ./
 COPY --from=ts-compiler /usr/src/app/prepare.js ./
 
-RUN npm ci --only=production
+RUN yarn install --frozen-lockfile
 
 FROM node:16-alpine
 WORKDIR /usr/src/app
