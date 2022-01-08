@@ -1,0 +1,55 @@
+import { Field, ObjectType } from '@nestjs/graphql';
+import { CombatLog } from 'src/gamerules';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { CharacterModel } from '../characters/character.model';
+
+@ObjectType()
+@Entity()
+export class CombatModel {
+  @PrimaryGeneratedColumn('uuid')
+  @Field()
+  id: string;
+
+  @Field((type) => CharacterModel, { nullable: true })
+  @ManyToOne((type) => CharacterModel, (character) => character.attacking)
+  @JoinColumn({ name: 'attacker_id' })
+  attacker: CharacterModel;
+
+  @Column({ type: 'uuid', name: 'attacker_id' })
+  @Field()
+  attackerId: string;
+
+  @Field((type) => CharacterModel, { nullable: true })
+  @ManyToOne((type) => CharacterModel, (character) => character.defending)
+  @JoinColumn({ name: 'defender_id' })
+  defender: CharacterModel;
+  @Field()
+  @Column({ type: 'uuid', name: 'defender_id' })
+  defenderId: string;
+
+  @Field()
+  @Column({
+    type: 'json',
+    nullable: true,
+  })
+  log: CombatLog;
+  @Field()
+  @Column()
+  @CreateDateColumn()
+  created_at: Date;
+  @Field()
+  @Column()
+  @UpdateDateColumn()
+  updated_at: Date;
+}

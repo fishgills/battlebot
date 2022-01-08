@@ -1,0 +1,28 @@
+# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
+version: 2.1
+
+# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
+# See: https://circleci.com/docs/2.0/orb-intro/
+orbs:
+  aws-ecr: circleci/aws-ecr@7.3.0
+  aws-ecs: circleci/aws-ecs@2.2.1
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - aws-ecr/build-and-push-image:
+          context:
+            - EnvVariables
+          repo: "battlebot-backend"
+          remote-docker-layer-caching: true
+          tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
+      - aws-ecs/deploy-service-update:
+          context:
+            - EnvVariables
+          requires:
+            - aws-ecr/build-and-push-image
+          family: "backend"
+          cluster-name: "bot-cluster"
+          service-name: "backend-fargate-spot"
+          container-image-name-updates: "container=bot-backend,tag=${CIRCLE_BRANCH}_${CIRCLE_SHA1}"
+

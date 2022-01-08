@@ -1,0 +1,33 @@
+{
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "bot-db-server.cluster-czt8rqiogmyl.us-west-1.rds.amazonaws.co",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "botdb",
+            "database": "botdb",
+            "username": "admin",
+            "password": "botpassword"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "localhost",
+            "database": "botdb",
+            "username": "root",
+            "password": "Buster"
+        }
+    ]
+}
