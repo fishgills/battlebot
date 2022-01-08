@@ -3,7 +3,6 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "prepare": "node ./prepare.js",
     "prebuild": "rimraf dist",
     "start:dev": "DEBUG=* ts-node-dev --inspect --respawn src/index.ts",
     "start:prod": "node index.js",
@@ -11,9 +10,5 @@
     "lint": "eslint . --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "codegen": "graphql-codegen --config codegen.yml"
-  },
-  "lint-staged": {
-    "manifest.json": "node src/tools/manifest.mjs",
-    "*.ts": "eslint --cache --fix"
   }
 }

@@ -4,11 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "husky install .config/husky"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fishgills/battlebot.git"
+  },
+  "devDependencies": {
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.7"
+  },
+  "lint-staged": {
+    "manifest.json": "node src/tools/manifest.mjs",
+    "*.ts": "eslint --cache --fix"
   },
   "author": "",
   "license": "ISC",
