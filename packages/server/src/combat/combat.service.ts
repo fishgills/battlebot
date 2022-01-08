@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CharacterModel } from 'src/characters/character.model';
 import { CombatLog } from 'src/gamerules';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import { CharacterModel } from '../characters/character.model';
 import { CombatModel } from './combat.model';
 import { CreateCombatInput } from './dto/create-combat.input';
 
