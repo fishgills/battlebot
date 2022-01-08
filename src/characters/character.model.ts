@@ -60,21 +60,21 @@ export class CharacterModel {
   @Column({
     default: 0,
   })
-  str: number;
+  strength: number;
   @Field({
     nullable: true,
   })
   @Column({
     default: 0,
   })
-  dex: number;
+  defense: number;
   @Field({
     nullable: true,
   })
   @Column({
     default: 0,
   })
-  con: number;
+  vitality: number;
   @Field({
     nullable: true,
   })
@@ -105,15 +105,3 @@ export class CharacterModel {
   })
   rolls: number;
 }
-
-// @Entity('character_combat_link')
-// export class CharacterCombatLink {
-//   @CreateDateColumn()
-//   createdAt: Date;
-
-//   @PrimaryColumn('uuid')
-//   character_id: string;
-
-//   @PrimaryColumn('uuid')
-//   combat_id: string;
-// }

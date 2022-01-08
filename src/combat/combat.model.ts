@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { CombatLog } from 'src/dnd';
+import { CombatLog } from 'src/gamerules';
 import {
   Column,
   CreateDateColumn,

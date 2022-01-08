@@ -1,14 +1,5 @@
 import { Inject } from '@nestjs/common';
-import {
-  Args,
-  Int,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
-import { CombatModel } from 'src/combat/combat.model';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { CharacterModel } from './character.model';
 import { CharacterService } from './character.service';
@@ -61,13 +52,4 @@ export class CharacterResolver {
   createCharacter(@Args('input') input: CreateCharacterInput) {
     return this.charService.create(input);
   }
-
-  // @ResolveField(() => [CombatModel])
-  // async attacking(@Parent() char: CharacterModel) {
-  //   return await char.attacking;
-  // }
-  // @ResolveField(() => [CombatModel])
-  // async combats(@Parent() char: CharacterModel) {
-  //   return await char.combats;
-  // }
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { subMinutes } from 'date-fns';
 import { CombatModel } from 'src/combat/combat.model';
-import { modifier } from 'src/dnd';
+import { modifier } from 'src/gamerules';
 import { FindManyOptions, FindOneOptions, MoreThan, Repository } from 'typeorm';
 import { CharacterModel } from './character.model';
 import { CreateCharacterInput } from './create-character.dto';
@@ -57,10 +57,10 @@ export class CharacterService {
   }
 
   public rollCharacter(char: CharacterModel) {
-    char.str = new DiceRoll('4d6kh3').total;
-    char.dex = new DiceRoll('4d6kh3').total;
-    char.con = new DiceRoll('4d6kh3').total;
+    char.strength = new DiceRoll('4d6kh3').total;
+    char.defense = new DiceRoll('4d6kh3').total;
+    char.vitality = new DiceRoll('4d6kh3').total;
     char.rolls = char.rolls ? ++char.rolls : 1;
-    char.hp = 10 + modifier(char.con);
+    char.hp = 10 + modifier(char.vitality);
   }
 }

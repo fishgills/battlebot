@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CharacterModel } from 'src/characters/character.model';
-import { CombatLog } from 'src/dnd';
+import { CombatLog } from 'src/gamerules';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { CombatModel } from './combat.model';
 import { CreateCombatInput } from './dto/create-combat.input';
@@ -38,5 +38,11 @@ export class CombatService {
       attackerId: input.attackerId,
       defenderId: input.defenderId,
     });
+  }
+
+  getGold(attacker: CharacterModel, defender: CharacterModel) {}
+  getXP(attacker: CharacterModel, defender: CharacterModel) {
+    const base = 10;
+    const diff = attacker.level - defender.level;
   }
 }

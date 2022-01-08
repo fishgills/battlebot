@@ -11,7 +11,7 @@ import {
 import { subMinutes } from 'date-fns';
 import { CharacterModel } from 'src/characters/character.model';
 import { CharacterService } from 'src/characters/character.service';
-import { CombatLog, CombatRound, modifier } from 'src/dnd';
+import { CombatLog, CombatRound, modifier } from 'src/gamerules';
 import { MoreThan } from 'typeorm';
 import { CombatModel } from './combat.model';
 import { CombatService } from './combat.service';
@@ -71,14 +71,14 @@ export class CombatResolver {
     participants.sort((a, b) => {
       const aRoll = new DiceRoll('d20');
       const bRoll = new DiceRoll('d20');
-      const aTotal = aRoll.total + modifier(a.dex);
-      const bTotal = bRoll.total + modifier(b.dex);
+      const aTotal = aRoll.total + modifier(a.defense);
+      const bTotal = bRoll.total + modifier(b.defense);
 
       console.log(
-        `Initiative Rolls: A(${a.name}): ${aRoll.total} + ${modifier(
-          a.dex,
+        `Who's first Rolls: A(${a.name}): ${aRoll.total} + ${modifier(
+          a.defense,
         )} = ${aTotal}. B(${b.name}): ${bRoll.total} + ${modifier(
-          b.dex,
+          b.defense,
         )} = ${bTotal}`,
       );
       return bTotal - aTotal;
@@ -115,20 +115,20 @@ export class CombatResolver {
     log: Partial<CombatLog>,
   ) {
     const attackRoll = new DiceRoll('d20').total;
-    const attackModifier = modifier(attacker.str);
-    const defenderAC = 10 + modifier(defender.dex);
+    const attackModifier = modifier(attacker.strength);
+    const defenderDefense = 10 + modifier(defender.defense);
 
     console.log(
       `${
         attacker.name
       } Rolled ${attackRoll} with modifer of ${attackModifier} is attacking ${
         defender.name
-      } with an AC of ${10 + modifier(defender.dex)}`,
+      } with an AC of ${10 + modifier(defender.defense)}`,
     );
     let roundLog: CombatRound;
 
     if (
-      (attackRoll > 1 && attackRoll + attackModifier > defenderAC) ||
+      (attackRoll > 1 && attackRoll + attackModifier > defenderDefense) ||
       attackRoll === 20
     ) {
       console.log('hit!');
@@ -141,10 +141,10 @@ export class CombatResolver {
       defender.hp = defender.hp - damage;
       roundLog = {
         attackRoll,
-        attackModifier,
+        attackBonus: attackModifier,
         attacker,
         defender,
-        defenderAC,
+        defenderDefense: defenderDefense,
         hit: true,
         defenderHealth: defender.hp,
         damage,
@@ -152,11 +152,11 @@ export class CombatResolver {
     } else {
       console.log('miss');
       roundLog = {
-        attackModifier,
+        attackBonus: attackModifier,
         attackRoll,
         attacker,
         defender,
-        defenderAC,
+        defenderDefense: defenderDefense,
         defenderHealth: defender.hp,
         hit: false,
       };

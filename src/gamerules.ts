@@ -8,11 +8,11 @@ export const modifier = (value: number) => {
 
 export const getHitPoints = (char: CharacterModel) => {
   const roll = new DiceRoll('1d10');
-  return roll.total + modifier(char.con);
+  return roll.total + modifier(char.vitality);
 };
 
 @ObjectType()
-export class InitiativeRoll {
+export class WhoGoesFirst {
   @Field()
   roll: number;
   @Field()
@@ -34,9 +34,9 @@ export class CombatRound {
   @Field()
   attackRoll: number;
   @Field()
-  attackModifier: number;
+  attackBonus: number;
   @Field()
-  defenderAC: number;
+  defenderDefense: number;
   @Field()
   defenderHealth: number;
 }
@@ -44,15 +44,13 @@ export class CombatRound {
 @ObjectType()
 export class CombatLogInitObj {
   @Field()
-  attacker: InitiativeRoll;
+  attacker: WhoGoesFirst;
   @Field()
-  defender: InitiativeRoll;
+  defender: WhoGoesFirst;
 }
 
 @ObjectType()
 export class CombatLog {
-  // @Field(() => CombatLogInitObj)
-  // initiativeRolls: CombatLogInitObj;
   @Field(() => [CombatRound])
   combat: CombatRound[];
 }

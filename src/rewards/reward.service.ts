@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { time } from 'console';
-import { formatISO9075, startOfToday, subHours, subSeconds } from 'date-fns';
-import { isListType } from 'graphql';
+import { startOfToday, subHours } from 'date-fns';
 
-import { Between, LessThan, MoreThan, Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { RewardModel } from './reward.model';
 
 @Injectable()

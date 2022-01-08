@@ -10,9 +10,9 @@ type CharacterModel {
   owner: String!
   attacking: [CombatModel!]
   defending: [CombatModel!]
-  str: Float
-  dex: Float
-  con: Float
+  strength: Float
+  defense: Float
+  vitality: Float
   level: Float
   xp: Float
   hp: Float
@@ -24,7 +24,7 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type InitiativeRoll {
+type WhoGoesFirst {
   roll: Float!
   modifier: Float!
 }
@@ -35,8 +35,8 @@ type CombatRound {
   hit: Boolean!
   damage: Float
   attackRoll: Float!
-  attackModifier: Float!
-  defenderAC: Float!
+  attackBonus: Float!
+  defenderDefense: Float!
   defenderHealth: Float!
 }
 
