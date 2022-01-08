@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CombatModel } from 'src/combat/combat.model';
+import { CombatModel } from '../combat/combat.model';
 import { CharacterModel } from './character.model';
 import { CharacterResolver } from './character.resolver';
 import { CharacterService } from './character.service';

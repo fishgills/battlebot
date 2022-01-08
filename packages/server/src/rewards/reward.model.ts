@@ -1,5 +1,4 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { CharacterModel } from 'src/characters/character.model';
 import {
   Column,
   CreateDateColumn,

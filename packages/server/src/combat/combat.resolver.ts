@@ -9,10 +9,11 @@ import {
   Parent,
 } from '@nestjs/graphql';
 import { subMinutes } from 'date-fns';
-import { CharacterModel } from 'src/characters/character.model';
-import { CharacterService } from 'src/characters/character.service';
-import { CombatLog, CombatRound, modifier } from 'src/gamerules';
+
 import { MoreThan } from 'typeorm';
+import { CharacterModel } from '../characters/character.model';
+import { CharacterService } from '../characters/character.service';
+import { CombatLog, CombatRound, modifier } from '../gamerules';
 import { CombatModel } from './combat.model';
 import { CombatService } from './combat.service';
 import { CreateCombatInput } from './dto/create-combat.input';

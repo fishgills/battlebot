@@ -2,9 +2,9 @@ import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { subMinutes } from 'date-fns';
-import { CombatModel } from 'src/combat/combat.model';
-import { modifier } from 'src/gamerules';
 import { FindManyOptions, FindOneOptions, MoreThan, Repository } from 'typeorm';
+import { CombatModel } from '../combat/combat.model';
+import { modifier } from '../gamerules';
 import { CharacterModel } from './character.model';
 import { CreateCharacterInput } from './create-character.dto';
 @Injectable()

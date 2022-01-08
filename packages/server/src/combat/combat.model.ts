@@ -1,5 +1,4 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { CombatLog } from 'src/gamerules';
 import {
   Column,
   CreateDateColumn,
@@ -13,6 +12,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { CharacterModel } from '../characters/character.model';
+import { CombatLog } from '../gamerules';
 
 @ObjectType()
 @Entity()

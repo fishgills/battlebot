@@ -1,8 +1,8 @@
-import { CharacterModel } from 'src/characters/character.model';
-import { CombatModel } from 'src/combat/combat.model';
-import { RewardModel } from 'src/rewards/reward.model';
-import { SlackInstallModel } from 'src/installs/install.model';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+import { CharacterModel } from '../characters/character.model';
+import { CombatModel } from '../combat/combat.model';
+import { SlackInstallModel } from '../installs/install.model';
+import { RewardModel } from '../rewards/reward.model';
 
 export const database: MysqlConnectionOptions = {
   type: 'mysql',

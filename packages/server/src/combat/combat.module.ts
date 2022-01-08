@@ -1,7 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CharacterModel } from 'src/characters/character.model';
-import { CharacterModule } from 'src/characters/character.module';
+import { CharacterModel } from '../characters/character.model';
+import { CharacterModule } from '../characters/character.module';
 import { CombatModel } from './combat.model';
 import { CombatResolver } from './combat.resolver';
 import { CombatService } from './combat.service';
