@@ -8,7 +8,7 @@ orbs:
   aws-ecs: circleci/aws-ecs@2.2.1
 
 workflows:
-  build-and-deploy:
+  build-and-deploy-bot:
     jobs:
       - aws-ecr/build-and-push-image:
           context:

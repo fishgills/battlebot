@@ -8,21 +8,20 @@ orbs:
   aws-ecs: circleci/aws-ecs@2.2.1
 
 workflows:
-  build-and-deploy:
+  build-and-deploy-server:
     jobs:
       - aws-ecr/build-and-push-image:
           context:
             - EnvVariables
-          repo: "battlebot-backend"
+          repo: 'battlebot-backend'
           remote-docker-layer-caching: true
-          tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
+          tag: '${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest'
       - aws-ecs/deploy-service-update:
           context:
             - EnvVariables
           requires:
             - aws-ecr/build-and-push-image
-          family: "backend"
-          cluster-name: "bot-cluster"
-          service-name: "backend-fargate-spot"
-          container-image-name-updates: "container=bot-backend,tag=${CIRCLE_BRANCH}_${CIRCLE_SHA1}"
-
+          family: 'backend'
+          cluster-name: 'bot-cluster'
+          service-name: 'backend-fargate-spot'
+          container-image-name-updates: 'container=bot-backend,tag=${CIRCLE_BRANCH}_${CIRCLE_SHA1}'
