@@ -1,0 +1,86 @@
+fragment CharacterParts on CharacterModel {
+  defense
+  vitality
+  strength
+  name
+  xp
+  rolls
+  hp
+  level
+  owner
+  id
+  created_at
+  updated_at
+}
+
+fragment SlackInstallParts on SlackInstallModel {
+  id
+  team_id
+  installObj
+}
+
+mutation addCharacter($input: CreateCharacterInput!) {
+  createCharacter(input: $input) {
+    ...CharacterParts
+  }
+}
+
+mutation startCombat($attackerId: String!, $defenderId: String!) {
+  start(input: { attackerId: $attackerId, defenderId: $defenderId }) {
+    combat {
+      attacker {
+        ...CharacterParts
+      }
+      defender {
+        ...CharacterParts
+      }
+      hit
+      damage
+      attackRoll
+      attackBonus
+      defenderDefense
+      defenderHealth
+    }
+  }
+}
+query characterByOwner($owner: String!) {
+  findByOwner(owner: $owner) {
+    ...CharacterParts
+  }
+}
+
+mutation rollCharacter($id: String!) {
+  reroll(id: $id) {
+    ...CharacterParts
+  }
+}
+
+query getInstall($team_id: String!) {
+  install(team_id: $team_id) {
+    ...SlackInstallParts
+  }
+}
+
+mutation updateInstall($input: UpdateSlackInstallInput!) {
+  updateInstall(input: $input) {
+    ...SlackInstallParts
+  }
+}
+
+mutation createInstall($input: CreateSlackInstallInput!) {
+  createInstall(input: $input) {
+    ...SlackInstallParts
+  }
+}
+
+mutation removeInstall($team_id: String!) {
+  removeInstall(team_id: $team_id)
+}
+
+mutation giveReward($from: String!, $to: String!) {
+  giveReward(input: { from: $from, to: $to })
+}
+
+query rewardsGivenToday($user: String!) {
+  rewardsGivenToday(user: $user)
+}

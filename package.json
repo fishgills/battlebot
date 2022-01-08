@@ -1,0 +1,23 @@
+{
+  "name": "battlebot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fishgills/battlebot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fishgills/battlebot/issues"
+  },
+  "homepage": "https://github.com/fishgills/battlebot#readme",
+  "workspaces": [
+    "packages/bot",
+    "packages/server"
+  ]
+}
