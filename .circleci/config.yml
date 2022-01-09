@@ -69,7 +69,7 @@ jobs:
       - aws-ecr/build-and-push-image:
           repo: "battlebot-<< parameters.package_name >>"
           remote-docker-layer-caching: true
-          checkout: true
+          checkout: false
           tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
 
         # - persist_to_workspace:
