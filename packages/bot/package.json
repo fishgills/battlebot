@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "prepare": "node ./prepare.js",
     "prebuild": "rimraf dist",
     "start:dev": "DEBUG=* ts-node-dev --inspect --respawn src/index.ts",
     "start:prod": "node index.js",
