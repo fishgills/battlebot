@@ -51,6 +51,11 @@ jobs:
     working_directory: ~/project/packages/<< parameters.package_name >>
 
     steps:
+      - run:
+          command: ls -al
+      - run:
+          command: pwd
+
       #   - checkout:
       #       path: ~/project
       #   # This step is added only to show that we are in the package directory
