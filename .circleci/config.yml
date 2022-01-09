@@ -51,6 +51,8 @@ jobs:
     working_directory: ~/project/packages/<< parameters.package_name >>
 
     steps:
+      - checkout:
+          path: ~/project
       - run:
           command: ls -al
       - run:
