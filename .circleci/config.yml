@@ -50,14 +50,17 @@ jobs:
     working_directory: ~/project/packages/<< parameters.package_name >>
 
     steps:
-      - checkout:
+      - checkout: 
           path: ~/project
       # This step is added only to show that we are in the package directory
       - run:
           name: Content
           command: |
             cat package.json
-            echo "<< parameters.package_name >> built." > build.txt        
+            echo "<< parameters.package_name >> built." > build.txt
+      - run:
+          name: Test
+          command: ls -al
       - aws-ecr/build-and-push-image:
           repo: "battlebot-<< parameters.package_name >>"
           remote-docker-layer-caching: true
