@@ -45,11 +45,12 @@ jobs:
     parameters:
       package_name:
         type: string
-
+    machine:
+      image: ubuntu-2004:202010-01 # recommended linux image
     # executor: node
     working_directory: ~/project/packages/<< parameters.package_name >>
 
-    # steps:
+    steps:
     #   - checkout:
     #       path: ~/project
     #   # This step is added only to show that we are in the package directory
@@ -58,11 +59,11 @@ jobs:
     #       command: |
     #         cat package.json
     #         echo "<< parameters.package_name >> built." > build.txt
-    - aws-ecr/build-and-push-image:
-        repo: "battlebot-<< parameters.package_name >>"
-        remote-docker-layer-caching: true
-        checkout: false
-        tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
+      - aws-ecr/build-and-push-image:
+          repo: "battlebot-<< parameters.package_name >>"
+          remote-docker-layer-caching: true
+          checkout: false
+          tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
 
       # - persist_to_workspace:
       #     root: ~/project
