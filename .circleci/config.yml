@@ -47,35 +47,36 @@ jobs:
         type: string
     machine:
       image: ubuntu-2004:202010-01 # recommended linux image
-    # executor: node
     working_directory: ~/project/packages/<< parameters.package_name >>
 
     steps:
       - checkout:
           path: ~/project
-      - run:
-          command: ls -al
-      - run:
-          command: pwd
-
-      #   - checkout:
-      #       path: ~/project
-      #   # This step is added only to show that we are in the package directory
-      #   - run:
-      #       name: Content
-      #       command: |
-      #         cat package.json
-      #         echo "<< parameters.package_name >> built." > build.txt
       - aws-ecr/build-and-push-image:
           repo: "battlebot-<< parameters.package_name >>"
           remote-docker-layer-caching: true
           checkout: false
+          create-repo: true
           tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
-
-        # - persist_to_workspace:
-        #     root: ~/project
-        #     paths:
-        #       - packages/<< parameters.package_name >>
+  deploy:
+    parameters:
+      package_name:
+        type: string
+    machine:
+      image: ubuntu-2004:202010-01 # recommended linux image
+    working_directory: ~/project/packages/<< parameters.package_name >>
+    steps:
+      - checkout:
+          path: ~/project
+      - aws-ecs/deploy-service-update:
+          context:
+            - EnvVariables
+          requires:
+            - aws-ecr/build-and-push-image
+          family: "<< parameters.package_name >>"
+          cluster-name: "bot-cluster"
+          service-name: "<< parameters.package_name >>-fargate-spot"
+          container-image-name-updates: "container=<< parameters.package_name >>-container,tag=${CIRCLE_BRANCH}_${CIRCLE_SHA1}"
 
 workflows:
   version: 2
@@ -96,11 +97,11 @@ workflows:
           name: server-build
           package_name: server
           context: EnvVariables
-      # - deploy:
-      #     name: server-deploy
-      #     package_name: server
-      #     requires:
-      #       - server-build
+      - deploy:
+          name: server-deploy
+          package_name: server
+          requires:
+            - server-build
 
   bot:
     when: << pipeline.parameters.bot >>
@@ -109,8 +110,8 @@ workflows:
           name: bot-build
           package_name: bot
           context: EnvVariables
-      # - deploy:
-      #     name: bot-deploy
-      #     package_name: bot
-      #     requires:
-      #       - bot-build
+      - deploy:
+          name: bot-deploy
+          package_name: bot
+          requires:
+            - bot-build
