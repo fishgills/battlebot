@@ -68,14 +68,10 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - aws-ecs/deploy-service-update:
-          context:
-            - EnvVariables
-          requires:
-            - aws-ecr/build-and-push-image
-          family: "<< parameters.package_name >>"
+      - aws-ecs/update-service:
+          family: "<< parameters.package_name >>-task"
           cluster-name: "bot-cluster"
-          service-name: "<< parameters.package_name >>-fargate-spot"
+          service-name: "<< parameters.package_name >>-service-fargate-spot"
           container-image-name-updates: "container=<< parameters.package_name >>-container,tag=${CIRCLE_BRANCH}_${CIRCLE_SHA1}"
 
 workflows:
@@ -99,6 +95,7 @@ workflows:
           context: EnvVariables
       - deploy:
           name: server-deploy
+          context: EnvVariables
           package_name: server
           requires:
             - server-build
@@ -112,6 +109,7 @@ workflows:
           context: EnvVariables
       - deploy:
           name: bot-deploy
+          context: EnvVariables
           package_name: bot
           requires:
             - bot-build
