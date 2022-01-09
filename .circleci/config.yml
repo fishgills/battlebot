@@ -55,7 +55,7 @@ jobs:
       - run:
           name: Content
           command: |
-            cat README.md 
+            cat package.json
             echo "<< parameters.package_name >> built." > build.txt
       - aws-ecr/build-and-push-image:
           repo: "battlebot-<< parameters.package_name >>"
