@@ -12,10 +12,10 @@ parameters:
   # A parameter per package
   server:
     type: boolean
-    default: false
+    default: true
   bot:
     type: boolean
-    default: false
+    default: true
 
 executors:
   node:
