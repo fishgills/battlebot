@@ -1,0 +1,8 @@
+{
+  "root": "packages",
+  "pages": 3,
+  "packages": {
+    "server": ["packages/server/"],
+    "bot": ["packages/bot/"]
+  }
+}

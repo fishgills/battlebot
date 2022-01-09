@@ -1,9 +1,104 @@
 version: 2.1
-setup: true
 orbs:
-  circletron: circletron/circletron@3.0.4
+  aws-ecr: circleci/aws-ecr@7.3.0
+  aws-ecs: circleci/aws-ecs@2.2.1
+
+parameters:
+  # This parameter is used to trigger the main workflow
+  trigger:
+    type: boolean
+    default: true
+
+  # A parameter per package
+  server:
+    type: boolean
+    default: false
+  bot:
+
+  # Custom parameters
+  deploy:
+    type: boolean
+    default: false
+
+executors:
+  node:
+    docker:
+      - image: circleci/node
+
+jobs:
+  trigger-workflows:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          # This step is added to demonstrate the possibility to dynamically set the user token
+          name: Set token
+          command: echo "export CIRCLE_USER_TOKEN=${CIRCLE_TOKEN}" >> $BASH_ENV
+      - run:
+          name: Trigger workflows
+          command: chmod +x .circleci/monorepo.sh && .circleci/monorepo.sh
+          environment:
+            # (optional) print additional debug information
+            MONOREPO_DEBUG: "true"
+            # (optional) additional CI parameters to include in the pipeline (must be a valid JSON)
+            CI_PARAMETERS: '{ "deploy": true }'
+  build:
+    parameters:
+      package_name:
+        type: string
+
+    executor: node
+    working_directory: ~/project/packages/<< parameters.package_name >>
+
+    steps:
+      - checkout:
+          path: ~/project
+      # This step is added only to show that we are in the package directory
+      - run:
+          name: Content
+          command: |
+            cat README.md 
+            echo "<< parameters.package_name >> built." > build.txt
+      - aws-ecr/build-and-push-image:
+          context:
+            - EnvVariables
+          repo: "battlebot-<< parameters.package_name >>"
+          remote-docker-layer-caching: true
+          tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
 
 workflows:
-  trigger-jobs:
+  version: 2
+
+  # The main workflow responsible for triggering all other workflows
+  # in which changes are detected.
+  ci:
+    when: << pipeline.parameters.trigger >>
     jobs:
-      - circletron/trigger-jobs
+      - trigger-workflows
+
+  # Workflows defined for each package.
+
+  server:
+    when: << pipeline.parameters.server >>
+    jobs:
+      - build:
+          name: server-build
+          package_name: server
+      - deploy:
+          name: server-deploy
+          package_name: server
+          requires:
+            - server-build
+
+  bot:
+    when: << pipeline.parameters.bot >>
+    jobs:
+      - build:
+          name: bot-build
+          package_name: bot
+      - deploy:
+          name: bot-deploy
+          package_name: bot
+          requires:
+            - bot-build

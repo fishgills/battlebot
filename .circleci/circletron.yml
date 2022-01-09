@@ -1,2 +1,0 @@
-targetBranches: ^(master$)
-runOnlyChangedOnTargetBranches: true
