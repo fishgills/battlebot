@@ -15,15 +15,13 @@ ARG DB_PASSWORD
 ENV DB_PASSWORD $DB_PASSWORD
 
 COPY . /tmp/
-RUN yarn install --frozen-lockfile
-
-
-RUN yarn build
+RUN npm ci
+RUN npm run build
 
 FROM node:16-alpine as ts-remove
 WORKDIR /tmp
 COPY --from=ts-compiler /tmp/package*.json ./
-RUN yarn install --frozen-lockfile
+RUN npm ci --production
 
 FROM node:16-alpine
 WORKDIR /tmp
