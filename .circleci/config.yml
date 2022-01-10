@@ -16,6 +16,9 @@ parameters:
   bot:
     type: boolean
     default: false
+  www:
+    type: boolean
+    default: false
 
 executors:
   node:
@@ -86,6 +89,20 @@ workflows:
       - trigger-workflows
 
   # Workflows defined for each package.
+
+  www:
+    when: << pipeline.parameters.www >>
+    jobs:
+      - build:
+          name: www-build
+          package_name: www
+          context: EnvVariables
+      - deploy:
+          name: www-deploy
+          context: EnvVariables
+          package_name: www
+          requires:
+            - www-build
 
   server:
     when: << pipeline.parameters.server >>
