@@ -3,11 +3,12 @@
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": false,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "es2017",
-    "sourceMap": true,
-    "outDir": "./dist"
+    "sourceMap": false,
+    "outDir": "./dist",
+    "moduleResolution": "node"
   }
 }

@@ -1,4 +1,4 @@
 #!/bin/sh -eu
 echo "starting entrypoint" >&1
-node /tmp/dist/main
+node /tmp/index.js
 echo "express started" >&1
