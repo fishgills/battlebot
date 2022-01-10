@@ -18,17 +18,18 @@ COPY . /tmp/
 RUN npm ci
 RUN npm run build
 
-# FROM node:16-alpine as ts-remove
-# WORKDIR /tmp
-# COPY --from=ts-compiler /tmp/package*.json ./
-# RUN npm ci --production
+FROM node:16-alpine as ts-remove
+WORKDIR /tmp
+COPY --from=ts-compiler /tmp/package*.json ./
+RUN npm ci --production
 
 FROM node:16-alpine
 WORKDIR /tmp
-COPY --from=ts-compiler /tmp/dist/index.js .
-# COPY --from=ts-compiler /tmp/package.json ./
-# COPY --from=ts-remove /tmp/node_modules ./node_modules
+COPY --from=ts-compiler /tmp/dist/ .
+COPY --from=ts-compiler /tmp/package.json ./
+COPY --from=ts-remove /tmp/node_modules ./node_modules
 COPY --from=ts-compiler /tmp/docker-entrypoint.sh ./
+RUN ls -al
 RUN chmod +rwx /tmp/docker-entrypoint.sh
 
 EXPOSE $PORT

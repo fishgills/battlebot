@@ -26,6 +26,7 @@ executors:
 jobs:
   trigger-workflows:
     docker:
+    resource_class: small
       - image: cimg/base:stable
     steps:
       - checkout

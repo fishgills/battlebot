@@ -6,7 +6,6 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "postbuild": "ncc build dist/main.js",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:dev": "NODE_ENV=development nest start --debug 9230 --watch",
     "start:prod": "node dist/main",
@@ -31,7 +30,6 @@
     "typeorm": "^0.2.41"
   },
   "devDependencies": {
-    "@nestjs/cli": "^8.1.6",
-    "@vercel/ncc": "^0.33.1"
+    "@nestjs/cli": "^8.1.6"
   }
 }
