@@ -33,6 +33,8 @@ jobs:
     working_directory: ~/project/packages/www
     steps:
       - checkout
+      - run:
+          command: ls -al
       - restore_cache:
           key: v1-deps-{{ checksum "package-lock.json" }}
       - run:
