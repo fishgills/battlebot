@@ -30,7 +30,7 @@ jobs:
   ng-build:
     docker:
       - image: cimg/node:lts
-    working_directory: ~/project/packages/www
+    # working_directory: ~/project/packages/www
     steps:
       - checkout
       - run:
