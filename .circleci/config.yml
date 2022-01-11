@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@7.3.0
   aws-ecs: circleci/aws-ecs@2.2.1
-  aws-s3: circleci/aws-s3@3.0.0
+  aws-cli: circleci/aws-cli@2.0.6
 
 parameters:
   # This parameter is used to trigger the main workflow
@@ -55,19 +55,18 @@ jobs:
           paths:
             - "www"
   copy-to-s3:
-    docker:
-      - image: cimg/python:3.6
+    executor: aws-cli/default
     steps:
+      - aws-cli/setup
       - attach_workspace:
           at: .
       - run:
           command: ls -al
       - run:
           command: ls -al www
-      - aws-s3/sync:
-          from: www
-          to: s3://battlebot-www
-
+      - run:
+          command: aws s3 sync www s3://battlebot-www/www
+          
   trigger-workflows:
     docker:
       - image: cimg/base:stable
@@ -136,6 +135,7 @@ workflows:
     jobs:
       - ng-build
       - copy-to-s3:
+          context: EnvVariables
           requires:
             - ng-build
       
