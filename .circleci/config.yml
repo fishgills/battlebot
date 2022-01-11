@@ -18,7 +18,7 @@ parameters:
     default: false
   www:
     type: boolean
-    default: false
+    default: true
 
 executors:
   node:
@@ -27,6 +27,30 @@ executors:
       - image: circleci/node
 
 jobs:
+  ng-build:
+    docker:
+      - image: cimg/node:lts
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-deps-{{ checksum "packages/www/package-lock.json" }}
+      - run:
+          command: npm ci
+          name: install deps
+      - save_cache:
+          paths:
+            - packages/www/node_modules
+          key: v1-deps-{{ checksum "packages/www/package-lock.json"}}
+      - run:
+          command: npm build
+          name: build
+  copy-to-s3:
+    docker:
+      - image: cimg/python:3.6
+    steps:
+      - run:
+          command: ls -al
+
   trigger-workflows:
     docker:
       - image: cimg/base:stable
@@ -93,16 +117,9 @@ workflows:
   www:
     when: << pipeline.parameters.www >>
     jobs:
-      - build:
-          name: www-build
-          package_name: www
-          context: EnvVariables
-      - deploy:
-          name: www-deploy
-          context: EnvVariables
-          package_name: www
-          requires:
-            - www-build
+      - ng-build
+      - copy-to-s3
+      
 
   server:
     when: << pipeline.parameters.server >>
