@@ -30,9 +30,11 @@ jobs:
   ng-build:
     docker:
       - image: cimg/node:lts
-    # working_directory: ~/project/packages/www
+    working_directory: ~/project/packages/www
+
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - run:
           command: ls -al
       - restore_cache:
@@ -121,7 +123,9 @@ workflows:
     when: << pipeline.parameters.www >>
     jobs:
       - ng-build
-      - copy-to-s3
+      - copy-to-s3:
+          requires:
+            - ng-build
       
 
   server:
