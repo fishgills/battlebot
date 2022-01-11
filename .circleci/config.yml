@@ -47,7 +47,7 @@ jobs:
             - node_modules
           key: v1-deps-{{ checksum "package-lock.json"}}
       - run:
-          command: npm build
+          command: npm run build
           name: build
   copy-to-s3:
     docker:
