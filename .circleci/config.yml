@@ -40,7 +40,7 @@ jobs:
       - restore_cache:
           key: v1-deps-{{ checksum "package-lock.json" }}
       - run:
-          command: npm ci
+          command: npm install
           name: install deps
       - save_cache:
           paths:
