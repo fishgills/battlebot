@@ -51,9 +51,9 @@ jobs:
           command: npm run build
           name: build
       - persist_to_workspace:
-          root: ~/project/packages/www
+          root: ~/project/packages/www/dist
           paths:
-            - "dist"
+            - "www"
   copy-to-s3:
     docker:
       - image: cimg/python:3.6
@@ -63,10 +63,10 @@ jobs:
       - run:
           command: ls -al
       - run:
-          command: ls -al dist
+          command: ls -al www
       - aws-s3/sync:
-          from: dist
-          to: battlebot-www
+          from: www
+          to: battlebot-www/site
 
   trigger-workflows:
     docker:
