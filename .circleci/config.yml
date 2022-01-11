@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@7.3.0
   aws-ecs: circleci/aws-ecs@2.2.1
+  aws-s3: circleci/aws-s3@3.0.0
 
 parameters:
   # This parameter is used to trigger the main workflow
@@ -58,11 +59,14 @@ jobs:
       - image: cimg/python:3.6
     steps:
       - attach_workspace:
-          at: dist
+          at: .
       - run:
           command: ls -al
       - run:
           command: ls -al dist
+      - aws-s3/sync:
+          from: dist
+          to: battlebot-www
 
   trigger-workflows:
     docker:
