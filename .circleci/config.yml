@@ -19,7 +19,7 @@ parameters:
     default: false
   www:
     type: boolean
-    default: true
+    default: false
 
 executors:
   node:
@@ -136,7 +136,6 @@ workflows:
           context: EnvVariables
           requires:
             - ng-build
-      
 
   server:
     when: << pipeline.parameters.server >>
