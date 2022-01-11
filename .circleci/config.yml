@@ -50,9 +50,9 @@ jobs:
           command: npm run build
           name: build
       - persist_to_workspace:
-          root: ~/project/
+          root: ~/project/packages/www
           paths:
-            - "packages/www/dist"
+            - "dist"
   copy-to-s3:
     docker:
       - image: cimg/python:3.6
