@@ -49,12 +49,20 @@ jobs:
       - run:
           command: npm run build
           name: build
+      - persist_to_workspace:
+          root: ~/project/
+          paths:
+            - "packages/www/dist"
   copy-to-s3:
     docker:
       - image: cimg/python:3.6
     steps:
+      - attach_workspace:
+          at: dist
       - run:
           command: ls -al
+      - run:
+          command: ls -al dist
 
   trigger-workflows:
     docker:
