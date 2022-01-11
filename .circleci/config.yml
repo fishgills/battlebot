@@ -30,17 +30,18 @@ jobs:
   ng-build:
     docker:
       - image: cimg/node:lts
+    working_directory: ~/project/packages/www
     steps:
       - checkout
       - restore_cache:
-          key: v1-deps-{{ checksum "packages/www/package-lock.json" }}
+          key: v1-deps-{{ checksum "package-lock.json" }}
       - run:
           command: npm ci
           name: install deps
       - save_cache:
           paths:
-            - packages/www/node_modules
-          key: v1-deps-{{ checksum "packages/www/package-lock.json"}}
+            - node_modules
+          key: v1-deps-{{ checksum "package-lock.json"}}
       - run:
           command: npm build
           name: build
