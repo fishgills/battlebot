@@ -12,7 +12,10 @@
     "prettier": "^2.5.1"
   },
   "lint-staged": {
-    "packages/*/src/**/*.ts": "eslint --fix"
+    "packages/*/src/**/*.ts": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "devDependencies": {
     "husky": "^7.0.0",
