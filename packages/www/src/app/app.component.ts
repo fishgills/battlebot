@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { filter } from 'rxjs/operators';
 import { authCodeFlowConfig } from './auth-code-flow.config';
-import { authConfig } from './auth-config';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -11,7 +8,7 @@ import { authConfig } from './auth-config';
 })
 export class AppComponent {
   title = 'www';
-  constructor(private router: Router, private oauth: OAuthService) {
+  constructor(private oauth: OAuthService) {
     // if (sessionStorage.getItem('flow') === 'code') {
     //   this.configureCodeFlow();
     // } else {
@@ -31,14 +28,14 @@ export class AppComponent {
       .then((value) => {
         return this.oauth.tryLogin();
       });
-    this.oauth.events
-      .pipe(filter((e) => e.type === 'token_received'))
-      .subscribe((_) => {
+    this.oauth.events.subscribe((_) => {
+      if (_.type === 'token_received') {
         console.debug('state', this.oauth.state);
         this.oauth.loadUserProfile();
         const scopes = this.oauth.getGrantedScopes();
         console.debug('scopes', scopes);
-      });
+      }
+    });
   }
   // private configureImplicitFlow() {
   //   this.oauth.configure(authConfig);

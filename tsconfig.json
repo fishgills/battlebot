@@ -17,9 +17,9 @@
     "noUnusedLocals": true,
     "resolveJsonModule": true,
     "paths": {
-      "@server/*": ["projects/server/src/**/*"],
-      "@bot/*": ["projects/bot/src/**/*"],
-      "@www/*": ["projects/www/src/**/*"]
+      "@server/*": ["projects/server/src/*"],
+      "@bot/*": ["projects/bot/src/*"],
+      "@www/*": ["projects/www/src/*"]
     }
   },
   "references": [
