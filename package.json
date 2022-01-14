@@ -13,8 +13,7 @@
   },
   "lint-staged": {
     "packages/*/src/**/*.ts": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "devDependencies": {
