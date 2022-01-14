@@ -5,12 +5,14 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach by Process ID",
-      "processId": "${command:PickProcess}",
+      "localRoot": "${workspaceFolder}/packages/server",
+      "name": "Server",
+      "port": 9230,
+      "restart": true,
+      // "remoteRoot": "Absolute path to the remote directory containing the program",
       "request": "attach",
       "skipFiles": ["<node_internals>/**"],
-      "type": "pwa-node",
-      "restart": true
+      "type": "pwa-node"
     }
   ]
 }

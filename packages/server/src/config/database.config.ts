@@ -1,3 +1,4 @@
+import { SessionModel } from 'src/auth/session-model';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { CharacterModel } from '../characters/character.model';
 import { CombatModel } from '../combat/combat.model';
@@ -15,5 +16,11 @@ export const database: MysqlConnectionOptions = {
   synchronize: true,
   logging: true,
   cache: true,
-  entities: [CombatModel, CharacterModel, SlackInstallModel, RewardModel],
+  entities: [
+    CombatModel,
+    CharacterModel,
+    SlackInstallModel,
+    RewardModel,
+    SessionModel,
+  ],
 };

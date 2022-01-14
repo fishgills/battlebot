@@ -6,9 +6,11 @@ import { CombatModule } from './combat/combat.module';
 import { database } from './config/database.config';
 import { RewardModule } from './rewards/reward.module';
 import { SlackInstallModule } from './installs/install.module';
-
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     CharacterModule,
     CombatModule,
     SlackInstallModule,
@@ -17,6 +19,7 @@ import { SlackInstallModule } from './installs/install.module';
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
     }),
+    AuthModule,
   ],
 })
 export class AppModule {}

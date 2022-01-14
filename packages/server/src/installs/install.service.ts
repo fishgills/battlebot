@@ -34,7 +34,7 @@ export class SlackInstallService {
   }
 
   public async deleteInstall(team_id: string) {
-    let found = await this.slackRepo.findOne({
+    const found = await this.slackRepo.findOne({
       where: {
         team_id,
       },
