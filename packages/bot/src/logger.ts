@@ -18,7 +18,7 @@ export class BotLogger implements Logger {
     [LogLevel.ERROR]: 400,
     [LogLevel.WARN]: 300,
     [LogLevel.INFO]: 200,
-    [LogLevel.DEBUG]: 100
+    [LogLevel.DEBUG]: 100,
   };
 
   public constructor() {

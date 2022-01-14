@@ -13,7 +13,7 @@ export class ShieldObserver extends Observer<
       text: content,
       channel: this.event.message.user,
       token: this.event.context.botToken,
-      icon_emoji: ':shield:'
+      icon_emoji: ':shield:',
     });
   }
   msgThread(): Promise<ChatPostMessageResponse> {
@@ -29,7 +29,7 @@ export class ShieldObserver extends Observer<
 
     const givenRewards = (
       await sdk.rewardsGivenToday({
-        user: this.event.message.user
+        user: this.event.message.user,
       })
     ).rewardsGivenToday;
 
@@ -37,7 +37,7 @@ export class ShieldObserver extends Observer<
     if (users) {
       if (users.length > diff) {
         this.msgUser(
-          `You are trying to give away ${users.length} shields, but you only have ${diff} shields left today!`
+          `You are trying to give away ${users.length} shields, but you only have ${diff} shields left today!`,
         );
         return;
       }
@@ -46,7 +46,7 @@ export class ShieldObserver extends Observer<
     for (const user of users) {
       await sdk.giveReward({
         from: this.event.message.user,
-        to: user
+        to: user,
       });
     }
   }
@@ -56,7 +56,7 @@ export class ShieldObserver extends Observer<
     if (!rawUsers) return [];
     const users = rawUsers.map((u) => u.replace('<@', '').replace('>', ''));
     const unique_users: string[] = users.filter(
-      (value, i, arr) => arr.indexOf(value) === i
+      (value, i, arr) => arr.indexOf(value) === i,
     );
     return unique_users.length ? unique_users : [];
   }

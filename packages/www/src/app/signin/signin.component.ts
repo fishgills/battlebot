@@ -7,8 +7,8 @@ const authCodeFlowConfig: AuthConfig = {
   showDebugInformation: true,
   redirectUri: 'https://9d3a-73-70-164-116.ngrok.io/index.html',
   responseType: 'code',
-  scope: "openid",
-  sessionChecksEnabled: true
+  scope: 'openid',
+  sessionChecksEnabled: true,
 };
 
 @Component({
@@ -16,10 +16,8 @@ const authCodeFlowConfig: AuthConfig = {
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css'],
 })
-export class SigninComponent implements OnInit {
+export class SigninComponent {
   constructor(private oauth: OAuthService) {}
-
-  ngOnInit(): void {}
 
   doSlack() {
     console.log('asdf');
@@ -28,7 +26,7 @@ export class SigninComponent implements OnInit {
     this.oauth.initLoginFlow();
   }
 }
-  // href="https://slack.com/openid/connect/authorize?scope=openid&amp;response_type=code&amp;redirect_uri=https%3A%2F%2F9d3a-73-70-164-116.ngrok.io%2Fauth&amp;client_id=1426341815603.2829208342434"
+// href="https://slack.com/openid/connect/authorize?scope=openid&amp;response_type=code&amp;redirect_uri=https%3A%2F%2F9d3a-73-70-164-116.ngrok.io%2Fauth&amp;client_id=1426341815603.2829208342434"
 //   style="align-items:center;color:#000;background-color:#fff;border:1px solid #ddd;border-radius:44px;display:inline-flex;font-family:Lato, sans-serif;font-size:14px;font-weight:600;height:44px;justify-content:center;text-decoration:none;width:224px"
 // >
 //   <svg

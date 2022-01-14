@@ -2,14 +2,14 @@ import {
   Installation,
   InstallationQuery,
   InstallationStore,
-  Logger
+  Logger,
 } from '@slack/bolt';
 import { sdk } from './utils/gql';
 
 export class Store implements InstallationStore {
   storeInstallation<AuthVersion extends 'v1' | 'v2'>(
     installation: Installation<AuthVersion, boolean>,
-    logger?: Logger
+    logger?: Logger,
   ): Promise<void> {
     if (
       installation.isEnterpriseInstall &&
@@ -18,8 +18,8 @@ export class Store implements InstallationStore {
       sdk.createInstall({
         input: {
           team_id: installation.enterprise.id,
-          installObj: installation
-        }
+          installObj: installation,
+        },
       });
       return;
     }
@@ -27,8 +27,8 @@ export class Store implements InstallationStore {
       sdk.createInstall({
         input: {
           team_id: installation.team.id,
-          installObj: installation
-        }
+          installObj: installation,
+        },
       });
       return;
     }
@@ -36,13 +36,13 @@ export class Store implements InstallationStore {
   }
   async fetchInstallation(
     query: InstallationQuery<boolean>,
-    logger?: Logger
+    logger?: Logger,
   ): Promise<Installation<'v1' | 'v2', boolean>> {
     if (query.isEnterpriseInstall && query.enterpriseId !== undefined) {
       try {
         const install = (
           await sdk.getInstall({
-            team_id: query.enterpriseId
+            team_id: query.enterpriseId,
           })
         ).install.installObj;
         return install;
@@ -54,7 +54,7 @@ export class Store implements InstallationStore {
       try {
         const install = (
           await sdk.getInstall({
-            team_id: query.teamId
+            team_id: query.teamId,
           })
         ).install.installObj;
         return install;
@@ -65,12 +65,12 @@ export class Store implements InstallationStore {
   }
   deleteInstallation(
     query: InstallationQuery<boolean>,
-    logger?: Logger
+    logger?: Logger,
   ): Promise<void> {
     if (query.isEnterpriseInstall && query.enterpriseId !== undefined) {
       sdk
         .removeInstall({
-          team_id: query.enterpriseId
+          team_id: query.enterpriseId,
         })
         .then();
       return;
@@ -78,7 +78,7 @@ export class Store implements InstallationStore {
     if (query.teamId !== undefined) {
       sdk
         .removeInstall({
-          team_id: query.teamId
+          team_id: query.teamId,
         })
         .then();
       return;

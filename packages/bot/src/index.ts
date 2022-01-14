@@ -23,8 +23,8 @@ const app = new App({
       method: 'GET',
       handler: (req, res) => {
         res.writeHead(200), res.end('UP');
-      }
-    }
+      },
+    },
   ],
   developerMode: process.env.NODE_ENV !== 'production',
   logger: Logger,
@@ -40,15 +40,15 @@ const app = new App({
     'chat:write',
     'channels:manage',
     'channels:read',
-    'channels:join'
+    'channels:join',
   ],
-  installationStore: new Store()
+  installationStore: new Store(),
 });
 
 (async () => {
   const port = Number(process.env.PORT);
   await app.start({
-    port
+    port,
   });
   Logger.info('Starting bolt');
 })();
@@ -71,7 +71,7 @@ app.event('member_joined_channel', async (args) => {
     text:
       'Welcome <@' +
       args.payload.user +
-      '>! Mention me with one of the following commands: `create <character_name`, `fight @<userToFight>`, `sheet`. For example `@DM fight @bubba` to start a fight.'
+      '>! Mention me with one of the following commands: `create <character_name`, `fight @<userToFight>`, `sheet`. For example `@DM fight @bubba` to start a fight.',
   });
 });
 
@@ -79,7 +79,7 @@ app.event('team_join', async (args) => {
   await args.client.chat.postMessage({
     channel: args.payload.user.id,
     token: args.context.botToken,
-    text: 'Welcome. Join #adventureland to start'
+    text: 'Welcome. Join #adventureland to start',
   });
 });
 app.event('app_home_opened', async (args) => {
@@ -96,18 +96,18 @@ app.event('app_home_opened', async (args) => {
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: '*Welcome home, <@' + args.event.user + '> :house:*'
-            }
+              text: '*Welcome home, <@' + args.event.user + '> :house:*',
+            },
           },
           {
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: 'Learn how home tabs can be more useful and interactive <https://api.slack.com/surfaces/tabs/using|*in the documentation*>.'
-            }
-          }
-        ]
-      }
+              text: 'Learn how home tabs can be more useful and interactive <https://api.slack.com/surfaces/tabs/using|*in the documentation*>.',
+            },
+          },
+        ],
+      },
     });
   } catch (error) {
     debug(error);
@@ -121,13 +121,13 @@ app.action<BlockAction>('reroll', async (args) => {
     args.ack();
     char = (
       await sdk.rollCharacter({
-        id: char.id
+        id: char.id,
       })
     ).reroll;
     await args.client.chat.postMessage({
       channel: args.body.user.id,
       token: args.context.botToken,
-      blocks: editCharacterModal(char)
+      blocks: editCharacterModal(char),
     });
   } catch (e) {
     args.say(`You do not have a character!`);

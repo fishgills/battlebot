@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "moduleResolution": "Node",
+    "module": "CommonJS",
+    "target": "ES2018",
+    "sourceMap": true,
+    "lib": ["esnext"],
+    "esModuleInterop": true,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@server/*": ["projects/server/src/**/*"],
+      "@bot/*": ["projects/bot/src/**/*"],
+      "@www/*": ["projects/www/src/**/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "projects/www"
+    },
+    {
+      "path": "projects/server"
+    },
+    {
+      "path": "projects/bot"
+    }
+  ],
+  "exclude": ["node_modules", "dist", "*.d.ts"]
+}

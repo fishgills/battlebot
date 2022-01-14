@@ -8,13 +8,13 @@ export abstract class MentionObserver extends Observer<MentionSlackEvent> {
     return event.payload.text.split(' ')[1];
   }
   async msgUser(
-    content: string | SlackBlockDto[]
+    content: string | SlackBlockDto[],
   ): Promise<ChatPostMessageResponse> {
     return await this.event.client.chat.postMessage({
       channel: this.event.payload.user,
       token: this.event.context.botToken,
       ...(Array.isArray(content) && { blocks: content }),
-      ...(!Array.isArray(content) && { text: content })
+      ...(!Array.isArray(content) && { text: content }),
     });
   }
 
@@ -23,7 +23,7 @@ export abstract class MentionObserver extends Observer<MentionSlackEvent> {
       thread_ts: this.event.event.thread_ts,
       channel: this.event.event.channel,
       ...(Array.isArray(content) && { blocks: content }),
-      ...(!Array.isArray(content) && { text: content })
+      ...(!Array.isArray(content) && { text: content }),
     });
   }
 }

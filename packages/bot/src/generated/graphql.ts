@@ -521,153 +521,153 @@ export const RewardsGivenTodayDocument = gql`
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
-  operationName: string
+  operationName: string,
 ) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 
 export function getSdk(
   client: GraphQLClient,
-  withWrapper: SdkFunctionWrapper = defaultWrapper
+  withWrapper: SdkFunctionWrapper = defaultWrapper,
 ) {
   return {
     addCharacter(
       variables: AddCharacterMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<AddCharacterMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<AddCharacterMutation>(
             AddCharacterDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
+            { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'addCharacter'
+        'addCharacter',
       );
     },
     startCombat(
       variables: StartCombatMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<StartCombatMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<StartCombatMutation>(StartCombatDocument, variables, {
             ...requestHeaders,
-            ...wrappedRequestHeaders
+            ...wrappedRequestHeaders,
           }),
-        'startCombat'
+        'startCombat',
       );
     },
     characterByOwner(
       variables: CharacterByOwnerQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<CharacterByOwnerQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<CharacterByOwnerQuery>(
             CharacterByOwnerDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
+            { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'characterByOwner'
+        'characterByOwner',
       );
     },
     rollCharacter(
       variables: RollCharacterMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<RollCharacterMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<RollCharacterMutation>(
             RollCharacterDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
+            { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'rollCharacter'
+        'rollCharacter',
       );
     },
     getInstall(
       variables: GetInstallQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<GetInstallQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<GetInstallQuery>(GetInstallDocument, variables, {
             ...requestHeaders,
-            ...wrappedRequestHeaders
+            ...wrappedRequestHeaders,
           }),
-        'getInstall'
+        'getInstall',
       );
     },
     updateInstall(
       variables: UpdateInstallMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<UpdateInstallMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<UpdateInstallMutation>(
             UpdateInstallDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
+            { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'updateInstall'
+        'updateInstall',
       );
     },
     createInstall(
       variables: CreateInstallMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<CreateInstallMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<CreateInstallMutation>(
             CreateInstallDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
+            { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'createInstall'
+        'createInstall',
       );
     },
     removeInstall(
       variables: RemoveInstallMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<RemoveInstallMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<RemoveInstallMutation>(
             RemoveInstallDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
+            { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'removeInstall'
+        'removeInstall',
       );
     },
     giveReward(
       variables: GiveRewardMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<GiveRewardMutation> {
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<GiveRewardMutation>(GiveRewardDocument, variables, {
             ...requestHeaders,
-            ...wrappedRequestHeaders
+            ...wrappedRequestHeaders,
           }),
-        'giveReward'
+        'giveReward',
       );
     },
     rewardsGivenToday(
       variables: RewardsGivenTodayQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: Dom.RequestInit['headers'],
     ): Promise<RewardsGivenTodayQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
           client.request<RewardsGivenTodayQuery>(
             RewardsGivenTodayDocument,
             variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
+            { ...requestHeaders, ...wrappedRequestHeaders },
           ),
-        'rewardsGivenToday'
+        'rewardsGivenToday',
       );
-    }
+    },
   };
 }
 export type Sdk = ReturnType<typeof getSdk>;

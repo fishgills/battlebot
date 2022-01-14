@@ -7,14 +7,14 @@ import { authConfig } from '../auth-config';
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
-  loginFailed: boolean = false;
+  loginFailed = false;
   userProfile: object | undefined;
   usePopup: boolean | undefined;
   login: false | undefined;
 
   constructor(
     private route: ActivatedRoute,
-    private oauthService: OAuthService
+    private oauthService: OAuthService,
   ) {}
 
   get hasValidAccessToken() {
@@ -102,13 +102,13 @@ export class HomeComponent implements OnInit {
   }
 
   get givenName() {
-    var claims: any = this.oauthService.getIdentityClaims();
+    const claims: any = this.oauthService.getIdentityClaims();
     if (!claims) return null;
     return claims['given_name'];
   }
 
   get familyName() {
-    var claims: any = this.oauthService.getIdentityClaims();
+    const claims: any = this.oauthService.getIdentityClaims();
     if (!claims) return null;
     return claims['family_name'];
   }

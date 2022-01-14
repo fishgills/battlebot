@@ -2,14 +2,14 @@ import {
   GenericMessageEvent,
   MessageEvent,
   ReactionAddedEvent,
-  ReactionMessageItem
+  ReactionMessageItem,
 } from '@slack/bolt';
 
 import { Logger } from '../logger';
 import { sdk } from './gql';
 
 export const isGenericMessageEvent = (
-  msg: MessageEvent
+  msg: MessageEvent,
 ): msg is GenericMessageEvent => {
   const test = (msg as GenericMessageEvent).subtype === undefined;
   if (!test) Logger.error(`Got a non-generic message`);
@@ -17,7 +17,7 @@ export const isGenericMessageEvent = (
 };
 
 export const isMessageItem = (
-  item: ReactionAddedEvent['item']
+  item: ReactionAddedEvent['item'],
 ): item is ReactionMessageItem => {
   return (item as ReactionMessageItem).type === 'message';
 };
@@ -27,18 +27,18 @@ export const titleCase = (str: string): string => {
 };
 
 export const getTeamInfo = async (
-  team_id: string
+  team_id: string,
 ): Promise<{ token: string }> => {
   const teamInstall = (
     await sdk.getInstall({
-      team_id
+      team_id,
     })
   ).install;
 
   const token = teamInstall.installObj.bot.token;
 
   return {
-    token
+    token,
   };
 };
 
@@ -67,7 +67,7 @@ export const numToEmoji = (str: number) => {
  */
 export function to<T, U = Error>(
   promise: Promise<T>,
-  errorExt?: Record<string, unknown>
+  errorExt?: Record<string, unknown>,
 ): Promise<[U, undefined] | [null, T]> {
   return promise
     .then<[null, T]>((data: T) => [null, data])

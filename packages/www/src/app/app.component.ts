@@ -26,7 +26,7 @@ export class AppComponent {
         currentUrl.protocol +
           '//' +
           currentUrl.hostname +
-          '/assets/open-id-config.json'
+          '/assets/open-id-config.json',
       )
       .then((value) => {
         return this.oauth.tryLogin();

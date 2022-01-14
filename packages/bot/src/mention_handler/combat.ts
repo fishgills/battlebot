@@ -10,7 +10,7 @@ export class CombatObserver extends MentionObserver {
 
     const char = (
       await sdk.characterByOwner({
-        owner: this.event.payload.user
+        owner: this.event.payload.user,
       })
     ).findByOwner;
 
@@ -29,7 +29,7 @@ export class CombatObserver extends MentionObserver {
     } catch (e) {
       this.log('target has no character');
       this.msgUser(
-        `<@${targetUser}> does not have a character yet. Tell them to make one!`
+        `<@${targetUser}> does not have a character yet. Tell them to make one!`,
       );
     }
 
@@ -40,8 +40,8 @@ export class CombatObserver extends MentionObserver {
     const [err, combatLog] = await to(
       sdk.startCombat({
         attackerId: char.id,
-        defenderId: target.findByOwner.id
-      })
+        defenderId: target.findByOwner.id,
+      }),
     );
     if (err) {
       if (err.message.indexOf('Combat started too fast') > -1) {
@@ -56,7 +56,7 @@ export class CombatObserver extends MentionObserver {
     const notification = await this.event.client.chat.postMessage({
       channel: this.event.payload.channel,
       token: info.token,
-      text: `<@${this.event.payload.user}> has started fighting <@${targetUser}>`
+      text: `<@${this.event.payload.user}> has started fighting <@${targetUser}>`,
     });
 
     await this.event.client.chat.postMessage({
@@ -65,10 +65,10 @@ export class CombatObserver extends MentionObserver {
         defender: target.findByOwner,
         log: combatLog.start,
         ts: notification.ts,
-        channel: this.event.payload.channel
+        channel: this.event.payload.channel,
       }),
       text: `${char.name} is attacking ${target.findByOwner.name}. They may have won... I dunno yet.`,
-      token: this.event.context.botToken
+      token: this.event.context.botToken,
     });
   }
   action?(): Promise<void> {

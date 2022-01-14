@@ -17,7 +17,7 @@ export class CharacterCreateObserver extends MentionObserver {
       ).findByOwner;
       if (char.id) {
         this.msgUser(
-          `You already have a character. Use \`/@${this.event.context.botUserId} sheet\` to review it.`
+          `You already have a character. Use \`/@${this.event.context.botUserId} sheet\` to review it.`,
         );
         return;
       }
@@ -25,11 +25,11 @@ export class CharacterCreateObserver extends MentionObserver {
       await sdk.addCharacter({
         input: {
           owner: this.event.payload.user,
-          name: this.event.payload.text.trim().split(' ')[2]
-        }
+          name: this.event.payload.text.trim().split(' ')[2],
+        },
       });
       this.msgUser(
-        `Character created! \`@${this.event.context.botUserId} sheet\` to review your character.`
+        `Character created! \`@${this.event.context.botUserId} sheet\` to review your character.`,
       );
     }
   }

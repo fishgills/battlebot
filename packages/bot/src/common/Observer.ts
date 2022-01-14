@@ -17,11 +17,11 @@ export abstract class Observer<T> {
   }
 
   abstract msgUser(
-    content: SlackBlockDto[] | string
+    content: SlackBlockDto[] | string,
   ): Promise<ChatPostMessageResponse>;
 
   abstract msgThread(
-    content: SlackBlockDto[] | string
+    content: SlackBlockDto[] | string,
   ): Promise<ChatPostMessageResponse>;
 
   abstract update(): Promise<void>;

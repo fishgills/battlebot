@@ -40,7 +40,6 @@ export class CombatService {
     });
   }
 
-  getGold(attacker: CharacterModel, defender: CharacterModel) {}
   getXP(attacker: CharacterModel, defender: CharacterModel) {
     const base = 10;
     const diff = attacker.level - defender.level;

@@ -8,14 +8,14 @@ export class SheetObserver extends MentionObserver {
     try {
       const char = (
         await sdk.characterByOwner({
-          owner: this.event.payload.user
+          owner: this.event.payload.user,
         })
       ).findByOwner;
       await this.msgUser(editCharacterModal(char));
     } catch (e) {
       this.log(`character not found`);
       await this.msgThread(
-        `<@${this.event.payload.user}>, You have no character. \`create <name>\` to make one.`
+        `<@${this.event.payload.user}>, You have no character. \`create <name>\` to make one.`,
       );
     }
   }

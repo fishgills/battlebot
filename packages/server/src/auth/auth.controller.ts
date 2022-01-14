@@ -9,7 +9,9 @@ import { Issuer } from 'openid-client';
 export class AuthController {
   @UseGuards(LoginGuard)
   @Get('/login')
-  login() {}
+  login() {
+    console.log('slack login');
+  }
 
   @Get('/user')
   user(@Request() req, @Res() res: Response) {
