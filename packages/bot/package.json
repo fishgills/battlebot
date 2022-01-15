@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "prebuild": "rimraf dist",
-    "start:dev": "DEBUG=* ts-node-dev --inspect --respawn src/index.ts",
+    "start": "DEBUG=* ts-node-dev --inspect --respawn src/index.ts",
     "start:prod": "node index.js",
     "build": "ncc build src/index.ts -m -o dist",
     "lint": "eslint . --ext .ts",
@@ -14,6 +14,7 @@
   "devDependencies": {
     "@vercel/ncc": "^0.33.1",
     "rimraf": "^3.0.2",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.4"
   },
   "dependencies": {

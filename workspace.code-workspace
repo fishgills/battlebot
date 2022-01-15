@@ -1,0 +1,25 @@
+{
+  "folders": [
+    {
+      "name": "www",
+      "path": "packages/www"
+    },
+    {
+      "name": "server",
+      "path": "packages/server"
+    },
+    {
+      "name": "bot",
+      "path": "packages/bot"
+    },
+    {
+      "path": ".",
+      "name": "root"
+    }
+  ],
+  "settings": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
+  }
+}

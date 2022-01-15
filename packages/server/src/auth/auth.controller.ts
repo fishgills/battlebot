@@ -25,7 +25,7 @@ export class AuthController {
   @UseGuards(LoginGuard)
   @Get('/callback')
   loginCallback(@Request() req, @Res() res: Response) {
-    res.send(req.user);
+    res.redirect(`https://www.${process.env.DOMAIN}/home`);
   }
 
   @Get('/logout')

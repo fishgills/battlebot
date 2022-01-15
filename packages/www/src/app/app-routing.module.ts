@@ -16,14 +16,14 @@ const routes: Routes = [
       import('./tavern/tavern.module').then((m) => m.TavernModule),
   },
   {
-    path: 'signin',
-    loadChildren: () =>
-      import('./signin/signin.module').then((m) => m.SigninModule),
-  },
-  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full',
+  },
+  {
+    path: 'login',
+    loadChildren: () =>
+      import('./login/login.module').then((m) => m.LoginModule),
   },
   {
     path: '**',

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --allowed-hosts 0.0.0.0 --public-host https://0c5b-73-70-164-116.ngrok.io",
+    "start": "ng serve  --disable-host-check",
     "build": "ng build",
     "build:prod": "ng build --deploy-url=https://cdn.slackbattlebot.com",
     "watch": "ng build --watch --configuration development",
@@ -21,7 +21,6 @@
     "@angular/platform-browser": "~12.2.0",
     "@angular/platform-browser-dynamic": "~12.2.0",
     "@angular/router": "~12.2.0",
-    "angular-oauth2-oidc": "^12.0.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

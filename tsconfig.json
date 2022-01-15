@@ -22,16 +22,16 @@
       "@www/*": ["projects/www/src/*"]
     }
   },
-  "references": [
-    {
-      "path": "projects/www"
-    },
-    {
-      "path": "projects/server"
-    },
-    {
-      "path": "projects/bot"
-    }
-  ],
+  // "references": [
+  //   {
+  //     "path": "projects/www"
+  //   },
+  //   {
+  //     "path": "projects/server"
+  //   },
+  //   {
+  //     "path": "projects/bot"
+  //   }
+  // ],
   "exclude": ["node_modules", "dist", "*.d.ts"]
 }

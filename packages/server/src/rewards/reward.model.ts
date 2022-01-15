@@ -29,11 +29,11 @@ export class RewardModel {
   value: number;
 
   @Field()
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   @CreateDateColumn()
   created_at: Date;
   @Field()
-  @Column({ type: 'timestamptz' })
+  @Column({ type: 'timestamp' })
   @UpdateDateColumn()
   updated_at: Date;
 }

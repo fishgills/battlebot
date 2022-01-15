@@ -2,6 +2,7 @@ import { LessThan, Repository } from 'typeorm';
 import { Store } from 'express-session';
 import { SessionModel } from './session-model';
 import { Logger } from '@nestjs/common';
+import { addSeconds } from 'date-fns';
 
 export interface Options {
   repository: Repository<SessionModel>;
@@ -142,7 +143,7 @@ export class DBStore extends Store {
     }
 
     const ttl = this.getTTL(session);
-    const expiresAt = Math.floor(new Date().getTime() / 1000) + ttl;
+    const expiresAt = addSeconds(new Date(), ttl);
 
     this.repository
       .save({ id, data, expiresAt })
@@ -160,7 +161,7 @@ export class DBStore extends Store {
     this.logger.log(`Touch`);
 
     const ttl = this.getTTL(session);
-    const expiresAt = Math.floor(new Date().getTime() / 1000) + ttl;
+    const expiresAt = addSeconds(new Date(), ttl);
 
     this.repository
       .update(id, { expiresAt })
@@ -175,7 +176,7 @@ export class DBStore extends Store {
   private clearExpiredSessions = (callback?: (error: any) => void) => {
     this.logger.log(`ClearExpired`);
 
-    const timestamp = Math.round(new Date().getTime() / 1000);
+    const timestamp = new Date();
 
     this.repository
       .delete({ expiresAt: LessThan(timestamp) })

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
-import { authCodeFlowConfig } from './auth-code-flow.config';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,34 +7,12 @@ import { authCodeFlowConfig } from './auth-code-flow.config';
 })
 export class AppComponent {
   title = 'www';
-  constructor(private oauth: OAuthService) {
+  constructor() {
     // if (sessionStorage.getItem('flow') === 'code') {
     //   this.configureCodeFlow();
     // } else {
     //   this.configureImplicitFlow();
     // }
-
-    this.oauth.initCodeFlow();
-    this.oauth.configure(authCodeFlowConfig);
-    const currentUrl = new URL(window.location.href);
-    this.oauth
-      .loadDiscoveryDocument(
-        currentUrl.protocol +
-          '//' +
-          currentUrl.hostname +
-          '/assets/open-id-config.json',
-      )
-      .then((value) => {
-        return this.oauth.tryLogin();
-      });
-    this.oauth.events.subscribe((_) => {
-      if (_.type === 'token_received') {
-        console.debug('state', this.oauth.state);
-        this.oauth.loadUserProfile();
-        const scopes = this.oauth.getGrantedScopes();
-        console.debug('scopes', scopes);
-      }
-    });
   }
   // private configureImplicitFlow() {
   //   this.oauth.configure(authConfig);
