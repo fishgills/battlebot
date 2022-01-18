@@ -12,5 +12,4 @@ node_modules
 !.yarn/sdks
 !.yarn/versions
 *.tsbuildinfo
-
 .angular/cache
