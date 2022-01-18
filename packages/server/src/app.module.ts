@@ -8,7 +8,7 @@ import { RewardModule } from './rewards/reward.module';
 import { SlackInstallModule } from './installs/install.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { ConnectproxyController } from './connectproxy/connectproxy.controller';
+import { HttpModule } from '@nestjs/axios';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -16,12 +16,13 @@ import { ConnectproxyController } from './connectproxy/connectproxy.controller';
     CombatModule,
     SlackInstallModule,
     RewardModule,
+    HttpModule,
     TypeOrmModule.forRoot(database),
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
     }),
     AuthModule,
   ],
-  controllers: [ConnectproxyController],
+  controllers: [],
 })
 export class AppModule {}

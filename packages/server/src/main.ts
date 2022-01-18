@@ -1,6 +1,7 @@
 // import './tracer';
 import * as dotenv from 'dotenv';
 dotenv.config();
+import 'axios-debug-log';
 import passport from 'passport';
 import session from 'express-session';
 import { NestFactory } from '@nestjs/core';
@@ -9,7 +10,6 @@ import { DBStore } from './auth/session-store';
 import { getConnection } from 'typeorm';
 import { SessionModel } from './auth/session-model';
 import { Logger } from '@nestjs/common';
-
 const whitelist = ['battlebot.ngrok.io', 'slackbattlebot.com'];
 
 async function bootstrap() {

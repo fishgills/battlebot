@@ -1,30 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
-  loginFailed = false;
-  userProfile: object | undefined;
-  usePopup: boolean | undefined;
-  login: false | undefined;
+  isAuthenticated = false;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(public authService: AuthService) {}
 
   ngOnInit() {
-    this.route.params.subscribe((p) => {
-      this.login = p['login'];
+    this.authService.isAuthenticated$.subscribe((value) => {
+      console.log(value);
     });
-
-    // This would directly (w/o user interaction) redirect the user to the
-    // login page if they are not already logged in.
-    /*
-        this.oauthService.loadDiscoveryDocumentAndTryLogin().then(_ => {
-            if (!this.oauthService.hasValidIdToken() || !this.oauthService.hasValidAccessToken()) {
-              this.oauthService.initImplicitFlow('some-state');
-            }
-        });
-    */
   }
 }

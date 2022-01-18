@@ -8,7 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { AuthConfigModule } from './auth/auth-config.module';
 
 @NgModule({
   declarations: [AppComponent, NavbarComponent],
@@ -19,7 +18,6 @@ import { AuthConfigModule } from './auth/auth-config.module';
     BrowserAnimationsModule,
     MatButtonModule,
     MatToolbarModule,
-    AuthConfigModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

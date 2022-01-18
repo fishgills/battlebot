@@ -20,6 +20,11 @@
   "settings": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
-    "editor.formatOnPaste": true
+    "editor.formatOnPaste": true,
+    "search.exclude": {
+      "**/dist": true,
+      "package-lock.json": true,
+      "yarn.lock": true
+    }
   }
 }
