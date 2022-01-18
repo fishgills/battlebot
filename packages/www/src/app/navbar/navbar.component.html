@@ -1,5 +1,10 @@
 <mat-toolbar>
   <button mat-flat-button routerLink="/home">Home</button>
   <button mat-flat-button routerLink="/how">How</button>
-  <button mat-flat-button routerLink="/tavern">Tavern</button>
+  <button *ngIf="isAuthenticated" mat-flat-button routerLink="/tavern">
+    Tavern
+  </button>
+  <button *ngIf="!isAuthenticated" mat-flat-button (click)="login()">
+    Login
+  </button>
 </mat-toolbar>

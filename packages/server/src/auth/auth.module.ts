@@ -4,7 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { buildOpenIdClient, OidcStrategy } from './oidc.strategy';
-import { SessionSerializer } from './session..serializer';
+import { SessionSerializer } from './session.serializer';
 
 const OidcStrategyFactory = {
   provide: 'OidcStrategy',

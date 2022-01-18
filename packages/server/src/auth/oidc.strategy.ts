@@ -17,6 +17,7 @@ export const buildOpenIdClient = async () => {
   const client = new TrustIssuer.Client({
     client_id: process.env.SLACK_CLIENT_ID,
     client_secret: process.env.SLACK_CLIENT_SECRET,
+    response_types: ['code'],
   });
   return client;
 };

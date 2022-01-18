@@ -8,6 +8,7 @@ import { RewardModule } from './rewards/reward.module';
 import { SlackInstallModule } from './installs/install.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { ConnectproxyController } from './connectproxy/connectproxy.controller';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -21,5 +22,6 @@ import { ConfigModule } from '@nestjs/config';
     }),
     AuthModule,
   ],
+  controllers: [ConnectproxyController],
 })
 export class AppModule {}

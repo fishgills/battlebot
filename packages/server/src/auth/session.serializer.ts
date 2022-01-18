@@ -1,4 +1,3 @@
-// src/auth/session.serializer.ts
 import { PassportSerializer } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 @Injectable()
