@@ -16,14 +16,15 @@ export class AuthController {
 
   @Get('/user')
   user(@Request() req, @Res() res: Response) {
-    return req.user;
+    if (req.user) res.send(req.user);
+    else res.sendStatus(403);
   }
 
   @UseGuards(LoginGuard)
   @Get('/callback')
   loginCallback(@Request() req, @Res() res: Response) {
-    // res.redirect(`https://www.${process.env.DOMAIN}/tavern`);
-    res.send(req.user);
+    res.redirect(`https://www.${process.env.DOMAIN}/done`);
+    // res.send(req.user);
   }
 
   @Get('/logout')
