@@ -11,6 +11,9 @@ import { getConnection } from 'typeorm';
 import { SessionModel } from './auth/session-model';
 import { Logger } from '@nestjs/common';
 const whitelist = ['battlebot.ngrok.io', 'slackbattlebot.com'];
+const sessionLengthInMinutes = 10;
+const sessionLengthInSeconds = sessionLengthInMinutes * 60;
+const sessionLengthInMs = sessionLengthInSeconds * 1000;
 
 async function bootstrap() {
   const ssl = process.env.SSL ? true : false;
@@ -36,12 +39,12 @@ async function bootstrap() {
         repository: repo,
         logger: new Logger('session-store'),
         clearExpired: true,
-        expirationInterval: 30,
-        ttl: 10,
+        expirationInterval: sessionLengthInMs,
+        ttl: sessionLengthInMinutes,
       }),
       rolling: true,
       cookie: {
-        maxAge: 10 * 1000,
+        maxAge: sessionLengthInMs,
         httpOnly: true,
         // secure: process.env.NODE_ENV === 'production',
         domain: process.env.DOMAIN,

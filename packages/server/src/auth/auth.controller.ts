@@ -16,14 +16,14 @@ export class AuthController {
 
   @Get('/user')
   user(@Request() req, @Res() res: Response) {
-    if (req.user) res.send(req.user);
+    if (req.user) res.send(req.user.userinfo);
     else res.sendStatus(403);
   }
 
   @UseGuards(LoginGuard)
   @Get('/callback')
   loginCallback(@Request() req, @Res() res: Response) {
-    res.redirect(`https://www.${process.env.DOMAIN}/done`);
+    res.redirect(`https://www.${process.env.DOMAIN}/home`);
     // res.send(req.user);
   }
 
@@ -31,7 +31,7 @@ export class AuthController {
   async logout(@Request() req, @Res() res: Response) {
     const id_token = req.user ? req.user.id_token : undefined;
     req.logout();
-    req.session.destroy(async (error: any) => {
+    req.session.destroy(async () => {
       const TrustIssuer = await Issuer.discover(
         `https://slack.com/.well-known/openid-configuration`,
       );

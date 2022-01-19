@@ -1,9 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { PopUpService, PopupResultReceivedUrl } from './popup.service';
+import { PopUpService } from './popup.service';
 
 export interface LoginResponse {
   isAuthenticated: boolean;
@@ -22,6 +22,14 @@ export class PopupLoginService {
     @Inject(DOCUMENT) private doc: any,
   ) {}
 
+  checkAuth() {
+    if (this.popupService.isCurrentlyInPopup()) {
+      this.popupService.sendMessageToMainWindow(
+        this.doc.defaultView?.location.toString(),
+      );
+    }
+  }
+
   login() {
     return of(`https://api.${environment.hostname}/login`).pipe(
       tap((url) => {
@@ -37,7 +45,6 @@ export class PopupLoginService {
                 errorMessage: 'User closed popup',
               });
             } else {
-              const { receivedUrl } = result;
               this.popupService.sendMessageToMainWindow(
                 this.doc.defaultView?.location.toString(),
               );

@@ -1,1 +1,6 @@
-<p>tavern works!</p>
+<mat-toolbar>
+  <button mat-flat-button [routerLink]="'character'">Character</button>
+  <button mat-flat-button [routerLink]="'store'">Store</button>
+  <button mat-flat-button [routerLink]="'boards'">Leaderboards</button>
+</mat-toolbar>
+<router-outlet></router-outlet>

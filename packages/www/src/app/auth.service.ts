@@ -48,7 +48,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
   public isAuthenticated() {
     return this.http
-      .get<SlackInfo>(`https://api.${environment.hostname}/user`, {
+      .get<Userinfo>(`https://api.${environment.hostname}/user`, {
         withCredentials: true,
       })
       .pipe(

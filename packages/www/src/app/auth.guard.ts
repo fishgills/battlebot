@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { PopupLoginService } from './popup-login.service';
 import { PopUpService } from './popup.service';
@@ -21,20 +15,23 @@ export class AuthGuard implements CanActivate {
     private login: PopupLoginService,
   ) {}
 
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
-  ): Observable<boolean> {
+  canActivate(): Observable<boolean> {
     return this.authService.isAuthenticated().pipe(
       map((response) => {
-        if (response.id_token) {
+        if (response.ok) {
           return true;
         }
         return false;
         // return this.login.login().pipe(switchMap(() => of(false)));
       }),
-      catchError((error) => {
-        return this.login.login().pipe(switchMap(() => of(false)));
+      catchError(() => {
+        return this.login.login().pipe(
+          tap((resp) => {
+            if (resp?.errorMessage !== 'User closed popup')
+              this.router.navigate(['/tavern']);
+          }),
+          switchMap(() => of(false)),
+        );
       }),
     );
   }

@@ -4,7 +4,18 @@ import { AuthGuard } from '../auth.guard';
 import { TavernComponent } from './tavern.component';
 
 const routes: Routes = [
-  { path: '', component: TavernComponent, canActivate: [AuthGuard] },
+  {
+    path: '',
+    component: TavernComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'character',
+        loadChildren: () =>
+          import('./character/character.module').then((m) => m.CharacterModule),
+      },
+    ],
+  },
 ];
 
 @NgModule({
