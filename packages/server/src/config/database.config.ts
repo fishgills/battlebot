@@ -12,7 +12,7 @@ export const database: MysqlConnectionOptions = {
   database: 'botdb',
   host: process.env.DB_HOST,
   port: 3306,
-  dropSchema: true,
+  dropSchema: false,
   synchronize: true,
   logging: true,
   cache: true,
