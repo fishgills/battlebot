@@ -31,6 +31,7 @@
           },
           "configurations": {
             "production": {
+              "vendorChunk": true,
               "budgets": [
                 {
                   "type": "initial",
