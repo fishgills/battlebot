@@ -1,0 +1,65 @@
+<ng-template #loading>
+  <div>Loading...</div>
+</ng-template>
+
+<div *ngIf="character; else loading">
+  <section class="container">
+    <article class="half">
+      <h1>{{ character.name }}</h1>
+      <h2 contenteditable="true">Level {{ character.level }}</h2>
+      <div class="content">
+        <div class="main-cont cont">
+          <div class="stats">
+            <div>
+              <label for="hitpoints">Hitpoints</label>
+              <span class="inpt">{{ character.hp }}</span>
+            </div>
+            <div>
+              <label for="armor">Armor Class</label>
+              <span class="inpt"
+                >{{
+                  character!.defense! + gameRules!.modifier(character!.defense!)
+                }}
+              </span>
+            </div>
+          </div>
+          <hr />
+          <div class="stats abilities">
+            <div>
+              <label for="str">Strength</label>
+              <div id="str" class="stat">
+                <span class="inpt"
+                  >{{ character.strength }} (+{{
+                    gameRules.modifier(character.strength)
+                  }})</span
+                >
+              </div>
+            </div>
+            <div>
+              <label for="dex">Defense</label>
+              <div id="dex" class="stat">
+                <span class="inpt"
+                  >{{ character.defense }} (+{{
+                    gameRules.modifier(character.defense)
+                  }})</span
+                >
+              </div>
+            </div>
+            <div>
+              <label for="con">Vitality</label>
+              <div id="con" class="stat">
+                <span class="inpt"
+                  >{{ character.vitality }} (+{{
+                    gameRules.modifier(character.vitality)
+                  }})</span
+                >
+              </div>
+            </div>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </article>
+    <div class="half bg"></div>
+  </section>
+</div>

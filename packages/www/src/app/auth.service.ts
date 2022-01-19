@@ -44,7 +44,7 @@ export interface Userinfo {
   providedIn: 'root',
 })
 export class AuthService {
-  public isAuthenticated$ = new ReplaySubject();
+  public isAuthenticated$ = new ReplaySubject<Userinfo>();
   constructor(private http: HttpClient) {}
   public isAuthenticated() {
     return this.http

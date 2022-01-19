@@ -55,42 +55,46 @@ export class CharacterModel {
   defending: CombatModel[];
 
   @Field({
-    nullable: true,
+    defaultValue: 0,
   })
   @Column({
     default: 0,
   })
   strength: number;
+
   @Field({
-    nullable: true,
+    defaultValue: 0,
   })
   @Column({
     default: 0,
   })
   defense: number;
+
   @Field({
-    nullable: true,
+    defaultValue: 0,
   })
   @Column({
     default: 0,
   })
   vitality: number;
+
   @Field({
-    nullable: true,
+    defaultValue: 1,
   })
   @Column({
-    default: 0,
+    default: 1,
   })
   level: number;
+
   @Field({
-    nullable: true,
+    defaultValue: 0,
   })
   @Column({
     default: 0,
   })
   xp: number;
   @Field({
-    nullable: true,
+    defaultValue: 0,
   })
   @Column({
     default: 0,
@@ -98,7 +102,7 @@ export class CharacterModel {
   hp: number;
 
   @Field({
-    nullable: true,
+    defaultValue: 0,
   })
   @Column({
     default: 0,

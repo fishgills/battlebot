@@ -1,6 +1,6 @@
-import { GraphQLClient } from 'graphql-request';
-import * as Dom from 'graphql-request/dist/types.dom';
-import gql from 'graphql-tag';
+import { gql } from 'apollo-angular';
+import { Injectable } from '@angular/core';
+import * as Apollo from 'apollo-angular';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -442,6 +442,20 @@ export const AddCharacterDocument = gql`
   }
   ${CharacterPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AddCharacterGQL extends Apollo.Mutation<
+  AddCharacterMutation,
+  AddCharacterMutationVariables
+> {
+  document = AddCharacterDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const StartCombatDocument = gql`
   mutation startCombat($attackerId: String!, $defenderId: String!) {
     start(input: { attackerId: $attackerId, defenderId: $defenderId }) {
@@ -463,6 +477,20 @@ export const StartCombatDocument = gql`
   }
   ${CharacterPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class StartCombatGQL extends Apollo.Mutation<
+  StartCombatMutation,
+  StartCombatMutationVariables
+> {
+  document = StartCombatDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const CharacterByOwnerDocument = gql`
   query characterByOwner($owner: String!) {
     findByOwner(owner: $owner) {
@@ -471,6 +499,20 @@ export const CharacterByOwnerDocument = gql`
   }
   ${CharacterPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CharacterByOwnerGQL extends Apollo.Query<
+  CharacterByOwnerQuery,
+  CharacterByOwnerQueryVariables
+> {
+  document = CharacterByOwnerDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const RollCharacterDocument = gql`
   mutation rollCharacter($id: String!) {
     reroll(id: $id) {
@@ -479,6 +521,20 @@ export const RollCharacterDocument = gql`
   }
   ${CharacterPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class RollCharacterGQL extends Apollo.Mutation<
+  RollCharacterMutation,
+  RollCharacterMutationVariables
+> {
+  document = RollCharacterDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const GetInstallDocument = gql`
   query getInstall($team_id: String!) {
     install(team_id: $team_id) {
@@ -487,6 +543,20 @@ export const GetInstallDocument = gql`
   }
   ${SlackInstallPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class GetInstallGQL extends Apollo.Query<
+  GetInstallQuery,
+  GetInstallQueryVariables
+> {
+  document = GetInstallDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const UpdateInstallDocument = gql`
   mutation updateInstall($input: UpdateSlackInstallInput!) {
     updateInstall(input: $input) {
@@ -495,6 +565,20 @@ export const UpdateInstallDocument = gql`
   }
   ${SlackInstallPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class UpdateInstallGQL extends Apollo.Mutation<
+  UpdateInstallMutation,
+  UpdateInstallMutationVariables
+> {
+  document = UpdateInstallDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const CreateInstallDocument = gql`
   mutation createInstall($input: CreateSlackInstallInput!) {
     createInstall(input: $input) {
@@ -503,171 +587,74 @@ export const CreateInstallDocument = gql`
   }
   ${SlackInstallPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CreateInstallGQL extends Apollo.Mutation<
+  CreateInstallMutation,
+  CreateInstallMutationVariables
+> {
+  document = CreateInstallDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const RemoveInstallDocument = gql`
   mutation removeInstall($team_id: String!) {
     removeInstall(team_id: $team_id)
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class RemoveInstallGQL extends Apollo.Mutation<
+  RemoveInstallMutation,
+  RemoveInstallMutationVariables
+> {
+  document = RemoveInstallDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const GiveRewardDocument = gql`
   mutation giveReward($from: String!, $to: String!) {
     giveReward(input: { from: $from, to: $to })
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class GiveRewardGQL extends Apollo.Mutation<
+  GiveRewardMutation,
+  GiveRewardMutationVariables
+> {
+  document = GiveRewardDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const RewardsGivenTodayDocument = gql`
   query rewardsGivenToday($user: String!) {
     rewardsGivenToday(user: $user)
   }
 `;
 
-export type SdkFunctionWrapper = <T>(
-  action: (requestHeaders?: Record<string, string>) => Promise<T>,
-  operationName: string,
-) => Promise<T>;
+@Injectable({
+  providedIn: 'root',
+})
+export class RewardsGivenTodayGQL extends Apollo.Query<
+  RewardsGivenTodayQuery,
+  RewardsGivenTodayQueryVariables
+> {
+  document = RewardsGivenTodayDocument;
 
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
-
-export function getSdk(
-  client: GraphQLClient,
-  withWrapper: SdkFunctionWrapper = defaultWrapper,
-) {
-  return {
-    addCharacter(
-      variables: AddCharacterMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<AddCharacterMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<AddCharacterMutation>(
-            AddCharacterDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'addCharacter',
-      );
-    },
-    startCombat(
-      variables: StartCombatMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<StartCombatMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<StartCombatMutation>(StartCombatDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'startCombat',
-      );
-    },
-    characterByOwner(
-      variables: CharacterByOwnerQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<CharacterByOwnerQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CharacterByOwnerQuery>(
-            CharacterByOwnerDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'characterByOwner',
-      );
-    },
-    rollCharacter(
-      variables: RollCharacterMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<RollCharacterMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<RollCharacterMutation>(
-            RollCharacterDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'rollCharacter',
-      );
-    },
-    getInstall(
-      variables: GetInstallQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<GetInstallQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GetInstallQuery>(GetInstallDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'getInstall',
-      );
-    },
-    updateInstall(
-      variables: UpdateInstallMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<UpdateInstallMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<UpdateInstallMutation>(
-            UpdateInstallDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'updateInstall',
-      );
-    },
-    createInstall(
-      variables: CreateInstallMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<CreateInstallMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CreateInstallMutation>(
-            CreateInstallDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'createInstall',
-      );
-    },
-    removeInstall(
-      variables: RemoveInstallMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<RemoveInstallMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<RemoveInstallMutation>(
-            RemoveInstallDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'removeInstall',
-      );
-    },
-    giveReward(
-      variables: GiveRewardMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<GiveRewardMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GiveRewardMutation>(GiveRewardDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'giveReward',
-      );
-    },
-    rewardsGivenToday(
-      variables: RewardsGivenTodayQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<RewardsGivenTodayQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<RewardsGivenTodayQuery>(
-            RewardsGivenTodayDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'rewardsGivenToday',
-      );
-    },
-  };
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
 }
-export type Sdk = ReturnType<typeof getSdk>;

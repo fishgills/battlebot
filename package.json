@@ -26,6 +26,12 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.3.1",
+    "@graphql-codegen/introspection": "2.1.1",
+    "@graphql-codegen/typescript": "2.4.2",
+    "@graphql-codegen/typescript-apollo-angular": "3.3.2",
+    "@graphql-codegen/typescript-graphql-request": "^4.3.3",
+    "@graphql-codegen/typescript-operations": "2.2.2",
     "husky": "^7.0.0",
     "lint-staged": "^12.1.7"
   },
@@ -34,7 +40,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "husky install",
     "lint": "eslint \"packages/*/{src,apps,libs,test}/**/*.ts\" --fix",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "repository": {
     "type": "git",

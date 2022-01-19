@@ -1,14 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { PopupLoginService } from './popup-login.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
-  constructor(private service: PopupLoginService) {}
-  ngOnInit(): void {
-    this.service.checkAuth();
-  }
-}
+export class AppComponent {}

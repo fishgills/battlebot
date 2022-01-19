@@ -106,7 +106,7 @@ export class PopUpService {
   }
 
   private sendMessage(url: string, href: string): void {
-    this.windowInternal.opener.postMessage(url, href);
+    this.windowInternal.opener?.postMessage(url, href);
   }
 
   private getOptions(popupOptions?: PopupOptions): string {

@@ -10,13 +10,13 @@ type CharacterModel {
   owner: String!
   attacking: [CombatModel!]
   defending: [CombatModel!]
-  strength: Float
-  defense: Float
-  vitality: Float
-  level: Float
-  xp: Float
-  hp: Float
-  rolls: Float
+  strength: Float!
+  defense: Float!
+  vitality: Float!
+  level: Float!
+  xp: Float!
+  hp: Float!
+  rolls: Float!
 }
 
 """
