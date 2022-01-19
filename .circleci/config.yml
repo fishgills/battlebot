@@ -39,21 +39,21 @@ jobs:
       - run:
           command: ls -al
       - restore_cache:
-          key: v1-deps-{{ checksum "package-lock.json" }}
+          key: v1-deps-{{ checksum "yarn.lock" }}
       - run:
-          command: npm install
+          command: yarn install
           name: install deps
       - save_cache:
           paths:
             - node_modules
-          key: v1-deps-{{ checksum "package-lock.json"}}
+          key: v1-deps-{{ checksum "yarn.lock"}}
       - run:
-          command: npm run build
+          command: yarn build
           name: build
       - persist_to_workspace:
           root: ~/project/packages/www/dist
           paths:
-            - "www"
+            - 'www'
   copy-to-s3:
     executor: aws-cli/default
     steps:
@@ -80,7 +80,7 @@ jobs:
           command: chmod +x .circleci/monorepo.sh && .circleci/monorepo.sh
           environment:
             # (optional) print additional debug information
-            MONOREPO_DEBUG: "true"
+            MONOREPO_DEBUG: 'true'
             # (optional) additional CI parameters to include in the pipeline (must be a valid JSON)
             # CI_PARAMETERS: '{ "deploy": true }'
   build:
@@ -95,11 +95,11 @@ jobs:
       - checkout:
           path: ~/project
       - aws-ecr/build-and-push-image:
-          repo: "battlebot-<< parameters.package_name >>"
+          repo: 'battlebot-<< parameters.package_name >>'
           remote-docker-layer-caching: true
           checkout: false
           create-repo: true
-          tag: "${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest"
+          tag: '${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest'
   deploy:
     parameters:
       package_name:
@@ -111,10 +111,10 @@ jobs:
       - checkout:
           path: ~/project
       - aws-ecs/update-service:
-          family: "<< parameters.package_name >>-task"
-          cluster-name: "bot-cluster"
-          service-name: "<< parameters.package_name >>-service-fargate-spot"
-          container-image-name-updates: "container=<< parameters.package_name >>-container,tag=${CIRCLE_BRANCH}_${CIRCLE_SHA1}"
+          family: '<< parameters.package_name >>-task'
+          cluster-name: 'bot-cluster'
+          service-name: '<< parameters.package_name >>-service-fargate-spot'
+          container-image-name-updates: 'container=<< parameters.package_name >>-container,tag=${CIRCLE_BRANCH}_${CIRCLE_SHA1}'
 
 workflows:
   version: 2
