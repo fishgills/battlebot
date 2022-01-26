@@ -8,7 +8,13 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "NODE_ENV=development nest start --debug 9230 --watch",
-    "start:prod": "node dist/main"
+    "start:prod": "node dist/main",
+    "typeorm:cli": "ts-node -P tsconfig.json -r tsconfig-paths/register ./node_modules/.bin/typeorm -f ./src/ormconfig-migrations.ts",
+    "entity:create": "yarn typeorm:cli entity:create -n",
+    "migrate:generate": "yarn typeorm:cli migration:generate -n",
+    "migrate:run": "yarn typeorm:cli migration:run",
+    "migrate:revert": "yarn typeorm:cli migration:revert",
+    "schema:drop": "yarn typeorm:cli schema:drop"
   },
   "dependencies": {
     "@dice-roller/rpg-dice-roller": "^5.1.0",
@@ -46,6 +52,7 @@
     "@types/express-session": "^1.17.4",
     "@types/openid-client": "^3.7.0",
     "@types/passport": "^1.0.7",
+    "ts-node": "^10.4.0",
     "typescript": "~4.3.0"
   }
 }

@@ -17,6 +17,7 @@ type CharacterModel {
   xp: Float!
   hp: Float!
   rolls: Float!
+  gold: Float!
 }
 
 """

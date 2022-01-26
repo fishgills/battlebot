@@ -3,12 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
   OneToMany,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
@@ -108,4 +103,8 @@ export class CharacterModel {
     default: 0,
   })
   rolls: number;
+
+  @Column()
+  @Field()
+  gold: number;
 }

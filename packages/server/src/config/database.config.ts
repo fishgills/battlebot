@@ -1,4 +1,4 @@
-import { SessionModel } from 'src/auth/session-model';
+import { SessionModel } from '../auth/session-model';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { CharacterModel } from '../characters/character.model';
 import { CombatModel } from '../combat/combat.model';
@@ -13,9 +13,14 @@ export const database: MysqlConnectionOptions = {
   host: process.env.DB_HOST,
   port: 3306,
   dropSchema: false,
-  synchronize: true,
+  synchronize: false,
+  migrationsRun: true,
   logging: true,
   cache: true,
+  migrations: ['src/config/migrations/**/*{*.ts}'],
+  cli: {
+    migrationsDir: './migrations',
+  },
   entities: [
     CombatModel,
     CharacterModel,

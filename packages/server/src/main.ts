@@ -10,7 +10,11 @@ import { DBStore } from './auth/session-store';
 import { getConnection } from 'typeorm';
 import { SessionModel } from './auth/session-model';
 import { Logger } from '@nestjs/common';
-const whitelist = ['battlebot.ngrok.io', 'slackbattlebot.com'];
+const whitelist = [
+  'battlebot.ngrok.io',
+  'slackbattlebot.com',
+  'studio.apollographql.com',
+];
 const sessionLengthInMinutes = 10;
 const sessionLengthInSeconds = sessionLengthInMinutes * 60;
 const sessionLengthInMs = sessionLengthInSeconds * 1000;
@@ -24,7 +28,7 @@ async function bootstrap() {
       if (!origin || whitelist.some((domain) => origin.includes(domain))) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by cors'));
+        callback(new Error(`Not allowed by cors: ${origin}`));
       }
     },
     credentials: true,

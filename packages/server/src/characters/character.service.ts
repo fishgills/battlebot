@@ -1,9 +1,7 @@
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { subMinutes } from 'date-fns';
-import { FindManyOptions, FindOneOptions, MoreThan, Repository } from 'typeorm';
-import { CombatModel } from '../combat/combat.model';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { modifier } from '../gamerules';
 import { CharacterModel } from './character.model';
 import { CreateCharacterInput } from './create-character.dto';
@@ -12,8 +10,6 @@ export class CharacterService {
   constructor(
     @InjectRepository(CharacterModel)
     private readonly charRepo: Repository<CharacterModel>,
-    @InjectRepository(CombatModel)
-    private readonly combatRepo: Repository<CombatModel>,
   ) {}
 
   create(createCharacterDto: CreateCharacterInput): Promise<CharacterModel> {
