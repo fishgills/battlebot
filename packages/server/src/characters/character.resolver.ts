@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { UserInputError } from 'apollo-server-core';
 
 import { CharacterModel } from './character.model';
 import { CharacterService } from './character.service';
@@ -46,7 +47,7 @@ export class CharacterResolver {
       },
     });
     if (char.rolls >= 5) {
-      throw new Error('Character ran out of rolls');
+      throw new UserInputError('Character ran out of rolls');
     }
     this.charService.rollCharacter(char);
     await this.charService.update(id, char);

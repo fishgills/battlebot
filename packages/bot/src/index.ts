@@ -129,6 +129,6 @@ app.action<BlockAction>('reroll', async (args) => {
       blocks: editCharacterModal(char),
     });
   } catch (e) {
-    args.say(`You do not have a character!`);
+    args.say(e.response.errors[0].message);
   }
 });
