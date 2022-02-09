@@ -1,29 +1,37 @@
+import { SlackCommandMiddlewareArgs } from '@slack/bolt';
 import { ChatPostMessageResponse } from '@slack/web-api';
 import { SlackBlockDto } from 'slack-block-builder';
 import { Observer } from '../common/Observer';
-import { MentionSlackEvent } from '../common/types';
 
-export abstract class MentionObserver extends Observer<MentionSlackEvent> {
-  getHandleText(event: MentionSlackEvent): string {
-    return event.payload.text.split(' ')[1];
+function normalizeQuotes(text) {
+  return text
+    .replace(/\u00AB/g, '"')
+    .replace(/\u00BB/g, '"')
+    .replace(/\u201C/g, '"')
+    .replace(/\u201D/g, '"')
+    .replace(/\u201E/g, '"')
+    .replace(/\u201F/g, '"');
+}
+export abstract class MentionObserver extends Observer<SlackCommandMiddlewareArgs> {
+  getHandleText(event: SlackCommandMiddlewareArgs): string {
+    const text = normalizeQuotes(event.payload.text);
+    const match = text.match(/^(\w+) *(.*)$/);
+    return match ? match[1] : undefined;
   }
   async msgUser(
     content: string | SlackBlockDto[],
   ): Promise<ChatPostMessageResponse> {
-    return await this.event.client.chat.postMessage({
-      channel: this.event.payload.user,
-      token: this.event.context.botToken,
+    return await this.event.respond({
+      response_type: 'ephemeral',
+
       ...(Array.isArray(content) && { blocks: content }),
       ...(!Array.isArray(content) && { text: content }),
     });
   }
 
-  async msgThread(content: SlackBlockDto[] | string) {
-    return this.event.client.chat.postMessage({
-      thread_ts: this.event.event.thread_ts,
-      channel: this.event.event.channel,
-      ...(Array.isArray(content) && { blocks: content }),
-      ...(!Array.isArray(content) && { text: content }),
-    });
+  msgThread(
+    content: string | SlackBlockDto[],
+  ): Promise<ChatPostMessageResponse> {
+    throw new Error('Method not implemented.');
   }
 }

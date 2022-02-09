@@ -2,11 +2,14 @@ import { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { ChatPostMessageResponse } from '@slack/web-api';
 import { Observer } from '../common/Observer';
 import { sdk } from '../utils/gql';
-import { isGenericMessageEvent } from '../utils/helpers';
+import { getUsernames, isGenericMessageEvent } from '../utils/helpers';
 
 export class ShieldObserver extends Observer<
   SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs
 > {
+  getHelpBlocks() {
+    return;
+  }
   msgUser(content: string) {
     if (!isGenericMessageEvent(this.event.message)) return;
     return this.event.client.chat.postMessage({
@@ -22,7 +25,7 @@ export class ShieldObserver extends Observer<
   async update(): Promise<void> {
     if (!isGenericMessageEvent(this.event.message)) return;
 
-    const users = this.getUsernames(this.event.message.text);
+    const users = getUsernames(this.event.message.text);
     if (!users || !users.length) {
       return;
     }
@@ -46,19 +49,9 @@ export class ShieldObserver extends Observer<
     for (const user of users) {
       await sdk.giveReward({
         from: this.event.message.user,
-        to: user,
+        to: user.id,
       });
     }
-  }
-
-  private getUsernames(text: string): string[] {
-    const rawUsers = text.match(new RegExp(/(<@[A-Z0-9]{2,}>)/g));
-    if (!rawUsers) return [];
-    const users = rawUsers.map((u) => u.replace('<@', '').replace('>', ''));
-    const unique_users: string[] = users.filter(
-      (value, i, arr) => arr.indexOf(value) === i,
-    );
-    return unique_users.length ? unique_users : [];
   }
 
   getHandleText(): string {

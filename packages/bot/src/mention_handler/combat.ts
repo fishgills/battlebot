@@ -1,17 +1,29 @@
+import { Blocks } from 'slack-block-builder';
 import { CharacterByOwnerQuery } from '../generated/graphql';
 import { sdk } from '../utils/gql';
-import { getTeamInfo, to } from '../utils/helpers';
+import { getTeamInfo, getUsernames, to } from '../utils/helpers';
 import { battleLog } from '../views/character';
 import { MentionObserver } from './observer';
 
 export class CombatObserver extends MentionObserver {
+  getHelpBlocks() {
+    return [
+      Blocks.Section({
+        text: 'To start combat.',
+      }),
+      Blocks.Section({
+        text: '`/battlebot fight @Someone`',
+      }),
+    ];
+  }
+
   async update() {
     this.log(`starting combat`);
 
     const char = (
       await sdk.characterByOwner({
-        owner: this.event.payload.user,
-        teamId: this.event.context.teamId,
+        owner: this.event.payload.user_id,
+        teamId: this.event.payload.team_id,
       })
     ).findByOwner;
 
@@ -20,15 +32,20 @@ export class CombatObserver extends MentionObserver {
       this.log('no character');
       return;
     }
+    const targets = getUsernames(this.event.payload.text);
 
-    const targetUser = (this.event.payload.blocks[0] as any).elements[0]
-      .elements[2].user_id;
+    if (targets.length > 1) {
+      this.msgUser('Can only attack one person.');
+      return;
+    }
+
+    const targetUser = targets[0];
 
     let target: CharacterByOwnerQuery;
     try {
       target = await sdk.characterByOwner({
-        owner: targetUser,
-        teamId: this.event.context.teamId,
+        owner: targetUser.id,
+        teamId: this.event.payload.team_id,
       });
     } catch (e) {
       this.log('target has no character');
@@ -55,15 +72,15 @@ export class CombatObserver extends MentionObserver {
       this.logger(err.message);
       return;
     }
-    const info = await getTeamInfo(this.event.context.teamId);
+    const info = await getTeamInfo(this.event.payload.team_id);
 
-    const notification = await this.event.client.chat.postMessage({
+    const notification = await this.event.say({
       channel: this.event.payload.channel,
       token: info.token,
-      text: `<@${this.event.payload.user}> has started fighting <@${targetUser}>`,
+      text: `<@${this.event.payload.user_id}> has started fighting <@${targetUser.id}>`,
     });
 
-    await this.event.client.chat.postMessage({
+    await this.event.say({
       ...battleLog({
         attacker: char,
         defender: target.findByOwner,
@@ -72,7 +89,6 @@ export class CombatObserver extends MentionObserver {
         channel: this.event.payload.channel,
       }),
       text: `${char.name} is attacking ${target.findByOwner.name}. They may have won... I dunno yet.`,
-      token: this.event.context.botToken,
     });
   }
   action?(): Promise<void> {

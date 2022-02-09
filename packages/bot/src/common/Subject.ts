@@ -1,11 +1,10 @@
-import { WebClient } from '@slack/web-api';
 import { Observer } from './Observer';
 
 export abstract class Subject<Event> {
-  private observers: Observer<Event>[] = [];
-  private client: WebClient;
+  public observers: Observer<Event>[] = [];
 
   attach(observer: Observer<Event>): void {
+    observer.setSubject(this);
     this.observers.push(observer);
   }
 

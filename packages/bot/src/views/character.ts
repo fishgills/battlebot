@@ -13,7 +13,7 @@ export const editCharacterModal = (character: Partial<CharacterModel>) => {
         Blocks.Section({
           text: `You have ${
             5 - character.rolls
-          } ability rolls left. Choose wisely.`,
+          } ability rolls left. Choose wisely. *18* is the highest you can roll.`,
         }),
       ]),
       Blocks.Section({

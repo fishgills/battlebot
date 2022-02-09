@@ -34,6 +34,7 @@ const app = new App({
     'app_mentions:read',
     'users:read',
     'im:write',
+    'im:history',
     'channels:history',
     'chat:write',
   ],
@@ -48,9 +49,9 @@ const app = new App({
   Logger.info('Starting bolt');
 })();
 
-app.event('app_mention', async (args) => {
-  Mention$.event(args);
-});
+// app.event('app_mention', async (args) => {
+//   Mention$.event(args);
+// });
 
 app.message(':shield:', async (args) => {
   if (!isGenericMessageEvent(args.message)) {
@@ -77,6 +78,12 @@ app.event('team_join', async (args) => {
     text: 'Welcome. Join #adventureland to start',
   });
 });
+
+app.command('/battlebot', async (args) => {
+  await args.ack();
+  Mention$.event(args);
+});
+
 app.event('app_home_opened', async (args) => {
   try {
     // Call views.publish with the built-in client
@@ -123,10 +130,11 @@ app.action<BlockAction>('reroll', async (args) => {
         id: char.id,
       })
     ).reroll;
-    await args.client.chat.postMessage({
+    await args.client.chat.postEphemeral({
       channel: args.body.user.id,
       token: args.context.botToken,
       blocks: editCharacterModal(char),
+      user: args.body.user.id,
     });
   } catch (e) {
     args.say(e.response.errors[0].message);

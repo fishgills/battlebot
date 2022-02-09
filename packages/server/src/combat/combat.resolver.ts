@@ -43,22 +43,22 @@ export class CombatResolver {
     @Args('input')
     input: CreateCombatInput,
   ) {
-    const combatCount = await this.combatService.findAll({
-      where: [
-        {
-          attackerId: input.attackerId,
-          created_at: MoreThan(subMinutes(new Date(), 1).toISOString()),
-        },
-        {
-          defenderId: input.attackerId,
-          created_at: MoreThan(subMinutes(new Date(), 1).toISOString()),
-        },
-      ],
-    });
+    // const combatCount = await this.combatService.findAll({
+    //   where: [
+    //     {
+    //       attackerId: input.attackerId,
+    //       created_at: MoreThan(subMinutes(new Date(), 1).toISOString()),
+    //     },
+    //     {
+    //       defenderId: input.attackerId,
+    //       created_at: MoreThan(subMinutes(new Date(), 1).toISOString()),
+    //     },
+    //   ],
+    // });
 
-    if (combatCount.length > 0) {
-      throw new Error(`Combat started too fast`);
-    }
+    // if (combatCount.length > 0) {
+    //   throw new Error(`Combat started too fast`);
+    // }
 
     let combat = await this.combatService.create(input);
 

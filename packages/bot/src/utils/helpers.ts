@@ -48,6 +48,7 @@ export const numToEmoji = (str: number) => {
   }
 
   return (str + '')
+    .replace(/-/g, ':heavy_minus_sign:')
     .replace(/0/g, ':zero:')
     .replace(/1/g, ':one:')
     .replace(/2/g, ':two:')
@@ -79,4 +80,20 @@ export function to<T, U = Error>(
 
       return [err, undefined];
     });
+}
+
+export function getUsernames(text: string) {
+  const rawUsers = text.match(new RegExp(/(<@[\S]{2,}>)/g));
+  if (!rawUsers) return [];
+  const users = rawUsers
+    .map((u) => u.match(/<@([A-Z0-9]*)\|([\S]{2,})>/))
+    .map((v) => {
+      return {
+        id: v[1],
+        display: v[2],
+      };
+    });
+
+  const unique_users = users.filter((v, i, arr) => arr.indexOf(v) === i);
+  return unique_users.length ? unique_users : [];
 }
