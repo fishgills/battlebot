@@ -77,6 +77,11 @@ app.command('/battlebot', async (args) => {
   Mention$.event(args);
 });
 
+app.command('/battlebot-dev', async (args) => {
+  await args.ack();
+  Mention$.event(args);
+});
+
 app.event('app_home_opened', async (args) => {
   try {
     // Call views.publish with the built-in client
