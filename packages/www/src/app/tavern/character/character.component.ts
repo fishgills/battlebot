@@ -23,6 +23,7 @@ export class CharacterComponent implements OnInit {
         switchMap((value) => {
           return this.charService.watch({
             owner: value['https://slack.com/user_id'],
+            teamId: value['https://slack.com/team_id'],
           }).valueChanges;
         }),
       )
