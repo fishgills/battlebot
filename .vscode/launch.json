@@ -8,6 +8,7 @@
       "localRoot": "${workspaceFolder}/packages/server",
       "name": "Server",
       "port": 9230,
+      "sourceMaps": true,
       "restart": true,
       // "remoteRoot": "Absolute path to the remote directory containing the program",
       "request": "attach",

@@ -30,18 +30,7 @@ const app = new App({
   logger: Logger,
   socketMode: true,
   stateSecret: 'awesome',
-  scopes: [
-    'groups:write',
-    'mpim:write',
-    'im:write',
-    'im:read',
-    'im:history',
-    'users:read',
-    'chat:write',
-    'channels:manage',
-    'channels:read',
-    'channels:join',
-  ],
+  scopes: [],
   installationStore: new Store(),
 });
 
@@ -116,8 +105,12 @@ app.event('app_home_opened', async (args) => {
 
 app.action<BlockAction>('reroll', async (args) => {
   try {
-    let char = (await sdk.characterByOwner({ owner: args.body.user.id }))
-      .findByOwner;
+    let char = (
+      await sdk.characterByOwner({
+        owner: args.body.user.id,
+        teamId: args.context.teamId,
+      })
+    ).findByOwner;
     args.ack();
     char = (
       await sdk.rollCharacter({

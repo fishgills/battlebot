@@ -63,24 +63,20 @@ export class Store implements InstallationStore {
       }
     }
   }
-  deleteInstallation(
+  async deleteInstallation(
     query: InstallationQuery<boolean>,
     logger?: Logger,
   ): Promise<void> {
     if (query.isEnterpriseInstall && query.enterpriseId !== undefined) {
-      sdk
-        .removeInstall({
-          team_id: query.enterpriseId,
-        })
-        .then();
+      await sdk.removeInstall({
+        team_id: query.enterpriseId,
+      });
       return;
     }
     if (query.teamId !== undefined) {
-      sdk
-        .removeInstall({
-          team_id: query.teamId,
-        })
-        .then();
+      await sdk.removeInstall({
+        team_id: query.teamId,
+      });
       return;
     }
     logger.error('Failed to delete installation');

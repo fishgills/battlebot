@@ -1,3 +1,4 @@
+import { Md } from 'slack-block-builder';
 import { sdk } from '../utils/gql';
 import { MentionObserver } from './observer';
 
@@ -19,8 +20,10 @@ export class CharacterCreateObserver extends MentionObserver {
         })
       ).findByOwner;
       if (char.id) {
+        const userMd = Md.user(this.event.context.botUserId);
+        const quoteMd = Md.quote(`${userMd} sheet`);
         this.msgUser(
-          `You already have a character. Use \`/@${this.event.context.botUserId} sheet\` to review it.`,
+          `You already have a character. Use ${quoteMd} to review it.`,
         );
         return;
       }
@@ -32,9 +35,10 @@ export class CharacterCreateObserver extends MentionObserver {
           teamId: this.event.context.teamId,
         },
       });
-      this.msgUser(
-        `Character created! \`@${this.event.context.botUserId} sheet\` to review your character.`,
-      );
+      const userMd = Md.user(this.event.context.botUserId);
+      const quoteMd = Md.quote(`${userMd} sheet`);
+
+      this.msgUser(`Character created! ${quoteMd} to review your character.`);
     }
   }
 }

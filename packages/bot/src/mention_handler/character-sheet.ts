@@ -9,6 +9,7 @@ export class SheetObserver extends MentionObserver {
       const char = (
         await sdk.characterByOwner({
           owner: this.event.payload.user,
+          teamId: this.event.context.teamId,
         })
       ).findByOwner;
       await this.msgUser(editCharacterModal(char));

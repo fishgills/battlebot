@@ -1,8 +1,4 @@
 {
-  "_metadata": {
-    "major_version": 1,
-    "minor_version": 1
-  },
   "display_information": {
     "name": "BattleBot (Dev)",
     "description": "Running off my laptop",
@@ -20,31 +16,14 @@
     }
   },
   "oauth_config": {
-    "redirect_urls": [
-      "https://7f6f-73-70-164-116.ngrok.io/slack/oauth_redirect"
-    ],
+    "redirect_urls": ["https://bot.battlebot.ngrok.io/slack/oauth_redirect"],
     "scopes": {
-      "bot": [
-        "channels:manage",
-        "channels:read",
-        "channels:history",
-        "channels:join",
-        "app_mentions:read",
-        "users:read",
-        "im:history"
-      ]
+      "bot": ["app_mentions:read", "users:read"]
     }
   },
   "settings": {
     "event_subscriptions": {
-      "bot_events": [
-        "app_home_opened",
-        "message.im",
-        "team_join",
-        "member_joined_channel",
-        "app_mention",
-        "message.channels"
-      ]
+      "bot_events": ["team_join", "app_mention"]
     },
     "interactivity": {
       "is_enabled": true
