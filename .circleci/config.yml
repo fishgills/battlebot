@@ -100,29 +100,6 @@ jobs:
           create-repo: true
           tag: '${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest'
 
-  db-migration:
-    parameters:
-      package_name:
-        type: string
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - checkout:
-          path: ~/project
-      - restore_cache:
-          key: v1-deps-{{ checksum "yarn.lock" }}
-      - run:
-          command: yarn install
-          name: install deps
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-deps-{{ checksum "yarn.lock"}}
-      - run:
-          working_directory: ~/project/packages/<< parameters.package_name >>
-          command: yarn migrate:run
-          name: Migration
-
   deploy:
     parameters:
       package_name:
@@ -165,10 +142,6 @@ workflows:
     jobs:
       - build:
           name: server-build
-          package_name: server
-          context: EnvVariables
-      - db-migration:
-          name: server-migrate
           package_name: server
           context: EnvVariables
       - deploy:
