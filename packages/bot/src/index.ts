@@ -30,14 +30,7 @@ const app = new App({
   logger: Logger,
   socketMode: true,
   stateSecret: 'awesome',
-  scopes: [
-    'app_mentions:read',
-    'users:read',
-    'im:write',
-    'im:history',
-    'channels:history',
-    'chat:write',
-  ],
+  scopes: ['users:read', 'channels:history', 'commands'],
   installationStore: new Store(),
 });
 
