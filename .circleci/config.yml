@@ -119,7 +119,7 @@ jobs:
             - node_modules
           key: v1-deps-{{ checksum "yarn.lock"}}
       - run:
-          working_directory: ~/projects/packages/<< parameters.package_name >>
+          working_directory: ~/project/packages/<< parameters.package_name >>
           command: yarn migrate:run
           name: Migration
 
