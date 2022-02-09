@@ -144,6 +144,8 @@ workflows:
           name: server-build
           package_name: server
           context: EnvVariables
+      - db-migration:
+
       - deploy:
           name: server-deploy
           context: EnvVariables

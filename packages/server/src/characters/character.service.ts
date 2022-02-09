@@ -14,6 +14,7 @@ export class CharacterService {
 
   create(createCharacterDto: CreateCharacterInput): Promise<CharacterModel> {
     const char = this.charRepo.create(createCharacterDto);
+    char.teamId = createCharacterDto.teamId;
     this.rollCharacter(char);
     char.level = 1;
     return this.charRepo.save(char);
@@ -31,10 +32,11 @@ export class CharacterService {
     return this.charRepo.findByIds(ids);
   }
 
-  findByOwner(owner: string) {
+  findByOwner(owner: string, teamId: string | undefined) {
     return this.charRepo.findOneOrFail({
       where: {
         owner,
+        teamId,
       },
     });
   }

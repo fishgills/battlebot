@@ -13,7 +13,10 @@ export class CharacterCreateObserver extends MentionObserver {
     }
     try {
       const char = (
-        await sdk.characterByOwner({ owner: this.event.payload.user })
+        await sdk.characterByOwner({
+          owner: this.event.payload.user,
+          teamId: this.event.context.teamId,
+        })
       ).findByOwner;
       if (char.id) {
         this.msgUser(
@@ -26,6 +29,7 @@ export class CharacterCreateObserver extends MentionObserver {
         input: {
           owner: this.event.payload.user,
           name: this.event.payload.text.trim().split(' ')[2],
+          teamId: this.event.context.teamId,
         },
       });
       this.msgUser(

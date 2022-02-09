@@ -11,6 +11,7 @@ export class CombatObserver extends MentionObserver {
     const char = (
       await sdk.characterByOwner({
         owner: this.event.payload.user,
+        teamId: this.event.context.teamId,
       })
     ).findByOwner;
 
@@ -25,7 +26,10 @@ export class CombatObserver extends MentionObserver {
 
     let target: CharacterByOwnerQuery;
     try {
-      target = await sdk.characterByOwner({ owner: targetUser });
+      target = await sdk.characterByOwner({
+        owner: targetUser,
+        teamId: this.event.context.teamId,
+      });
     } catch (e) {
       this.log('target has no character');
       this.msgUser(

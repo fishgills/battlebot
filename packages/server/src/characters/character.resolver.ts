@@ -23,8 +23,13 @@ export class CharacterResolver {
       nullable: false,
     })
     owner: string,
+    @Args('teamId', {
+      type: () => String,
+      nullable: true,
+    })
+    teamId?: string | undefined,
   ) {
-    return this.charService.findByOwner(owner);
+    return this.charService.findByOwner(owner, teamId);
   }
 
   @Mutation((returns) => CharacterModel)

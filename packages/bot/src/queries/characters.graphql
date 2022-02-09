@@ -10,6 +10,8 @@ fragment CharacterParts on CharacterModel {
   owner
   id
   created_at
+  gold
+  teamId
   updated_at
 }
 
@@ -43,8 +45,8 @@ mutation startCombat($attackerId: String!, $defenderId: String!) {
     }
   }
 }
-query characterByOwner($owner: String!) {
-  findByOwner(owner: $owner) {
+query characterByOwner($owner: String!, $teamId: String!) {
+  findByOwner(owner: $owner, teamId: $teamId) {
     ...CharacterParts
   }
 }

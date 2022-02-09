@@ -31,6 +31,7 @@ export type CharacterModel = {
   created_at: Scalars['DateTime'];
   defending?: Maybe<Array<CombatModel>>;
   defense: Scalars['Float'];
+  gold: Scalars['Float'];
   hp: Scalars['Float'];
   id: Scalars['String'];
   level: Scalars['Float'];
@@ -38,6 +39,7 @@ export type CharacterModel = {
   owner: Scalars['String'];
   rolls: Scalars['Float'];
   strength: Scalars['Float'];
+  teamId: Scalars['String'];
   updated_at: Scalars['DateTime'];
   vitality: Scalars['Float'];
   xp: Scalars['Float'];
@@ -75,6 +77,7 @@ export type CombatRound = {
 export type CreateCharacterInput = {
   name: Scalars['String'];
   owner: Scalars['String'];
+  teamId: Scalars['String'];
 };
 
 export type CreateCombatInput = {
@@ -152,6 +155,7 @@ export type Query = {
 
 export type QueryFindByOwnerArgs = {
   owner: Scalars['String'];
+  teamId?: InputMaybe<Scalars['String']>;
 };
 
 export type QueryGetUserScoreArgs = {
@@ -211,6 +215,8 @@ export type CharacterPartsFragment = {
   owner: string;
   id: string;
   created_at: any;
+  gold: number;
+  teamId: string;
   updated_at: any;
 };
 
@@ -240,6 +246,8 @@ export type AddCharacterMutation = {
     owner: string;
     id: string;
     created_at: any;
+    gold: number;
+    teamId: string;
     updated_at: any;
   };
 };
@@ -274,6 +282,8 @@ export type StartCombatMutation = {
         owner: string;
         id: string;
         created_at: any;
+        gold: number;
+        teamId: string;
         updated_at: any;
       };
       defender: {
@@ -289,6 +299,8 @@ export type StartCombatMutation = {
         owner: string;
         id: string;
         created_at: any;
+        gold: number;
+        teamId: string;
         updated_at: any;
       };
     }>;
@@ -297,6 +309,7 @@ export type StartCombatMutation = {
 
 export type CharacterByOwnerQueryVariables = Exact<{
   owner: Scalars['String'];
+  teamId: Scalars['String'];
 }>;
 
 export type CharacterByOwnerQuery = {
@@ -314,6 +327,8 @@ export type CharacterByOwnerQuery = {
     owner: string;
     id: string;
     created_at: any;
+    gold: number;
+    teamId: string;
     updated_at: any;
   };
 };
@@ -337,6 +352,8 @@ export type RollCharacterMutation = {
     owner: string;
     id: string;
     created_at: any;
+    gold: number;
+    teamId: string;
     updated_at: any;
   };
 };
@@ -424,6 +441,8 @@ export const CharacterPartsFragmentDoc = gql`
     owner
     id
     created_at
+    gold
+    teamId
     updated_at
   }
 `;
@@ -464,8 +483,8 @@ export const StartCombatDocument = gql`
   ${CharacterPartsFragmentDoc}
 `;
 export const CharacterByOwnerDocument = gql`
-  query characterByOwner($owner: String!) {
-    findByOwner(owner: $owner) {
+  query characterByOwner($owner: String!, $teamId: String!) {
+    findByOwner(owner: $owner, teamId: $teamId) {
       ...CharacterParts
     }
   }

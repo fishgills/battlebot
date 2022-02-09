@@ -8,6 +8,10 @@ import { RewardModule } from './rewards/reward.module';
 import { SlackInstallModule } from './installs/install.module';
 import { AuthModule } from './auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
+import {
+  ApolloServerPluginLandingPageLocalDefault,
+  ApolloServerPluginLandingPageProductionDefault,
+} from 'apollo-server-core';
 @Module({
   imports: [
     CharacterModule,
@@ -17,7 +21,16 @@ import { HttpModule } from '@nestjs/axios';
     HttpModule,
     TypeOrmModule.forRoot(database.database),
     GraphQLModule.forRoot({
+      debug: true,
+      playground: false,
       autoSchemaFile: 'schema.gql',
+      plugins: [
+        process.env['NODE_ENV'] === 'production'
+          ? ApolloServerPluginLandingPageProductionDefault()
+          : ApolloServerPluginLandingPageLocalDefault({
+              footer: false,
+            }),
+      ],
     }),
     AuthModule,
   ],

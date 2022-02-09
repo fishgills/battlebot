@@ -9,6 +9,7 @@
     "target": "es2017",
     "sourceMap": false,
     "outDir": "./dist",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "incremental": true
   }
 }

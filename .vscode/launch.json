@@ -13,6 +13,16 @@
       "request": "attach",
       "skipFiles": ["<node_internals>/**"],
       "type": "pwa-node"
+    },
+    {
+      "localRoot": "${workspaceFolder}/packages/bot",
+      "name": "Bot",
+      "port": 9229,
+      "restart": true,
+      // "remoteRoot": "Absolute path to the remote directory containing the program",
+      "request": "attach",
+      "skipFiles": ["<node_internals>/**"],
+      "type": "pwa-node"
     }
   ]
 }

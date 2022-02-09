@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Float, Int, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
@@ -104,7 +104,15 @@ export class CharacterModel {
   })
   rolls: number;
 
-  @Column()
-  @Field()
+  @Field(() => Float)
+  @Column({
+    default: 0,
+  })
   gold: number;
+
+  @Column({
+    nullable: false,
+  })
+  @Field()
+  teamId: string;
 }

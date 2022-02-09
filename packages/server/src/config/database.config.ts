@@ -14,12 +14,12 @@ export const database: MysqlConnectionOptions = {
   port: 3306,
   dropSchema: false,
   synchronize: false,
-  migrationsRun: true,
+  migrationsRun: false,
   logging: true,
   cache: true,
-  migrations: ['src/config/migrations/**/*{*.ts}'],
+  migrations: [`${__dirname}/migrations/*.ts`],
   cli: {
-    migrationsDir: './migrations',
+    migrationsDir: `${__dirname}/migrations`,
   },
   entities: [
     CombatModel,

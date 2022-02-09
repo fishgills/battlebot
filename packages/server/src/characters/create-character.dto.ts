@@ -7,4 +7,7 @@ export class CreateCharacterInput {
 
   @Field()
   owner: string;
+
+  @Field()
+  teamId: string;
 }
