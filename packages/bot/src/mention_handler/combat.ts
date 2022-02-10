@@ -1,3 +1,4 @@
+import { WebClient } from '@slack/web-api';
 import { Blocks } from 'slack-block-builder';
 import { CharacterByOwnerQuery } from '../generated/graphql';
 import { sdk } from '../utils/gql';
@@ -72,23 +73,30 @@ export class CombatObserver extends MentionObserver {
       this.logger(err.message);
       return;
     }
-    const info = await getTeamInfo(this.event.payload.team_id);
+    // const info = await getTeamInfo(this.event.payload.team_id);
 
-    const notification = await this.event.say({
-      channel: this.event.payload.channel,
-      token: info.token,
+    const notification = await this.event.respond({
+      // channel: this.event.payload.channel,
+      // token: info.token,
       text: `<@${this.event.payload.user_id}> has started fighting <@${targetUser.id}>`,
     });
 
-    await this.event.say({
-      ...battleLog({
-        attacker: char,
-        defender: target.findByOwner,
-        log: combatLog.start,
-        ts: notification.ts,
-        channel: this.event.payload.channel,
-      }),
+    const log = battleLog({
+      attacker: char,
+      defender: target.findByOwner,
+      log: combatLog.start,
+      ts: notification.ts,
+      channel: this.event.payload.channel,
+    });
+
+    await this.event.respond({
+      ...log,
       text: `${char.name} is attacking ${target.findByOwner.name}. They may have won... I dunno yet.`,
+    });
+
+    await this.event.client.chat.postMessage({
+      channel: targetUser.id,
+      ...log,
     });
   }
   action?(): Promise<void> {

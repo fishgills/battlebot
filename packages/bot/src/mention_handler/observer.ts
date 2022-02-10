@@ -1,4 +1,4 @@
-import { SlackCommandMiddlewareArgs } from '@slack/bolt';
+import { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from '@slack/bolt';
 import { ChatPostMessageResponse } from '@slack/web-api';
 import { SlackBlockDto } from 'slack-block-builder';
 import { Observer } from '../common/Observer';
@@ -12,7 +12,9 @@ function normalizeQuotes(text) {
     .replace(/\u201E/g, '"')
     .replace(/\u201F/g, '"');
 }
-export abstract class MentionObserver extends Observer<SlackCommandMiddlewareArgs> {
+export abstract class MentionObserver extends Observer<
+  SlackCommandMiddlewareArgs & AllMiddlewareArgs
+> {
   getHandleText(event: SlackCommandMiddlewareArgs): string {
     const text = normalizeQuotes(event.payload.text);
     const match = text.match(/^(\w+) *(.*)$/);

@@ -1,9 +1,5 @@
 import { ChatPostMessageResponse } from '@slack/web-api';
-import {
-  SectionBuilder,
-  SlackBlockDto,
-  SlackMessageDto,
-} from 'slack-block-builder';
+import { SectionBuilder, SlackBlockDto } from 'slack-block-builder';
 import { Debug } from '../logger';
 import { Subject } from './Subject';
 
