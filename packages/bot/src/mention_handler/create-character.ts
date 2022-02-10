@@ -16,7 +16,7 @@ export class CharacterCreateObserver extends MentionObserver {
   async update(): Promise<void> {
     if (
       !this.event.payload.text ||
-      this.event.payload.text.trim().split(' ').length !== 3 ||
+      this.event.payload.text.trim().split(' ').length !== 2 ||
       this.event.payload.text.length > 100
     ) {
       this.msgUser('Invalid command. Should be `create MyCharacterName`');
