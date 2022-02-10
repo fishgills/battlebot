@@ -1,8 +1,7 @@
-import { WebClient } from '@slack/web-api';
 import { Blocks } from 'slack-block-builder';
 import { CharacterByOwnerQuery } from '../generated/graphql';
 import { sdk } from '../utils/gql';
-import { getTeamInfo, getUsernames, to } from '../utils/helpers';
+import { getUsernames, to } from '../utils/helpers';
 import { battleLog } from '../views/character';
 import { MentionObserver } from './observer';
 
@@ -50,9 +49,11 @@ export class CombatObserver extends MentionObserver {
       });
     } catch (e) {
       this.log('target has no character');
-      this.msgUser(
-        `<@${targetUser}> does not have a character yet. Tell them to make one!`,
-      );
+      this.msgUser(`<@${targetUser.id}> does not have a character yet.`);
+      this.event.client.chat.postMessage({
+        channel: targetUser.id,
+        text: `${this.event.payload.user_name} tried to fight you but you have no character. :cry: Type \`/battlebot\` to get started.`,
+      });
     }
 
     if (!target) {
