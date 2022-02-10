@@ -128,13 +128,11 @@ app.action<BlockAction>('reroll', async (args) => {
         id: char.id,
       })
     ).reroll;
-    await args.client.chat.postEphemeral({
-      channel: args.body.user.id,
-      token: args.context.botToken,
+    await args.respond({
+      response_type: 'ephemeral',
       blocks: editCharacterModal(char),
-      user: args.body.user.id,
     });
   } catch (e) {
-    args.say(e.response.errors[0].message);
+    await args.respond(e.response.errors[0].message);
   }
 });

@@ -22,7 +22,9 @@ export class CombatModel {
   id: string;
 
   @Field((type) => CharacterModel, { nullable: true })
-  @ManyToOne((type) => CharacterModel, (character) => character.attacking)
+  @ManyToOne((type) => CharacterModel, (character) => character.attacking, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'attacker_id' })
   attacker: CharacterModel;
 
@@ -31,7 +33,9 @@ export class CombatModel {
   attackerId: string;
 
   @Field((type) => CharacterModel, { nullable: true })
-  @ManyToOne((type) => CharacterModel, (character) => character.defending)
+  @ManyToOne((type) => CharacterModel, (character) => character.defending, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'defender_id' })
   defender: CharacterModel;
   @Field()

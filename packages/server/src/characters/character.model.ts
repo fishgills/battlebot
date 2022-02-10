@@ -37,13 +37,19 @@ export class CharacterModel {
   @Column()
   owner: string;
 
-  @OneToMany((type) => CombatModel, (combat) => combat.attacker, { lazy: true })
+  @OneToMany((type) => CombatModel, (combat) => combat.attacker, {
+    lazy: true,
+    onDelete: 'CASCADE',
+  })
   @Field(() => [CombatModel], {
     nullable: true,
   })
   attacking: CombatModel[];
 
-  @OneToMany((type) => CombatModel, (combat) => combat.defender, { lazy: true })
+  @OneToMany((type) => CombatModel, (combat) => combat.defender, {
+    lazy: true,
+    onDelete: 'CASCADE',
+  })
   @Field(() => [CombatModel], {
     nullable: true,
   })

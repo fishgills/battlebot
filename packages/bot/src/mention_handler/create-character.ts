@@ -37,7 +37,7 @@ export class CharacterCreateObserver extends MentionObserver {
       await sdk.addCharacter({
         input: {
           owner: this.event.payload.user_id,
-          name: this.event.payload.text.trim().split(' ')[2],
+          name: this.event.payload.text.trim().split(' ')[1],
           teamId: this.event.payload.team_id,
         },
       });
