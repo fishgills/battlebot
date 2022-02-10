@@ -17,7 +17,7 @@ export const database: MysqlConnectionOptions = {
   migrationsRun: false,
   logging: true,
   cache: true,
-  migrations: [`${__dirname}/migrations/*.ts`],
+  migrations: [`${__dirname}/migrations/*.{ts,js}`],
   cli: {
     migrationsDir: `${__dirname}/migrations`,
   },
