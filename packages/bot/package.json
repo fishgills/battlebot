@@ -13,7 +13,6 @@
     "codegen": "graphql-codegen --config codegen.yml"
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.33.1",
     "concurrently": "^7.0.0",
     "nodemon": "^2.0.15",
     "rimraf": "^3.0.2",
