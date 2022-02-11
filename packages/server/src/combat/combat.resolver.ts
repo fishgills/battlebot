@@ -38,7 +38,7 @@ export class CombatResolver {
     return await this.combatService.create(input);
   }
 
-  @Mutation(() => CombatLog)
+  @Mutation(() => CombatModel)
   async start(
     @Args('input')
     input: CreateCombatInput,
@@ -98,8 +98,18 @@ export class CombatResolver {
       }
       this.battleRound(participants, log);
     }
+    combat.log = log;
     await this.combatService.updateLog(combat.id, log);
-    return log;
+
+    combat.rewardGold = new DiceRoll('4d6kh2').total;
+    combat.winner = log.combat[log.combat.length - 1].attacker;
+    combat.loser = log.combat[log.combat.length - 1].defender;
+    combat.winner.gold = combat.winner.gold += combat.rewardGold;
+
+    await this.charService.update(combat.winner.id, combat.winner);
+    await this.combatService.update(combat.id, combat);
+
+    return combat;
   }
 
   private battleRound(participants: CharacterModel[], log: Partial<CombatLog>) {

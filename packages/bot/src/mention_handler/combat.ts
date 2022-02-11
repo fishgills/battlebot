@@ -62,8 +62,10 @@ export class CombatObserver extends MentionObserver {
 
     const [err, combatLog] = await to(
       sdk.startCombat({
-        attackerId: char.id,
-        defenderId: target.findByOwner.id,
+        input: {
+          attackerId: char.id,
+          defenderId: target.findByOwner.id,
+        },
       }),
     );
     if (err) {
@@ -83,16 +85,13 @@ export class CombatObserver extends MentionObserver {
     });
 
     const log = battleLog({
-      attacker: char,
-      defender: target.findByOwner,
-      log: combatLog.start,
-      ts: notification.ts,
+      combat: combatLog,
       channel: this.event.payload.channel,
     });
 
     await this.event.respond({
       ...log,
-      text: `${char.name} is attacking ${target.findByOwner.name}. They may have won... I dunno yet.`,
+      text: `${char.name} is attacking ${target.findByOwner.name}. ${combatLog.start.winner.name} has won!.`,
     });
 
     await this.event.client.chat.postMessage({

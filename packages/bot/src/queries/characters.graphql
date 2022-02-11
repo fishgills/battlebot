@@ -27,21 +27,42 @@ mutation addCharacter($input: CreateCharacterInput!) {
   }
 }
 
-mutation startCombat($attackerId: String!, $defenderId: String!) {
-  start(input: { attackerId: $attackerId, defenderId: $defenderId }) {
-    combat {
-      attacker {
-        ...CharacterParts
+mutation startCombat($input: CreateCombatInput!) {
+  start(input: $input) {
+    attacker {
+      id
+      name
+    }
+    defender {
+      id
+      name
+    }
+    rewardGold
+    loser {
+      id
+      name
+    }
+    winner {
+      id
+      name
+    }
+    log {
+      combat {
+        attacker {
+          id
+          name
+        }
+        defender {
+          id
+          name
+        }
+        hit
+        damage
+        attackRoll
+        attackBonus
+        defenderDefense
+        defenderHealth
       }
-      defender {
-        ...CharacterParts
-      }
-      hit
-      damage
-      attackRoll
-      attackBonus
-      defenderDefense
-      defenderHealth
     }
   }
 }

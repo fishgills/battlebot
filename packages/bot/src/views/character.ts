@@ -1,5 +1,10 @@
 import { Blocks, Elements, Message, setIfTruthy } from 'slack-block-builder';
-import { CharacterModel, CombatLog } from '../generated/graphql';
+import {
+  CharacterModel,
+  CombatLog,
+  CombatModel,
+  StartCombatMutation,
+} from '../generated/graphql';
 import { numToEmoji } from '../utils/helpers';
 
 export const editCharacterModal = (character: Partial<CharacterModel>) => {
@@ -17,16 +22,19 @@ export const editCharacterModal = (character: Partial<CharacterModel>) => {
         }),
       ]),
       Blocks.Section({
-        text: `*Strength*: ${character.strength}`,
+        text: `:muscle:: ${character.strength}`,
       }),
       Blocks.Section({
-        text: `*Defense*: ${character.defense}`,
+        text: `:shield:: ${character.defense}`,
       }),
       Blocks.Section({
-        text: `*Vitality*: ${character.vitality}`,
+        text: `:european_castle:: ${character.vitality}`,
       }),
       Blocks.Section({
-        text: `*Health*: ${character.hp}`,
+        text: `:heart:: ${character.hp}`,
+      }),
+      Blocks.Section({
+        text: `:moneybag: ${character.gold}`,
       }),
       setIfTruthy(character.rolls < 5, [
         Blocks.Actions().elements(
@@ -38,7 +46,9 @@ export const editCharacterModal = (character: Partial<CharacterModel>) => {
       ]),
       Blocks.Divider(),
       Blocks.Section({
-        text: `${character.name}, who is level ##, has *##/###* experience points towards level #`,
+        text: `${character.name}, who is level ${character.level}, has *${
+          character.xp
+        }/###* experience points towards level ${character.level + 1}`,
       }),
       Blocks.Divider(),
     )
@@ -46,22 +56,19 @@ export const editCharacterModal = (character: Partial<CharacterModel>) => {
 };
 
 export const battleLog = (options: {
-  log: CombatLog;
-  attacker: CharacterModel;
-  defender: CharacterModel;
+  combat: StartCombatMutation;
   channel: string;
-  ts: string;
 }) => {
   const blocks = [
     Blocks.Header({
-      text: `${options.attacker.name} wants to fight ${options.defender.name}!`,
+      text: `${options.combat.start.attacker.name} wants to fight ${options.combat.start.defender.name}!`,
     }),
     Blocks.Section({
-      text: `:crossed_swords: ${options.log.combat[0].attacker.name} has the initiative! Look out ${options.log.combat[0].defender.name}`,
+      text: `:crossed_swords: ${options.combat.start.log.combat[0].attacker.name} has the initiative! Look out ${options.combat.start.log.combat[0].defender.name}`,
     }),
   ];
 
-  for (const log of options.log.combat) {
+  for (const log of options.combat.start.log.combat) {
     let blockStr: string;
     if (log.attackRoll === 20) {
       blockStr = `*${log.attacker.name}* rolls a critical hit!`;
@@ -103,13 +110,15 @@ export const battleLog = (options: {
         Blocks.Section({
           text: `*${log.defender.name}* has been defeated. :cry:`,
         }),
+        Blocks.Section({
+          text: `*${log.attacker.name}* receives ${options.combat.start.rewardGold} :moneybag:!`,
+        }),
       );
     }
   }
 
   return Message()
     .channel(options.channel)
-    .threadTs(options.ts)
     .blocks(...blocks)
     .buildToObject();
 };

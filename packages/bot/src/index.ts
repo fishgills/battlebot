@@ -13,7 +13,6 @@ import { Mention$ } from './mention_handler';
 import { Shield$ } from './shield_handler';
 
 const app = new App({
-  signingSecret: process.env.SLACK_SIGNING_SECRET,
   clientId: process.env.SLACK_CLIENT_ID,
   clientSecret: process.env.SLACK_CLIENT_SECRET,
   appToken: process.env.SLACK_APP_TOKEN,
@@ -36,10 +35,10 @@ const app = new App({
 
 (async () => {
   const port = Number(process.env.PORT);
-  await app.start({
+  const info = await app.start({
     port,
   });
-  Logger.info('Starting bolt');
+  Logger.info('Starting bolt', info);
 })();
 
 // app.event('app_mention', async (args) => {

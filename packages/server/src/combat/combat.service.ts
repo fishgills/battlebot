@@ -22,6 +22,14 @@ export class CombatService {
     return this.combatRepo.findOneOrFail(id, options);
   }
 
+  update(id: string, combat: CombatModel) {
+    return this.combatRepo.update(
+      {
+        id,
+      },
+      combat,
+    );
+  }
   updateLog(combatId: string, log: CombatLog) {
     return this.combatRepo.update(
       {

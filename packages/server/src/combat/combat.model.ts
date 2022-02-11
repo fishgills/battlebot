@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { type } from 'ormconfig-migrations';
 import {
   Column,
   CreateDateColumn,
@@ -56,4 +57,30 @@ export class CombatModel {
   @Column()
   @UpdateDateColumn()
   updated_at: Date;
+
+  @Field()
+  @ManyToOne(() => CharacterModel)
+  @JoinColumn([
+    {
+      name: 'winner_id',
+      referencedColumnName: 'id',
+    },
+  ])
+  winner: CharacterModel;
+
+  @Field()
+  @ManyToOne(() => CharacterModel)
+  @JoinColumn([
+    {
+      name: 'loser_id',
+      referencedColumnName: 'id',
+    },
+  ])
+  loser: CharacterModel;
+
+  @Field()
+  @Column({
+    default: 0,
+  })
+  rewardGold: number;
 }

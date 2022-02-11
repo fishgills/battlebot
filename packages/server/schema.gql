@@ -55,6 +55,9 @@ type CombatModel {
   log: CombatLog!
   created_at: DateTime!
   updated_at: DateTime!
+  winner: CharacterModel!
+  loser: CharacterModel!
+  rewardGold: Float!
 }
 
 type SlackInstallModel {
@@ -93,7 +96,7 @@ type Mutation {
   reroll(id: String!): CharacterModel!
   createCharacter(input: CreateCharacterInput!): CharacterModel!
   createCombat(input: CreateCombatInput!): CombatModel!
-  start(input: CreateCombatInput!): CombatLog!
+  start(input: CreateCombatInput!): CombatModel!
   createInstall(input: CreateSlackInstallInput!): SlackInstallModel!
   updateInstall(input: UpdateSlackInstallInput!): SlackInstallModel!
   removeInstall(team_id: String!): String!

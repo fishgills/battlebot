@@ -59,7 +59,10 @@ export type CombatModel = {
   defenderId: Scalars['String'];
   id: Scalars['String'];
   log: CombatLog;
+  loser: CharacterModel;
+  rewardGold: Scalars['Float'];
   updated_at: Scalars['DateTime'];
+  winner: CharacterModel;
 };
 
 export type CombatRound = {
@@ -105,7 +108,7 @@ export type Mutation = {
   giveReward: Scalars['Boolean'];
   removeInstall: Scalars['String'];
   reroll: CharacterModel;
-  start: CombatLog;
+  start: CombatModel;
   updateInstall: SlackInstallModel;
 };
 
@@ -253,57 +256,40 @@ export type AddCharacterMutation = {
 };
 
 export type StartCombatMutationVariables = Exact<{
-  attackerId: Scalars['String'];
-  defenderId: Scalars['String'];
+  input: CreateCombatInput;
 }>;
 
 export type StartCombatMutation = {
   __typename?: 'Mutation';
   start: {
-    __typename?: 'CombatLog';
-    combat: Array<{
-      __typename?: 'CombatRound';
-      hit: boolean;
-      damage?: number | null | undefined;
-      attackRoll: number;
-      attackBonus: number;
-      defenderDefense: number;
-      defenderHealth: number;
-      attacker: {
-        __typename?: 'CharacterModel';
-        defense: number;
-        vitality: number;
-        strength: number;
-        name: string;
-        xp: number;
-        rolls: number;
-        hp: number;
-        level: number;
-        owner: string;
-        id: string;
-        created_at: any;
-        gold: number;
-        teamId: string;
-        updated_at: any;
-      };
-      defender: {
-        __typename?: 'CharacterModel';
-        defense: number;
-        vitality: number;
-        strength: number;
-        name: string;
-        xp: number;
-        rolls: number;
-        hp: number;
-        level: number;
-        owner: string;
-        id: string;
-        created_at: any;
-        gold: number;
-        teamId: string;
-        updated_at: any;
-      };
-    }>;
+    __typename?: 'CombatModel';
+    rewardGold: number;
+    attacker?: {
+      __typename?: 'CharacterModel';
+      id: string;
+      name: string;
+    } | null;
+    defender?: {
+      __typename?: 'CharacterModel';
+      id: string;
+      name: string;
+    } | null;
+    loser: { __typename?: 'CharacterModel'; id: string; name: string };
+    winner: { __typename?: 'CharacterModel'; id: string; name: string };
+    log: {
+      __typename?: 'CombatLog';
+      combat: Array<{
+        __typename?: 'CombatRound';
+        hit: boolean;
+        damage?: number | null;
+        attackRoll: number;
+        attackBonus: number;
+        defenderDefense: number;
+        defenderHealth: number;
+        attacker: { __typename?: 'CharacterModel'; id: string; name: string };
+        defender: { __typename?: 'CharacterModel'; id: string; name: string };
+      }>;
+    };
   };
 };
 
@@ -462,25 +448,45 @@ export const AddCharacterDocument = gql`
   ${CharacterPartsFragmentDoc}
 `;
 export const StartCombatDocument = gql`
-  mutation startCombat($attackerId: String!, $defenderId: String!) {
-    start(input: { attackerId: $attackerId, defenderId: $defenderId }) {
-      combat {
-        attacker {
-          ...CharacterParts
+  mutation startCombat($input: CreateCombatInput!) {
+    start(input: $input) {
+      attacker {
+        id
+        name
+      }
+      defender {
+        id
+        name
+      }
+      rewardGold
+      loser {
+        id
+        name
+      }
+      winner {
+        id
+        name
+      }
+      log {
+        combat {
+          attacker {
+            id
+            name
+          }
+          defender {
+            id
+            name
+          }
+          hit
+          damage
+          attackRoll
+          attackBonus
+          defenderDefense
+          defenderHealth
         }
-        defender {
-          ...CharacterParts
-        }
-        hit
-        damage
-        attackRoll
-        attackBonus
-        defenderDefense
-        defenderHealth
       }
     }
   }
-  ${CharacterPartsFragmentDoc}
 `;
 export const CharacterByOwnerDocument = gql`
   query characterByOwner($owner: String!, $teamId: String!) {
