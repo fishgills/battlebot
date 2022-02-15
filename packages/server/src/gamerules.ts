@@ -11,6 +11,10 @@ export const getHitPoints = (char: CharacterModel) => {
   return roll.total + modifier(char.vitality);
 };
 
+export const nextLevel = (level: number) => {
+  return level * (level - 1) * 500;
+};
+
 @ObjectType()
 export class WhoGoesFirst {
   @Field()

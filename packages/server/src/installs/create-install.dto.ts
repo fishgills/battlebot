@@ -6,8 +6,8 @@ export class CreateSlackInstallInput {
   @Field()
   team_id: string;
 
-  @Field(() => GraphQLJSON)
-  installObj: any;
+  // @Field(() => GraphQLJSON)
+  // installObj: Date;
 
   @Field(() => String, {
     nullable: true,

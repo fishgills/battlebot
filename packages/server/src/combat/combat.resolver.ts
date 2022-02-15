@@ -105,6 +105,7 @@ export class CombatResolver {
     combat.winner = log.combat[log.combat.length - 1].attacker;
     combat.loser = log.combat[log.combat.length - 1].defender;
     combat.winner.gold = combat.winner.gold += combat.rewardGold;
+    combat.winner.xp = combat.winner.xp += combat.loser.level * 100;
 
     await this.charService.update(combat.winner.id, combat.winner);
     await this.combatService.update(combat.id, combat);

@@ -5,7 +5,7 @@ import {
   CombatModel,
   StartCombatMutation,
 } from '../generated/graphql';
-import { numToEmoji } from '../utils/helpers';
+import { nextLevel, numToEmoji } from '../utils/helpers';
 
 export const editCharacterModal = (character: Partial<CharacterModel>) => {
   return Message()
@@ -48,7 +48,9 @@ export const editCharacterModal = (character: Partial<CharacterModel>) => {
       Blocks.Section({
         text: `${character.name}, who is level ${character.level}, has *${
           character.xp
-        }/###* experience points towards level ${character.level + 1}`,
+        }/${nextLevel(character.level)}* experience points towards level ${
+          character.level + 1
+        }`,
       }),
       Blocks.Divider(),
     )

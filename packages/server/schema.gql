@@ -19,6 +19,7 @@ type CharacterModel {
   rolls: Float!
   gold: Float!
   teamId: String!
+  extraPoints: Float!
 }
 
 """
@@ -70,7 +71,7 @@ type SlackInstallModel {
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
-scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+scalar JSON
 
 type RewardModel {
   id: String!
@@ -83,13 +84,13 @@ type RewardModel {
 
 type Query {
   characters: [CharacterModel!]!
-  findByOwner(teamId: String, owner: String!): CharacterModel!
+  findByOwner(owner: String!, teamId: String): CharacterModel!
   combats: [CombatModel!]!
   installs: [SlackInstallModel!]!
   install(team_id: String!): SlackInstallModel!
   rewards: [RewardModel!]!
   rewardsGivenToday(user: String!): Int!
-  getUserScore(listType: String = "from", userId: String!): [RewardModel!]!
+  getUserScore(userId: String!, listType: String = "from"): [RewardModel!]!
 }
 
 type Mutation {
@@ -116,13 +117,11 @@ input CreateCombatInput {
 
 input CreateSlackInstallInput {
   team_id: String!
-  installObj: JSON!
   channelId: String
 }
 
 input UpdateSlackInstallInput {
   team_id: String
-  installObj: JSON
   channelId: String
   id: String!
 }

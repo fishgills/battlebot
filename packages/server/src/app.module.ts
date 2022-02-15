@@ -12,6 +12,7 @@ import {
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from 'apollo-server-core';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 @Module({
   imports: [
     CharacterModule,
@@ -20,8 +21,9 @@ import {
     RewardModule,
     HttpModule,
     TypeOrmModule.forRoot(database.database),
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
       debug: true,
+      driver: ApolloDriver,
       playground: false,
       autoSchemaFile: 'schema.gql',
       plugins: [

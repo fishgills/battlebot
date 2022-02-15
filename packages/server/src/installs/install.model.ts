@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import GraphQLJSON from 'graphql-type-json';
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { JSONScalar } from './json.scalar';
 
 @Unique(['team_id'])
 @ObjectType()
@@ -18,7 +18,7 @@ export class SlackInstallModel {
     type: 'json',
     nullable: false,
   })
-  @Field(() => GraphQLJSON)
+  @Field(() => JSONScalar)
   installObj: any;
 
   @Column({

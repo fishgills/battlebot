@@ -9,7 +9,8 @@
       "packages/*"
     ],
     "nohoist": [
-      "**/@angular/**"
+      "**/@angular/**",
+      "**/@nestjs/**"
     ]
   },
   "dependencies": {

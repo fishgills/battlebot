@@ -121,4 +121,8 @@ export class CharacterModel {
   })
   @Field()
   teamId: string;
+
+  @Column()
+  @Field()
+  extraPoints: number;
 }
