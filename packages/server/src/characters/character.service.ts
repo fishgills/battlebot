@@ -41,7 +41,7 @@ export class CharacterService {
     });
   }
 
-  update(id: string, input: CreateCharacterInput) {
+  update(id: string, input: CharacterModel) {
     return this.charRepo.update(
       {
         id,

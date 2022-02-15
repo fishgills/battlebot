@@ -12,7 +12,7 @@ import { subMinutes } from 'date-fns';
 import { MoreThan } from 'typeorm';
 import { CharacterModel } from '../characters/character.model';
 import { CharacterService } from '../characters/character.service';
-import { CombatLog, CombatRound, modifier } from '../gamerules';
+import { CombatLog, CombatRound, levelUp, modifier } from '../gamerules';
 import { CombatModel } from './combat.model';
 import { CombatService } from './combat.service';
 import { CreateCombatInput } from './dto/create-combat.input';
@@ -98,17 +98,21 @@ export class CombatResolver {
     }
     combat.log = log;
     await this.combatService.updateLog(combat.id, log);
-
-    combat.rewardGold = new DiceRoll('4d6kh2').total;
     combat.winner = log.combat[log.combat.length - 1].attacker;
     combat.loser = log.combat[log.combat.length - 1].defender;
-    combat.winner.gold = combat.winner.gold += combat.rewardGold;
-    combat.winner.xp = combat.winner.xp +=
-      (combat.defender.level / combat.winner.level) *
-      new DiceRoll('20d10').total;
-
-    await this.charService.update(combat.winner.id, combat.winner);
+    combat.rewardGold = new DiceRoll('4d6kh2').total;
     await this.combatService.update(combat.id, combat);
+
+    const characters = await this.charService.findByIds([
+      combat.winner.id,
+      combat.loser.id,
+    ]);
+
+    characters[0].gold = characters[0].gold += combat.rewardGold;
+    characters[0].xp = characters[0].xp +=
+      (characters[1].level / characters[0].level) * new DiceRoll('20d10').total;
+
+    await this.charService.update(characters[0].id, levelUp(characters[0]));
 
     return combat;
   }

@@ -12,7 +12,21 @@ export const getHitPoints = (char: CharacterModel) => {
 };
 
 export const nextLevel = (level: number) => {
-  return level * (level - 1) * 500;
+  return level * 500;
+};
+
+export const levelUp = (char: CharacterModel) => {
+  if (char.xp < nextLevel(char.level)) {
+    return char;
+  }
+
+  const hp = 6 + modifier(char.vitality);
+  char.hp += hp;
+  char.level += 1;
+  if (char.level % 2) {
+    char.extraPoints += 1;
+  }
+  return char;
 };
 
 @ObjectType()
