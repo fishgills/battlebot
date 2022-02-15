@@ -1,28 +1,18 @@
 import {
   AllMiddlewareArgs,
+  BlockButtonAction,
   SlackActionMiddlewareArgs,
-  SlackCommandMiddlewareArgs,
 } from '@slack/bolt';
 import { ChatPostMessageResponse } from '@slack/web-api';
 import { SlackBlockDto } from 'slack-block-builder';
 import { Observer } from '../common/Observer';
 
-type ObserveType = SlackCommandMiddlewareArgs & AllMiddlewareArgs;
+type ObserveType = SlackActionMiddlewareArgs<BlockButtonAction> &
+  AllMiddlewareArgs;
 
-function normalizeQuotes(text) {
-  return text
-    .replace(/\u00AB/g, '"')
-    .replace(/\u00BB/g, '"')
-    .replace(/\u201C/g, '"')
-    .replace(/\u201D/g, '"')
-    .replace(/\u201E/g, '"')
-    .replace(/\u201F/g, '"');
-}
-export abstract class MentionObserver extends Observer<ObserveType> {
-  getHandleText(event: SlackCommandMiddlewareArgs): string {
-    const text = normalizeQuotes(event.payload.text);
-    const match = text.match(/^(\w+) *(.*)$/);
-    return match ? match[1] : undefined;
+export abstract class ActionObserver extends Observer<ObserveType> {
+  getHandleText(event: ObserveType): string {
+    return event.action.action_id;
   }
   async msgUser(
     content: string | SlackBlockDto[],

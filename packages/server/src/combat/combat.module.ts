@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CharacterModel } from '../characters/character.model';
+import { CharacterEntity } from 'characters/character.entity';
 import { CharacterModule } from '../characters/character.module';
 import { CombatModel } from './combat.model';
 import { CombatResolver } from './combat.resolver';
@@ -8,7 +8,7 @@ import { CombatService } from './combat.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([CombatModel, CharacterModel]),
+    TypeOrmModule.forFeature([CombatModel, CharacterEntity]),
     forwardRef(() => CharacterModule),
   ],
   providers: [CombatService, CombatResolver],

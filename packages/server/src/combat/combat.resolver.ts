@@ -1,16 +1,7 @@
-import { Dice, DiceRoll } from '@dice-roller/rpg-dice-roller';
+import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Inject } from '@nestjs/common';
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Args,
-  ResolveField,
-  Parent,
-} from '@nestjs/graphql';
-import { subMinutes } from 'date-fns';
-import { MoreThan } from 'typeorm';
-import { CharacterModel } from '../characters/character.model';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { CharacterType } from 'characters/character.type';
 import { CharacterService } from '../characters/character.service';
 import { CombatLog, CombatRound, levelUp, modifier } from '../gamerules';
 import { CombatModel } from './combat.model';
@@ -65,7 +56,7 @@ export class CombatResolver {
     });
 
     const log = new CombatLog();
-    const participants: CharacterModel[] = [combat.attacker, combat.defender];
+    const participants: CharacterType[] = [combat.attacker, combat.defender];
 
     participants.sort((a, b) => {
       const aRoll = new DiceRoll('d20');
@@ -98,26 +89,33 @@ export class CombatResolver {
     }
     combat.log = log;
     await this.combatService.updateLog(combat.id, log);
-    combat.winner = log.combat[log.combat.length - 1].attacker;
-    combat.loser = log.combat[log.combat.length - 1].defender;
     combat.rewardGold = new DiceRoll('4d6kh2').total;
     await this.combatService.update(combat.id, combat);
 
-    const characters = await this.charService.findByIds([
-      combat.winner.id,
-      combat.loser.id,
-    ]);
+    const winner = await this.charService.findOne({
+      where: {
+        id: log.combat[log.combat.length - 1].attacker.id,
+      },
+    });
+    const loser = await this.charService.findOne({
+      where: {
+        id: log.combat[log.combat.length - 1].defender.id,
+      },
+    });
 
-    characters[0].gold = characters[0].gold += combat.rewardGold;
-    characters[0].xp = characters[0].xp +=
-      (characters[1].level / characters[0].level) * new DiceRoll('20d10').total;
+    winner.gold = winner.gold += combat.rewardGold;
+    winner.xp = winner.xp += Math.floor(
+      (loser.level / winner.level) * new DiceRoll('20d10').total,
+    );
+    levelUp(winner);
+    await this.charService.update(winner.id, winner);
 
-    await this.charService.update(characters[0].id, levelUp(characters[0]));
-
+    combat.winner = winner;
+    combat.loser = loser;
     return combat;
   }
 
-  private battleRound(participants: CharacterModel[], log: Partial<CombatLog>) {
+  private battleRound(participants: CharacterType[], log: Partial<CombatLog>) {
     this.attack(participants[0], participants[1], log);
     if (participants[1].hp <= 0) {
       return;
@@ -126,8 +124,8 @@ export class CombatResolver {
   }
 
   private attack(
-    attacker: CharacterModel,
-    defender: CharacterModel,
+    attacker: CharacterType,
+    defender: CharacterType,
     log: Partial<CombatLog>,
   ) {
     const attackRoll = new DiceRoll('d20').total;

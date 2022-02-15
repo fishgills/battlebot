@@ -3,16 +3,18 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { modifier } from 'gamerules';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
-import { CharacterModel } from './character.model';
-import { CreateCharacterInput } from './create-character.dto';
+import { CharacterEntity } from './character.entity';
+import { CharacterType } from './character.type';
+import { CreateCharacterInput } from './dto/create-character.dto';
+import { UpdateCharacterInput } from './dto/update-character.dto';
 @Injectable()
 export class CharacterService {
   constructor(
-    @InjectRepository(CharacterModel)
-    private readonly charRepo: Repository<CharacterModel>,
+    @InjectRepository(CharacterEntity)
+    private readonly charRepo: Repository<CharacterEntity>,
   ) {}
 
-  create(createCharacterDto: CreateCharacterInput): Promise<CharacterModel> {
+  create(createCharacterDto: CreateCharacterInput): Promise<CharacterType> {
     const char = this.charRepo.create(createCharacterDto);
     char.teamId = createCharacterDto.teamId;
     this.rollCharacter(char);
@@ -20,19 +22,25 @@ export class CharacterService {
     return this.charRepo.save(char);
   }
 
-  find(options?: FindManyOptions<CharacterModel>) {
+  find(options?: FindManyOptions<CharacterEntity>): Promise<CharacterType[]> {
     return this.charRepo.find(options);
   }
 
-  findAll(): Promise<CharacterModel[]> {
+  findAll(): Promise<CharacterType[]> {
     return this.charRepo.find();
   }
 
-  findByIds(ids: string[]) {
-    return this.charRepo.findByIds(ids);
+  findByIds(
+    ids: string[],
+    options?: FindManyOptions<CharacterEntity>,
+  ): Promise<CharacterType[]> {
+    return this.charRepo.findByIds(ids, options);
   }
 
-  findByOwner(owner: string, teamId: string | undefined) {
+  findByOwner(
+    owner: string,
+    teamId: string | undefined,
+  ): Promise<CharacterType> {
     return this.charRepo.findOneOrFail({
       where: {
         owner,
@@ -41,7 +49,7 @@ export class CharacterService {
     });
   }
 
-  update(id: string, input: CharacterModel) {
+  update(id: string, input: UpdateCharacterInput) {
     return this.charRepo.update(
       {
         id,
@@ -50,11 +58,11 @@ export class CharacterService {
     );
   }
 
-  findOne(options: FindOneOptions<CharacterModel>) {
+  findOne(options: FindOneOptions<CharacterEntity>): Promise<CharacterType> {
     return this.charRepo.findOneOrFail(options);
   }
 
-  public rollCharacter(char: CharacterModel) {
+  public rollCharacter(char: CharacterType) {
     char.strength = new DiceRoll('4d6kh3').total;
     char.defense = new DiceRoll('4d6kh3').total;
     char.vitality = new DiceRoll('4d6kh3').total;

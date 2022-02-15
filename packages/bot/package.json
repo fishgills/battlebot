@@ -9,8 +9,7 @@
     "start:prod": "node index.js",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
   },
   "devDependencies": {
     "concurrently": "^7.0.0",

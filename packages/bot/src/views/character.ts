@@ -1,13 +1,75 @@
+import { RespondFn } from '@slack/bolt';
+import { WebClient } from '@slack/web-api';
 import { Blocks, Elements, Message, setIfTruthy } from 'slack-block-builder';
 import {
-  CharacterModel,
+  CharacterType,
   CombatLog,
   CombatModel,
   StartCombatMutation,
 } from '../generated/graphql';
 import { nextLevel, numToEmoji } from '../utils/helpers';
 
-export const editCharacterModal = (character: Partial<CharacterModel>) => {
+export const notifyLevelUp = (
+  winner: Pick<CharacterType, 'level' | 'id'>,
+  org_attacker: CharacterType,
+  org_defender: CharacterType,
+  attacker_resp: RespondFn,
+  org_def_slack_id: string,
+  event: WebClient,
+) => {
+  if (winner.id === org_attacker.id && winner.level > org_attacker.level) {
+    return attacker_resp({
+      response_type: 'ephemeral',
+      text: 'You have levelled up! Check your character sheet.',
+    }).then();
+  }
+
+  if (winner.id === org_defender.id && winner.level > org_defender.level) {
+    return event.chat
+      .postMessage({
+        channel: org_def_slack_id,
+        text: 'You have levelled up! Check your character sheet.',
+      })
+      .then();
+  }
+};
+
+const statBlock = (character: Partial<CharacterType>) => {
+  const stats = [
+    {
+      id: 'strength',
+      emoji: ':muscle:',
+      value: character.strength,
+    },
+    {
+      id: 'defense',
+      emoji: ':shield:',
+      value: character.defense,
+    },
+    {
+      id: 'vitality',
+      emoji: ':european_castle:',
+      value: character.vitality,
+    },
+  ];
+
+  return stats.map((stat) => {
+    const block = Blocks.Section({
+      text: `${stat.emoji}: ${stat.value}`,
+    });
+    if (character.extraPoints > 0) {
+      block.accessory(
+        Elements.Button({
+          text: ':heavy_plus_sign:',
+        })
+          .value(stat.id)
+          .actionId('stat-incr'),
+      );
+    }
+    return block;
+  });
+};
+export const editCharacterModal = (character: Partial<CharacterType>) => {
   return Message()
     .blocks(
       Blocks.Section({
@@ -21,15 +83,7 @@ export const editCharacterModal = (character: Partial<CharacterModel>) => {
           } ability rolls left. Choose wisely. *18* is the highest you can roll.`,
         }),
       ]),
-      Blocks.Section({
-        text: `:muscle:: ${character.strength}`,
-      }),
-      Blocks.Section({
-        text: `:shield:: ${character.defense}`,
-      }),
-      Blocks.Section({
-        text: `:european_castle:: ${character.vitality}`,
-      }),
+      statBlock(character),
       Blocks.Section({
         text: `:heart:: ${character.hp}`,
       }),

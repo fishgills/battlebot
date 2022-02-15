@@ -9,8 +9,9 @@ import { Store } from './installation_store';
 import { sdk } from './utils/gql';
 import { editCharacterModal } from './views/character';
 import { isGenericMessageEvent } from './utils/helpers';
-import { Mention$ } from './mention_handler';
+import { Command$ } from './mention_handler';
 import { Shield$ } from './shield_handler';
+import { Action$ } from './actions';
 
 const app = new App({
   clientId: process.env.SLACK_CLIENT_ID,
@@ -73,12 +74,12 @@ app.event('team_join', async (args) => {
 
 app.command('/battlebot', async (args) => {
   await args.ack();
-  Mention$.event(args);
+  Command$.event(args);
 });
 
 app.command('/battlebot-dev', async (args) => {
   await args.ack();
-  Mention$.event(args);
+  Command$.event(args);
 });
 
 app.event('app_home_opened', async (args) => {
@@ -111,6 +112,10 @@ app.event('app_home_opened', async (args) => {
   } catch (error) {
     debug(error);
   }
+});
+app.action(Action$.actions(), async (args) => {
+  await args.ack();
+  Action$.event(args);
 });
 
 app.action<BlockAction>('reroll', async (args) => {

@@ -25,12 +25,13 @@ export type Scalars = {
   JSON: any;
 };
 
-export type CharacterModel = {
-  __typename?: 'CharacterModel';
+export type CharacterType = {
+  __typename?: 'CharacterType';
   attacking?: Maybe<Array<CombatModel>>;
   created_at: Scalars['DateTime'];
   defending?: Maybe<Array<CombatModel>>;
   defense: Scalars['Float'];
+  extraPoints: Scalars['Float'];
   gold: Scalars['Float'];
   hp: Scalars['Float'];
   id: Scalars['String'];
@@ -52,26 +53,26 @@ export type CombatLog = {
 
 export type CombatModel = {
   __typename?: 'CombatModel';
-  attacker?: Maybe<CharacterModel>;
+  attacker?: Maybe<CharacterType>;
   attackerId: Scalars['String'];
   created_at: Scalars['DateTime'];
-  defender?: Maybe<CharacterModel>;
+  defender?: Maybe<CharacterType>;
   defenderId: Scalars['String'];
   id: Scalars['String'];
   log: CombatLog;
-  loser: CharacterModel;
+  loser: CharacterType;
   rewardGold: Scalars['Float'];
   updated_at: Scalars['DateTime'];
-  winner: CharacterModel;
+  winner: CharacterType;
 };
 
 export type CombatRound = {
   __typename?: 'CombatRound';
   attackBonus: Scalars['Float'];
   attackRoll: Scalars['Float'];
-  attacker: CharacterModel;
+  attacker: CharacterType;
   damage?: Maybe<Scalars['Float']>;
-  defender: CharacterModel;
+  defender: CharacterType;
   defenderDefense: Scalars['Float'];
   defenderHealth: Scalars['Float'];
   hit: Scalars['Boolean'];
@@ -102,14 +103,20 @@ export type CreateSlackInstallInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createCharacter: CharacterModel;
+  CharacterUpdate: Scalars['Int'];
+  createCharacter: CharacterType;
   createCombat: CombatModel;
   createInstall: SlackInstallModel;
   giveReward: Scalars['Boolean'];
   removeInstall: Scalars['String'];
-  reroll: CharacterModel;
+  reroll: CharacterType;
   start: CombatModel;
   updateInstall: SlackInstallModel;
+};
+
+export type MutationCharacterUpdateArgs = {
+  id: Scalars['String'];
+  input: UpdateCharacterInput;
 };
 
 export type MutationCreateCharacterArgs = {
@@ -146,9 +153,9 @@ export type MutationUpdateInstallArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  characters: Array<CharacterModel>;
+  characters: Array<CharacterType>;
   combats: Array<CombatModel>;
-  findByOwner: CharacterModel;
+  findByOwner: CharacterType;
   getUserScore: Array<RewardModel>;
   install: SlackInstallModel;
   installs: Array<SlackInstallModel>;
@@ -192,6 +199,13 @@ export type SlackInstallModel = {
   team_id: Scalars['String'];
 };
 
+export type UpdateCharacterInput = {
+  defense: Scalars['Float'];
+  extraPoints: Scalars['Float'];
+  strength: Scalars['Float'];
+  vitality: Scalars['Float'];
+};
+
 export type UpdateSlackInstallInput = {
   channelId?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
@@ -206,7 +220,7 @@ export type WhoGoesFirst = {
 };
 
 export type CharacterPartsFragment = {
-  __typename?: 'CharacterModel';
+  __typename?: 'CharacterType';
   defense: number;
   vitality: number;
   strength: number;
@@ -221,6 +235,7 @@ export type CharacterPartsFragment = {
   gold: number;
   teamId: string;
   updated_at: any;
+  extraPoints: number;
 };
 
 export type SlackInstallPartsFragment = {
@@ -237,7 +252,7 @@ export type AddCharacterMutationVariables = Exact<{
 export type AddCharacterMutation = {
   __typename?: 'Mutation';
   createCharacter: {
-    __typename?: 'CharacterModel';
+    __typename?: 'CharacterType';
     defense: number;
     vitality: number;
     strength: number;
@@ -252,6 +267,7 @@ export type AddCharacterMutation = {
     gold: number;
     teamId: string;
     updated_at: any;
+    extraPoints: number;
   };
 };
 
@@ -265,17 +281,23 @@ export type StartCombatMutation = {
     __typename?: 'CombatModel';
     rewardGold: number;
     attacker?: {
-      __typename?: 'CharacterModel';
+      __typename?: 'CharacterType';
       id: string;
       name: string;
     } | null;
     defender?: {
-      __typename?: 'CharacterModel';
+      __typename?: 'CharacterType';
       id: string;
       name: string;
     } | null;
-    loser: { __typename?: 'CharacterModel'; id: string; name: string };
-    winner: { __typename?: 'CharacterModel'; id: string; name: string };
+    loser: { __typename?: 'CharacterType'; id: string; name: string };
+    winner: {
+      __typename?: 'CharacterType';
+      id: string;
+      name: string;
+      level: number;
+      xp: number;
+    };
     log: {
       __typename?: 'CombatLog';
       combat: Array<{
@@ -286,8 +308,8 @@ export type StartCombatMutation = {
         attackBonus: number;
         defenderDefense: number;
         defenderHealth: number;
-        attacker: { __typename?: 'CharacterModel'; id: string; name: string };
-        defender: { __typename?: 'CharacterModel'; id: string; name: string };
+        attacker: { __typename?: 'CharacterType'; id: string; name: string };
+        defender: { __typename?: 'CharacterType'; id: string; name: string };
       }>;
     };
   };
@@ -301,7 +323,7 @@ export type CharacterByOwnerQueryVariables = Exact<{
 export type CharacterByOwnerQuery = {
   __typename?: 'Query';
   findByOwner: {
-    __typename?: 'CharacterModel';
+    __typename?: 'CharacterType';
     defense: number;
     vitality: number;
     strength: number;
@@ -316,6 +338,7 @@ export type CharacterByOwnerQuery = {
     gold: number;
     teamId: string;
     updated_at: any;
+    extraPoints: number;
   };
 };
 
@@ -326,7 +349,7 @@ export type RollCharacterMutationVariables = Exact<{
 export type RollCharacterMutation = {
   __typename?: 'Mutation';
   reroll: {
-    __typename?: 'CharacterModel';
+    __typename?: 'CharacterType';
     defense: number;
     vitality: number;
     strength: number;
@@ -341,6 +364,7 @@ export type RollCharacterMutation = {
     gold: number;
     teamId: string;
     updated_at: any;
+    extraPoints: number;
   };
 };
 
@@ -414,8 +438,18 @@ export type RewardsGivenTodayQuery = {
   rewardsGivenToday: number;
 };
 
+export type CharacterUpdateMutationVariables = Exact<{
+  characterUpdateId: Scalars['String'];
+  input: UpdateCharacterInput;
+}>;
+
+export type CharacterUpdateMutation = {
+  __typename?: 'Mutation';
+  CharacterUpdate: number;
+};
+
 export const CharacterPartsFragmentDoc = gql`
-  fragment CharacterParts on CharacterModel {
+  fragment CharacterParts on CharacterType {
     defense
     vitality
     strength
@@ -430,6 +464,7 @@ export const CharacterPartsFragmentDoc = gql`
     gold
     teamId
     updated_at
+    extraPoints
   }
 `;
 export const SlackInstallPartsFragmentDoc = gql`
@@ -480,6 +515,8 @@ export const StartCombatDocument = gql`
       winner {
         id
         name
+        level
+        xp
       }
       log {
         combat {
@@ -678,6 +715,28 @@ export class RewardsGivenTodayGQL extends Apollo.Query<
   RewardsGivenTodayQueryVariables
 > {
   document = RewardsGivenTodayDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const CharacterUpdateDocument = gql`
+  mutation CharacterUpdate(
+    $characterUpdateId: String!
+    $input: UpdateCharacterInput!
+  ) {
+    CharacterUpdate(id: $characterUpdateId, input: $input)
+  }
+`;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CharacterUpdateGQL extends Apollo.Mutation<
+  CharacterUpdateMutation,
+  CharacterUpdateMutationVariables
+> {
+  document = CharacterUpdateDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);

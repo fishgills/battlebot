@@ -19,7 +19,7 @@ export class SlackInstallModel {
     nullable: false,
   })
   @Field(() => JSONScalar)
-  installObj: any;
+  installObj: string;
 
   @Column({
     nullable: true,

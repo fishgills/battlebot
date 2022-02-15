@@ -1,9 +1,9 @@
 import { SessionModel } from '../auth/session-model';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
-import { CharacterModel } from '../characters/character.model';
 import { CombatModel } from '../combat/combat.model';
 import { SlackInstallModel } from '../installs/install.model';
 import { RewardModel } from '../rewards/reward.model';
+import { CharacterEntity } from 'characters/character.entity';
 
 export const database: MysqlConnectionOptions = {
   type: 'mysql',
@@ -23,7 +23,7 @@ export const database: MysqlConnectionOptions = {
   },
   entities: [
     CombatModel,
-    CharacterModel,
+    CharacterEntity,
     SlackInstallModel,
     RewardModel,
     SessionModel,

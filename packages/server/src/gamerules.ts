@@ -1,23 +1,23 @@
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { CharacterModel } from './characters/character.model';
+import { CharacterType } from 'characters/character.type';
 
 export const modifier = (value: number) => {
   return Math.floor((value - 10) / 2);
 };
 
-export const getHitPoints = (char: CharacterModel) => {
+export const getHitPoints = (char: CharacterType) => {
   const roll = new DiceRoll('1d10');
   return roll.total + modifier(char.vitality);
 };
 
 export const nextLevel = (level: number) => {
-  return level * 500;
+  return level * 300;
 };
 
-export const levelUp = (char: CharacterModel) => {
+export const levelUp = (char: CharacterType) => {
   if (char.xp < nextLevel(char.level)) {
-    return char;
+    return;
   }
 
   const hp = 6 + modifier(char.vitality);
@@ -26,7 +26,6 @@ export const levelUp = (char: CharacterModel) => {
   if (char.level % 2) {
     char.extraPoints += 1;
   }
-  return char;
 };
 
 @ObjectType()
@@ -40,9 +39,9 @@ export class WhoGoesFirst {
 @ObjectType()
 export class CombatRound {
   @Field()
-  attacker: CharacterModel;
+  attacker: CharacterType;
   @Field()
-  defender: CharacterModel;
+  defender: CharacterType;
   @Field()
   hit: boolean;
   @Field({

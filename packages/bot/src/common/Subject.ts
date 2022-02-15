@@ -1,19 +1,19 @@
 import { Observer } from './Observer';
 
-export abstract class Subject<Event> {
-  public observers: Observer<Event>[] = [];
+export abstract class Subject<T> {
+  public observers: Observer<T>[] = [];
 
-  attach(observer: Observer<Event>): void {
+  attach(observer: Observer<T>): void {
     observer.setSubject(this);
     this.observers.push(observer);
   }
 
-  notify(event: Event): void {
+  notify(event: T): void {
     for (const observer of this.observers) {
       observer.shouldHandle(event);
     }
   }
-  event(slackEvent: Event) {
+  event(slackEvent: T) {
     this.notify(slackEvent);
   }
 }

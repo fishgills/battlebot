@@ -1,4 +1,4 @@
-fragment CharacterParts on CharacterModel {
+fragment CharacterParts on CharacterType {
   defense
   vitality
   strength
@@ -13,6 +13,7 @@ fragment CharacterParts on CharacterModel {
   gold
   teamId
   updated_at
+  extraPoints
 }
 
 fragment SlackInstallParts on SlackInstallModel {
@@ -45,6 +46,8 @@ mutation startCombat($input: CreateCombatInput!) {
     winner {
       id
       name
+      level
+      xp
     }
     log {
       combat {
@@ -106,4 +109,11 @@ mutation giveReward($from: String!, $to: String!) {
 
 query rewardsGivenToday($user: String!) {
   rewardsGivenToday(user: $user)
+}
+
+mutation CharacterUpdate(
+  $characterUpdateId: String!
+  $input: UpdateCharacterInput!
+) {
+  CharacterUpdate(id: $characterUpdateId, input: $input)
 }

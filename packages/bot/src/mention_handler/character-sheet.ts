@@ -1,4 +1,4 @@
-import { Blocks, Message, SlackMessageDto } from 'slack-block-builder';
+import { Blocks } from 'slack-block-builder';
 import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
 import { MentionObserver } from './observer';

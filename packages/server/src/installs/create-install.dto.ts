@@ -1,13 +1,13 @@
 import { Field, InputType } from '@nestjs/graphql';
-import GraphQLJSON from 'graphql-type-json';
+import { JSONScalar } from './json.scalar';
 
 @InputType('CreateSlackInstallInput')
 export class CreateSlackInstallInput {
   @Field()
   team_id: string;
 
-  // @Field(() => GraphQLJSON)
-  // installObj: Date;
+  @Field(() => JSONScalar)
+  installObj: string;
 
   @Field(() => String, {
     nullable: true,

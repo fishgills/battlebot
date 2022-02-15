@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CharacterEntity } from 'characters/character.entity';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
-import { CharacterModel } from '../characters/character.model';
 import { CombatLog } from '../gamerules';
 import { CombatModel } from './combat.model';
 import { CreateCombatInput } from './dto/create-combat.input';
@@ -10,8 +10,8 @@ import { CreateCombatInput } from './dto/create-combat.input';
 export class CombatService {
   constructor(
     @InjectRepository(CombatModel) public combatRepo: Repository<CombatModel>,
-    @InjectRepository(CharacterModel)
-    private charRepo: Repository<CharacterModel>,
+    @InjectRepository(CharacterEntity)
+    private charRepo: Repository<CharacterEntity>,
   ) {}
 
   findAll(options?: FindManyOptions<CombatModel>) {
@@ -46,10 +46,5 @@ export class CombatService {
       attackerId: input.attackerId,
       defenderId: input.defenderId,
     });
-  }
-
-  getXP(attacker: CharacterModel, defender: CharacterModel) {
-    const base = 10;
-    const diff = attacker.level - defender.level;
   }
 }

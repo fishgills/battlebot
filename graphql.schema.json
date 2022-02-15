@@ -20,7 +20,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "CharacterModel",
+        "name": "CharacterType",
         "description": null,
         "fields": [
           {
@@ -81,6 +81,22 @@
           },
           {
             "name": "defense",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "extraPoints",
             "description": null,
             "args": [],
             "type": {
@@ -339,7 +355,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "CharacterModel",
+              "name": "CharacterType",
               "ofType": null
             },
             "isDeprecated": false,
@@ -383,7 +399,7 @@
             "args": [],
             "type": {
               "kind": "OBJECT",
-              "name": "CharacterModel",
+              "name": "CharacterType",
               "ofType": null
             },
             "isDeprecated": false,
@@ -446,7 +462,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CharacterModel",
+                "name": "CharacterType",
                 "ofType": null
               }
             },
@@ -494,7 +510,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CharacterModel",
+                "name": "CharacterType",
                 "ofType": null
               }
             },
@@ -553,7 +569,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CharacterModel",
+                "name": "CharacterType",
                 "ofType": null
               }
             },
@@ -581,7 +597,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CharacterModel",
+                "name": "CharacterType",
                 "ofType": null
               }
             },
@@ -900,6 +916,55 @@
         "description": null,
         "fields": [
           {
+            "name": "CharacterUpdate",
+            "description": null,
+            "args": [
+              {
+                "name": "id",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "input",
+                "description": null,
+                "type": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UpdateCharacterInput",
+                    "ofType": null
+                  }
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createCharacter",
             "description": null,
             "args": [
@@ -925,7 +990,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CharacterModel",
+                "name": "CharacterType",
                 "ofType": null
               }
             },
@@ -1090,7 +1155,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CharacterModel",
+                "name": "CharacterType",
                 "ofType": null
               }
             },
@@ -1189,7 +1254,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "CharacterModel",
+                    "name": "CharacterType",
                     "ofType": null
                   }
                 }
@@ -1260,7 +1325,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "CharacterModel",
+                "name": "CharacterType",
                 "ofType": null
               }
             },
@@ -1624,6 +1689,81 @@
         "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.",
         "fields": null,
         "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdateCharacterInput",
+        "description": null,
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "defense",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "extraPoints",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "strength",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "vitality",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
         "interfaces": null,
         "enumValues": null,
         "possibleTypes": null

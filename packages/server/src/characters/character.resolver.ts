@@ -1,23 +1,24 @@
 import { Inject } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserInputError } from 'apollo-server-core';
 
-import { CharacterModel } from './character.model';
 import { CharacterService } from './character.service';
-import { CreateCharacterInput } from './create-character.dto';
+import { CharacterType } from './character.type';
+import { CreateCharacterInput } from './dto/create-character.dto';
+import { UpdateCharacterInput } from './dto/update-character.dto';
 
-@Resolver((of) => CharacterModel)
+@Resolver((of) => CharacterType)
 export class CharacterResolver {
   constructor(
     @Inject(CharacterService) private charService: CharacterService,
   ) {}
 
-  @Query((returns) => [CharacterModel])
+  @Query((returns) => [CharacterType])
   characters() {
     return this.charService.findAll();
   }
 
-  @Query((returns) => CharacterModel)
+  @Query((returns) => CharacterType)
   findByOwner(
     @Args('owner', {
       type: () => String,
@@ -33,7 +34,16 @@ export class CharacterResolver {
     return this.charService.findByOwner(owner, teamId);
   }
 
-  @Mutation((returns) => CharacterModel)
+  @Mutation((returns) => Int)
+  async CharacterUpdate(
+    @Args('id') id: string,
+    @Args('input') input: UpdateCharacterInput,
+  ) {
+    const result = await this.charService.update(id, input);
+    return result.affected;
+  }
+
+  @Mutation((returns) => CharacterType)
   async reroll(
     @Args('id', {
       type: () => String,
@@ -54,7 +64,7 @@ export class CharacterResolver {
     return char;
   }
 
-  @Mutation((returns) => CharacterModel)
+  @Mutation((returns) => CharacterType)
   createCharacter(@Args('input') input: CreateCharacterInput) {
     return this.charService.create(input);
   }

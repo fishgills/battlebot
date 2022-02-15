@@ -2,7 +2,7 @@ import { Blocks } from 'slack-block-builder';
 import { CharacterByOwnerQuery } from '../generated/graphql';
 import { sdk } from '../utils/gql';
 import { getUsernames, to } from '../utils/helpers';
-import { battleLog } from '../views/character';
+import { battleLog, notifyLevelUp } from '../views/character';
 import { MentionObserver } from './observer';
 
 export class CombatObserver extends MentionObserver {
@@ -98,6 +98,14 @@ export class CombatObserver extends MentionObserver {
       channel: targetUser.id,
       ...log,
     });
+    await notifyLevelUp(
+      combatLog.start.winner,
+      char,
+      target.findByOwner,
+      this.event.respond,
+      targetUser.id,
+      this.event.client,
+    );
   }
   action?(): Promise<void> {
     throw new Error('Method not implemented.');

@@ -1,4 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { CharacterEntity } from 'characters/character.entity';
+import { CharacterType } from 'characters/character.type';
 import { type } from 'ormconfig-migrations';
 import {
   Column,
@@ -12,7 +14,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CharacterModel } from '../characters/character.model';
 import { CombatLog } from '../gamerules';
 
 @ObjectType()
@@ -22,23 +23,23 @@ export class CombatModel {
   @Field()
   id: string;
 
-  @Field((type) => CharacterModel, { nullable: true })
-  @ManyToOne((type) => CharacterModel, (character) => character.attacking, {
+  @Field((type) => CharacterType, { nullable: true })
+  @ManyToOne((type) => CharacterEntity, (character) => character.attacking, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'attacker_id' })
-  attacker: CharacterModel;
+  attacker: CharacterType;
 
   @Column({ type: 'uuid', name: 'attacker_id' })
   @Field()
   attackerId: string;
 
-  @Field((type) => CharacterModel, { nullable: true })
-  @ManyToOne((type) => CharacterModel, (character) => character.defending, {
+  @Field((type) => CharacterType, { nullable: true })
+  @ManyToOne((type) => CharacterEntity, (character) => character.defending, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'defender_id' })
-  defender: CharacterModel;
+  defender: CharacterType;
   @Field()
   @Column({ type: 'uuid', name: 'defender_id' })
   defenderId: string;
@@ -59,24 +60,24 @@ export class CombatModel {
   updated_at: Date;
 
   @Field()
-  @ManyToOne(() => CharacterModel)
+  @ManyToOne(() => CharacterEntity)
   @JoinColumn([
     {
       name: 'winner_id',
       referencedColumnName: 'id',
     },
   ])
-  winner: CharacterModel;
+  winner: CharacterType;
 
   @Field()
-  @ManyToOne(() => CharacterModel)
+  @ManyToOne(() => CharacterEntity)
   @JoinColumn([
     {
       name: 'loser_id',
       referencedColumnName: 'id',
     },
   ])
-  loser: CharacterModel;
+  loser: CharacterType;
 
   @Field()
   @Column({
