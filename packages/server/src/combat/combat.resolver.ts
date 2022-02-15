@@ -1,4 +1,4 @@
-import { DiceRoll } from '@dice-roller/rpg-dice-roller';
+import { Dice, DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Inject } from '@nestjs/common';
 import {
   Resolver,
@@ -9,7 +9,6 @@ import {
   Parent,
 } from '@nestjs/graphql';
 import { subMinutes } from 'date-fns';
-
 import { MoreThan } from 'typeorm';
 import { CharacterModel } from '../characters/character.model';
 import { CharacterService } from '../characters/character.service';
@@ -17,7 +16,6 @@ import { CombatLog, CombatRound, modifier } from '../gamerules';
 import { CombatModel } from './combat.model';
 import { CombatService } from './combat.service';
 import { CreateCombatInput } from './dto/create-combat.input';
-
 @Resolver((of) => CombatModel)
 export class CombatResolver {
   constructor(
@@ -105,7 +103,9 @@ export class CombatResolver {
     combat.winner = log.combat[log.combat.length - 1].attacker;
     combat.loser = log.combat[log.combat.length - 1].defender;
     combat.winner.gold = combat.winner.gold += combat.rewardGold;
-    combat.winner.xp = combat.winner.xp += combat.loser.level * 100;
+    combat.winner.xp = combat.winner.xp +=
+      (combat.defender.level / combat.winner.level) *
+      new DiceRoll('20d10').total;
 
     await this.charService.update(combat.winner.id, combat.winner);
     await this.combatService.update(combat.id, combat);

@@ -1,8 +1,8 @@
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { modifier } from 'gamerules';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
-import { modifier } from '../gamerules';
 import { CharacterModel } from './character.model';
 import { CreateCharacterInput } from './create-character.dto';
 @Injectable()

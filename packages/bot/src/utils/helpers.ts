@@ -97,7 +97,3 @@ export function getUsernames(text: string) {
   const unique_users = users.filter((v, i, arr) => arr.indexOf(v) === i);
   return unique_users.length ? unique_users : [];
 }
-
-export const nextLevel = (level: number) => {
-  return level * (level - 1) * 500;
-};
