@@ -1,3 +1,4 @@
+import { SlackCommandMiddlewareArgs, AllMiddlewareArgs } from '@slack/bolt';
 import { Blocks } from 'slack-block-builder';
 import { CharacterByOwnerQuery } from '../generated/graphql';
 import { sdk } from '../utils/gql';
@@ -17,25 +18,27 @@ export class CombatObserver extends MentionObserver {
     ];
   }
 
-  async update() {
+  async update(
+    e: SlackCommandMiddlewareArgs & AllMiddlewareArgs,
+  ): Promise<void> {
     this.log(`starting combat`);
 
     const char = (
       await sdk.characterByOwner({
-        owner: this.event.payload.user_id,
-        teamId: this.event.payload.team_id,
+        owner: e.payload.user_id,
+        teamId: e.payload.team_id,
       })
     ).findByOwner;
 
     if (!char.id) {
-      this.msgUser('You need to create a character.');
+      this.msgUser(e, 'You need to create a character.');
       this.log('no character');
       return;
     }
-    const targets = getUsernames(this.event.payload.text);
+    const targets = getUsernames(e.payload.text);
 
     if (targets.length > 1) {
-      this.msgUser('Can only attack one person.');
+      this.msgUser(e, 'Can only attack one person.');
       return;
     }
 
@@ -45,14 +48,14 @@ export class CombatObserver extends MentionObserver {
     try {
       target = await sdk.characterByOwner({
         owner: targetUser.id,
-        teamId: this.event.payload.team_id,
+        teamId: e.payload.team_id,
       });
     } catch (e) {
       this.log('target has no character');
-      this.msgUser(`<@${targetUser.id}> does not have a character yet.`);
-      this.event.client.chat.postMessage({
+      this.msgUser(e, `<@${targetUser.id}> does not have a character yet.`);
+      e.client.chat.postMessage({
         channel: targetUser.id,
-        text: `${this.event.payload.user_name} tried to fight you but you have no character. :cry: Type \`/battlebot\` to get started.`,
+        text: `${e.payload.user_name} tried to fight you but you have no character. :cry: Type \`/battlebot\` to get started.`,
       });
     }
 
@@ -70,31 +73,31 @@ export class CombatObserver extends MentionObserver {
     );
     if (err) {
       if (err.message.indexOf('Combat started too fast') > -1) {
-        this.msgUser('Please wait a bit before initiating another fight.');
+        this.msgUser(e, 'Please wait a bit before initiating another fight.');
         return;
       }
       this.logger(err.message);
       return;
     }
-    // const info = await getTeamInfo(this.event.payload.team_id);
+    // const info = await getTeamInfo(e.payload.team_id);
 
-    const notification = await this.event.respond({
-      // channel: this.event.payload.channel,
+    const notification = await e.respond({
+      // channel: e.payload.channel,
       // token: info.token,
-      text: `<@${this.event.payload.user_id}> has started fighting <@${targetUser.id}>`,
+      text: `<@${e.payload.user_id}> has started fighting <@${targetUser.id}>`,
     });
 
     const log = battleLog({
       combat: combatLog,
-      channel: this.event.payload.channel,
+      channel: e.payload.channel,
     });
 
-    await this.event.respond({
+    await e.respond({
       ...log,
       text: `${char.name} is attacking ${target.findByOwner.name}. ${combatLog.start.winner.name} has won!.`,
     });
 
-    await this.event.client.chat.postMessage({
+    await e.client.chat.postMessage({
       channel: targetUser.id,
       ...log,
     });
@@ -102,9 +105,9 @@ export class CombatObserver extends MentionObserver {
       combatLog.start.winner,
       char,
       target.findByOwner,
-      this.event.respond,
+      e.respond,
       targetUser.id,
-      this.event.client,
+      e.client,
     );
   }
   action?(): Promise<void> {

@@ -1,13 +1,10 @@
 import { ChatPostMessageResponse } from '@slack/web-api';
-import { SectionBuilder, SlackBlockDto } from 'slack-block-builder';
+import { SlackBlockDto } from 'slack-block-builder';
 import { Debug } from '../logger';
-import { Subject } from './Subject';
 
 export abstract class Observer<T> {
   command: string;
-  event: T;
   logger: Debug.Debugger;
-  protected subject: Subject<T>;
 
   constructor(command?: string) {
     this.command = command;
@@ -20,31 +17,11 @@ export abstract class Observer<T> {
   }
 
   abstract msgUser(
+    event: T,
     content: SlackBlockDto[] | string,
   ): Promise<ChatPostMessageResponse>;
 
-  abstract msgThread(
-    content: SlackBlockDto[] | string,
-  ): Promise<ChatPostMessageResponse>;
+  abstract listener(e: T): Promise<void>;
 
-  abstract update(): Promise<void>;
-
-  abstract getHandleText(event: T): string;
-  abstract getHelpBlocks(): Readonly<SectionBuilder[]> | void;
-
-  setSubject(subject: Subject<T>) {
-    this.subject = subject;
-  }
-
-  shouldHandle(event: T) {
-    // if (!this.command) {
-    //   this.logger('Observer needs a command to observer');
-    // }
-    const handleText = this.getHandleText(event);
-    if (handleText === this.command) {
-      this.logger(`accepting command: ${handleText}`);
-      this.event = event;
-      this.update();
-    }
-  }
+  abstract update(e: T): Promise<void>;
 }

@@ -1,6 +1,8 @@
-import { ActionSubject } from './action-subject';
-import { StatsObserver } from './stats';
+// import { ActionSubject } from './action-subject';
+import { Subject } from 'rxjs';
+// import { StatsObserver } from './stats';
 
-export const Action$ = new ActionSubject();
+export const Action$ = new Subject();
+// export const Action$ = new ActionSubject();
 
-Action$.attach(new StatsObserver('stat-incr'));
+// Action$.attach(new StatsObserver('stat-incr'));

@@ -10,8 +10,8 @@ import { sdk } from './utils/gql';
 import { editCharacterModal } from './views/character';
 import { isGenericMessageEvent } from './utils/helpers';
 import { Command$ } from './mention_handler';
-import { Shield$ } from './shield_handler';
 import { Action$ } from './actions';
+import { Shield$ } from './shield_handler';
 
 const app = new App({
   clientId: process.env.SLACK_CLIENT_ID,
@@ -50,7 +50,7 @@ app.message(':shield:', async (args) => {
   if (!isGenericMessageEvent(args.message)) {
     return;
   }
-  Shield$.event(args);
+  Shield$.next(args);
 });
 
 app.event('member_joined_channel', async (args) => {
@@ -72,14 +72,14 @@ app.event('team_join', async (args) => {
   });
 });
 
-app.command('/battlebot', async (args) => {
+app.command('/boom', async (args) => {
   await args.ack();
-  Command$.event(args);
+  Command$.next(args);
 });
 
-app.command('/battlebot-dev', async (args) => {
+app.command('/boom-dev', async (args) => {
   await args.ack();
-  Command$.event(args);
+  Command$.next(args);
 });
 
 app.event('app_home_opened', async (args) => {
@@ -113,9 +113,9 @@ app.event('app_home_opened', async (args) => {
     debug(error);
   }
 });
-app.action(Action$.actions(), async (args) => {
+app.action(new RegExp(['reroll', 'stat-inc'].join('|'), 'gi'), async (args) => {
   await args.ack();
-  Action$.event(args);
+  Action$.next(args);
 });
 
 app.action<BlockAction>('reroll', async (args) => {

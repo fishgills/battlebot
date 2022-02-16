@@ -1,3 +1,4 @@
+import { SlackCommandMiddlewareArgs, AllMiddlewareArgs } from '@slack/bolt';
 import { Blocks } from 'slack-block-builder';
 import { sdk } from '../utils/gql';
 import { MentionObserver } from './observer';
@@ -13,35 +14,37 @@ export class CharacterCreateObserver extends MentionObserver {
       }),
     ];
   }
-  async update(): Promise<void> {
+  async update(
+    e: SlackCommandMiddlewareArgs & AllMiddlewareArgs,
+  ): Promise<void> {
     if (
-      !this.event.payload.text ||
-      this.event.payload.text.trim().split(' ').length !== 2 ||
-      this.event.payload.text.length > 100
+      !e.payload.text ||
+      e.payload.text.trim().split(' ').length !== 2 ||
+      e.payload.text.length > 100
     ) {
-      this.msgUser('Invalid command. Should be `create MyCharacterName`');
+      this.msgUser(e, 'Invalid command. Should be `create MyCharacterName`');
       return;
     }
     try {
       const char = (
         await sdk.characterByOwner({
-          owner: this.event.payload.user_id,
-          teamId: this.event.payload.team_id,
+          owner: e.payload.user_id,
+          teamId: e.payload.team_id,
         })
       ).findByOwner;
       if (char.id) {
-        this.msgUser(`You already have a character.`);
+        this.msgUser(e, `You already have a character.`);
         return;
       }
     } catch (e) {
       await sdk.addCharacter({
         input: {
-          owner: this.event.payload.user_id,
-          name: this.event.payload.text.trim().split(' ')[1],
-          teamId: this.event.payload.team_id,
+          owner: e.payload.user_id,
+          name: e.payload.text.trim().split(' ')[1],
+          teamId: e.payload.team_id,
         },
       });
-      this.msgUser(`Character created!`);
+      this.msgUser(e, `Character created!`);
     }
   }
 }
