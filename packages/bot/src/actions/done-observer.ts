@@ -18,6 +18,7 @@ export class DoneObserver extends ActionObserver {
       return;
     }
 
+    findByOwner.active = true;
     await sdk.CharacterUpdate({
       input: {
         active: true,
