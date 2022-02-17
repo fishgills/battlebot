@@ -11,10 +11,10 @@ export class SheetObserver extends MentionObserver {
   getHelpBlocks() {
     return [
       Blocks.Section({
-        text: 'To retrieve your character sheet.',
+        text: "To retrieve your presentation's stats.",
       }),
       Blocks.Section({
-        text: '`/battlebot sheet`',
+        text: '`/presentaor sheet`',
       }),
     ];
   }

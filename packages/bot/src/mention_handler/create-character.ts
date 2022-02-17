@@ -10,10 +10,10 @@ export class CharacterCreateObserver extends MentionObserver {
   getHelpBlocks() {
     return [
       Blocks.Section({
-        text: 'To create a character.',
+        text: 'To create a presentation:',
       }),
       Blocks.Section({
-        text: '`/battlebot create <CharacterName>`',
+        text: '`/presentor create <PresentationName>`',
       }),
     ];
   }
@@ -25,7 +25,7 @@ export class CharacterCreateObserver extends MentionObserver {
       e.payload.text.trim().split(' ').length !== 2 ||
       e.payload.text.length > 100
     ) {
-      this.msgUser(e, 'Invalid command. Should be `create MyCharacterName`');
+      this.msgUser(e, 'Invalid command. Should be `create PresentationName`');
       return;
     }
     try {
@@ -36,7 +36,7 @@ export class CharacterCreateObserver extends MentionObserver {
         })
       ).findByOwner;
       if (char.id) {
-        this.msgUser(e, `You already have a character.`);
+        this.msgUser(e, `You already have a presentation.`);
         return;
       }
     } catch (e) {
@@ -47,7 +47,7 @@ export class CharacterCreateObserver extends MentionObserver {
           teamId: e.payload.team_id,
         },
       });
-      this.msgUser(e, `Character created!`);
+      this.msgUser(e, `Presentation created!`);
     }
   }
 }

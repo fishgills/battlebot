@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Unique } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateSlackInstallInput } from './create-install.dto';
 import { SlackInstallModel } from './install.model';
 import { UpdateSlackInstallInput } from './update-install.dto';

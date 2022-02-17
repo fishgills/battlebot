@@ -31,13 +31,13 @@ export class CharacterEntity extends BaseEntity {
   @Column()
   owner: string;
 
-  @OneToMany((type) => CombatModel, (combat) => combat.attacker, {
+  @OneToMany(() => CombatModel, (combat) => combat.attacker, {
     lazy: true,
     onDelete: 'CASCADE',
   })
   attacking: CombatModel[];
 
-  @OneToMany((type) => CombatModel, (combat) => combat.defender, {
+  @OneToMany(() => CombatModel, (combat) => combat.defender, {
     lazy: true,
     onDelete: 'CASCADE',
   })

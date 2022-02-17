@@ -13,10 +13,10 @@ export class CombatObserver extends MentionObserver {
   getHelpBlocks() {
     return [
       Blocks.Section({
-        text: 'To start combat.',
+        text: 'To start a presentation:',
       }),
       Blocks.Section({
-        text: '`/battlebot fight @Someone`',
+        text: '`/presentor fight @Someone`',
       }),
     ];
   }
@@ -34,14 +34,22 @@ export class CombatObserver extends MentionObserver {
     ).findByOwner;
 
     if (!char.id) {
-      this.msgUser(e, 'You need to create a character.');
+      this.msgUser(e, 'You need to create a presentation.');
       this.log('no character');
+      return;
+    }
+
+    if (!char.active) {
+      this.msgUser(
+        e,
+        'You need to finish your presentation. Check your presentation stats.',
+      );
       return;
     }
     const targets = getUsernames(e.payload.text);
 
     if (targets.length > 1) {
-      this.msgUser(e, 'Can only attack one person.');
+      this.msgUser(e, 'Can only present to one person at a time.');
       return;
     }
 
@@ -55,10 +63,13 @@ export class CombatObserver extends MentionObserver {
       });
     } catch (e) {
       this.log('target has no character');
-      this.msgUser(e, `<@${targetUser.id}> does not have a character yet.`);
+      this.msgUser(
+        e,
+        `<@${targetUser.id}> does not have a presentation to counter yours with.`,
+      );
       e.client.chat.postMessage({
         channel: targetUser.id,
-        text: `${e.payload.user_name} tried to fight you but you have no character. :cry: Type \`/battlebot\` to get started.`,
+        text: `${e.payload.user_name} tried to show you their presentation but you need a counter-presentation. :cry: Type \`/presentor\` to get started.`,
       });
     }
 
@@ -90,7 +101,7 @@ export class CombatObserver extends MentionObserver {
 
     await e.respond({
       ...log,
-      text: `${char.name} is attacking ${target.findByOwner.name}. ${combatLog.start.winner.name} has won!.`,
+      text: `${char.name} is presenting to ${target.findByOwner.name}. ${combatLog.start.winner.name} has won!.`,
     });
 
     await e.client.chat.postMessage({

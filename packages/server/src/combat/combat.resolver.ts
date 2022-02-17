@@ -7,19 +7,19 @@ import { CombatLog, CombatRound, levelUp, modifier } from '../gamerules';
 import { CombatModel } from './combat.model';
 import { CombatService } from './combat.service';
 import { CreateCombatInput } from './dto/create-combat.input';
-@Resolver((of) => CombatModel)
+@Resolver(() => CombatModel)
 export class CombatResolver {
   constructor(
     @Inject(CombatService) private combatService: CombatService,
     @Inject(CharacterService) private charService: CharacterService,
   ) {}
 
-  @Query((returns) => [CombatModel])
+  @Query(() => [CombatModel])
   async combats() {
     return this.combatService.findAll();
   }
 
-  @Mutation((returns) => CombatModel)
+  @Mutation(() => CombatModel)
   async createCombat(
     @Args('input')
     input: CreateCombatInput,

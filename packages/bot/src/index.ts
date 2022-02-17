@@ -1,13 +1,11 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import { App, BlockAction, BlockButtonAction } from '@slack/bolt';
+import { App, BlockButtonAction } from '@slack/bolt';
 import debug from 'debug';
 
 import { Logger } from './logger';
 import { Store } from './installation_store';
-import { sdk } from './utils/gql';
-import { editCharacterModal } from './views/character';
 import { isGenericMessageEvent } from './utils/helpers';
 import { Command$ } from './mention_handler';
 import { Action$, ActionsRegex } from './actions';
@@ -42,23 +40,23 @@ const app = new App({
   Logger.info('Starting bolt', info);
 })();
 
-app.message(':shield:', async (args) => {
+app.message(':loudspeaker:', async (args) => {
   if (!isGenericMessageEvent(args.message)) {
     return;
   }
   Shield$.next(args);
 });
 
-app.event('member_joined_channel', async (args) => {
-  await args.client.chat.postMessage({
-    channel: args.payload.channel,
-    token: args.context.botToken,
-    text:
-      'Welcome <@' +
-      args.payload.user +
-      '>! Mention me with one of the following commands: `create <character_name`, `fight @<userToFight>`, `sheet`. For example `@DM fight @bubba` to start a fight.',
-  });
-});
+// app.event('member_joined_channel', async (args) => {
+//   await args.client.chat.postMessage({
+//     channel: args.payload.channel,
+//     token: args.context.botToken,
+//     text:
+//       'Welcome <@' +
+//       args.payload.user +
+//       '>! Mention me with one of the following commands: `create <character_name`, `fight @<userToFight>`, `sheet`. For example `@DM fight @bubba` to start a fight.',
+//   });
+// });
 
 app.event('team_join', async (args) => {
   await args.client.chat.postMessage({
@@ -68,12 +66,12 @@ app.event('team_join', async (args) => {
   });
 });
 
-app.command('/boom', async (args) => {
+app.command('/presentator', async (args) => {
   await args.ack();
   Command$.next(args);
 });
 
-app.command('/boom-dev', async (args) => {
+app.command('/presentator-dev', async (args) => {
   await args.ack();
   Command$.next(args);
 });
@@ -113,26 +111,3 @@ app.action<BlockButtonAction>(ActionsRegex, async (args) => {
   await args.ack();
   Action$.next(args);
 });
-
-// app.action<BlockAction>('reroll', async (args) => {
-//   try {
-//     let char = (
-//       await sdk.characterByOwner({
-//         owner: args.body.user.id,
-//         teamId: args.context.teamId,
-//       })
-//     ).findByOwner;
-//     args.ack();
-//     char = (
-//       await sdk.rollCharacter({
-//         id: char.id,
-//       })
-//     ).reroll;
-//     await args.respond({
-//       response_type: 'ephemeral',
-//       blocks: editCharacterModal(char),
-//     });
-//   } catch (e) {
-//     await args.respond(e.response.errors[0].message);
-//   }
-// });

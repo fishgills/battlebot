@@ -19,8 +19,8 @@ export class CombatModel {
   @Field()
   id: string;
 
-  @Field((type) => CharacterType, { nullable: true })
-  @ManyToOne((type) => CharacterEntity, (character) => character.attacking, {
+  @Field(() => CharacterType, { nullable: true })
+  @ManyToOne(() => CharacterEntity, (character) => character.attacking, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'attacker_id' })
@@ -30,8 +30,8 @@ export class CombatModel {
   @Field()
   attackerId: string;
 
-  @Field((type) => CharacterType, { nullable: true })
-  @ManyToOne((type) => CharacterEntity, (character) => character.defending, {
+  @Field(() => CharacterType, { nullable: true })
+  @ManyToOne(() => CharacterEntity, (character) => character.defending, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'defender_id' })

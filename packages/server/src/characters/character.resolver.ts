@@ -7,18 +7,18 @@ import { CharacterType } from './character.type';
 import { CreateCharacterInput } from './dto/create-character.dto';
 import { UpdateCharacterInput } from './dto/update-character.dto';
 
-@Resolver((of) => CharacterType)
+@Resolver(() => CharacterType)
 export class CharacterResolver {
   constructor(
     @Inject(CharacterService) private charService: CharacterService,
   ) {}
 
-  @Query((returns) => [CharacterType])
+  @Query(() => [CharacterType])
   characters() {
     return this.charService.findAll();
   }
 
-  @Query((returns) => CharacterType)
+  @Query(() => CharacterType)
   findByOwner(
     @Args('owner', {
       type: () => String,
@@ -34,7 +34,7 @@ export class CharacterResolver {
     return this.charService.findByOwner(owner, teamId);
   }
 
-  @Mutation((returns) => Int)
+  @Mutation(() => Int)
   async CharacterUpdate(
     @Args('id') id: string,
     @Args('input') input: UpdateCharacterInput,
@@ -43,7 +43,7 @@ export class CharacterResolver {
     return result.affected;
   }
 
-  @Mutation((returns) => CharacterType)
+  @Mutation(() => CharacterType)
   async reroll(
     @Args('id', {
       type: () => String,
@@ -64,7 +64,7 @@ export class CharacterResolver {
     return char;
   }
 
-  @Mutation((returns) => CharacterType)
+  @Mutation(() => CharacterType)
   createCharacter(@Args('input') input: CreateCharacterInput) {
     return this.charService.create(input);
   }

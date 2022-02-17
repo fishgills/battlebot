@@ -1,17 +1,15 @@
 import { Inject } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { isListType } from 'graphql';
 import { CreateRewardInput } from './dto/reward.create';
-import { RewardsScoreBoardInput } from './dto/scoreboard';
 
 import { RewardModel } from './reward.model';
 import { RewardService } from './reward.service';
 
-@Resolver((of) => RewardModel)
+@Resolver(() => RewardModel)
 export class RewardResolver {
   constructor(@Inject(RewardService) private service: RewardService) {}
 
-  @Query((returns) => [RewardModel])
+  @Query(() => [RewardModel])
   rewards() {
     return this.service.find();
   }
@@ -21,12 +19,12 @@ export class RewardResolver {
     return this.service.give(input.to, input.from);
   }
 
-  @Query((returns) => Int)
+  @Query(() => Int)
   rewardsGivenToday(@Args('user') user: string): Promise<number> {
     return this.service.findFromToday(user);
   }
 
-  @Query((returns) => [RewardModel])
+  @Query(() => [RewardModel])
   getUserScore(
     @Args('userId') userId: string,
     @Args('listType', {
