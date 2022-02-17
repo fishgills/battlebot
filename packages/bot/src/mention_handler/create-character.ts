@@ -4,6 +4,9 @@ import { sdk } from '../utils/gql';
 import { MentionObserver } from './observer';
 
 export class CharacterCreateObserver extends MentionObserver {
+  constructor() {
+    super('create');
+  }
   getHelpBlocks() {
     return [
       Blocks.Section({

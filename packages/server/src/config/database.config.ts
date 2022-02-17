@@ -3,7 +3,7 @@ import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOpti
 import { CombatModel } from '../combat/combat.model';
 import { SlackInstallModel } from '../installs/install.model';
 import { RewardModel } from '../rewards/reward.model';
-import { CharacterEntity } from 'characters/character.entity';
+import { CharacterEntity } from '../characters/character.entity';
 
 export const database: MysqlConnectionOptions = {
   type: 'mysql',

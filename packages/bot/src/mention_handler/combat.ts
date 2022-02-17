@@ -7,6 +7,9 @@ import { battleLog, notifyLevelUp } from '../views/character';
 import { MentionObserver } from './observer';
 
 export class CombatObserver extends MentionObserver {
+  constructor() {
+    super('fight');
+  }
   getHelpBlocks() {
     return [
       Blocks.Section({
@@ -79,13 +82,6 @@ export class CombatObserver extends MentionObserver {
       this.logger(err.message);
       return;
     }
-    // const info = await getTeamInfo(e.payload.team_id);
-
-    const notification = await e.respond({
-      // channel: e.payload.channel,
-      // token: info.token,
-      text: `<@${e.payload.user_id}> has started fighting <@${targetUser.id}>`,
-    });
 
     const log = battleLog({
       combat: combatLog,

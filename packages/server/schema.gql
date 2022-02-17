@@ -20,6 +20,7 @@ type CharacterType {
   gold: Float!
   teamId: String!
   extraPoints: Float!
+  active: Boolean!
 }
 
 """
@@ -105,11 +106,13 @@ type Mutation {
   giveReward(input: CreateRewardInput!): Boolean!
 }
 
+"""Update a character's properties"""
 input UpdateCharacterInput {
-  strength: Float!
-  vitality: Float!
-  defense: Float!
-  extraPoints: Float!
+  strength: Float
+  vitality: Float
+  defense: Float
+  extraPoints: Float
+  active: Boolean
 }
 
 input CreateCharacterInput {

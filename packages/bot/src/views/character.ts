@@ -34,6 +34,34 @@ export const notifyLevelUp = (
   }
 };
 
+const saveBlock = (char: Partial<CharacterType>) => {
+  if (char.active) {
+    return [];
+  }
+
+  const block = Blocks.Actions({
+    blockId: 'save-actions',
+  });
+
+  if (char.rolls < 5) {
+    block.elements(
+      Elements.Button({
+        actionId: 'reroll',
+        text: 'Redo Abilities',
+      }),
+    );
+  }
+
+  block.elements(
+    Elements.Button({
+      actionId: 'complete',
+      text: 'Done',
+    }),
+  );
+
+  return block;
+};
+
 const statBlock = (character: Partial<CharacterType>) => {
   const stats = [
     {
@@ -90,14 +118,7 @@ export const editCharacterModal = (character: Partial<CharacterType>) => {
       Blocks.Section({
         text: `:moneybag: ${character.gold}`,
       }),
-      setIfTruthy(character.rolls < 5, [
-        Blocks.Actions().elements(
-          Elements.Button({
-            actionId: 'reroll',
-            text: 'ReRoll',
-          }),
-        ),
-      ]),
+      saveBlock(character),
       Blocks.Divider(),
       Blocks.Section({
         text: `${character.name}, who is level ${character.level}, has *${

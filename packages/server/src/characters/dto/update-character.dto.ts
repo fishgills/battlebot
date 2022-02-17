@@ -1,16 +1,31 @@
 import { Field, InputType } from '@nestjs/graphql';
 
-@InputType()
+@InputType({
+  description: "Update a character's properties",
+})
 export class UpdateCharacterInput {
-  @Field()
+  @Field({
+    nullable: true,
+  })
   strength: number;
 
-  @Field()
+  @Field({
+    nullable: true,
+  })
   vitality: number;
 
-  @Field()
+  @Field({
+    nullable: true,
+  })
   defense: number;
 
-  @Field()
+  @Field({
+    nullable: true,
+  })
   extraPoints: number;
+
+  @Field({
+    nullable: true,
+  })
+  active!: boolean;
 }

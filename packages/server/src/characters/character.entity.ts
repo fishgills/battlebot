@@ -90,4 +90,9 @@ export class CharacterEntity extends BaseEntity {
 
   @Column()
   extraPoints: number;
+
+  @Column({
+    default: false,
+  })
+  active: boolean;
 }

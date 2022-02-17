@@ -5,6 +5,9 @@ import { editCharacterModal } from '../views/character';
 import { MentionObserver } from './observer';
 
 export class SheetObserver extends MentionObserver {
+  constructor() {
+    super('sheet');
+  }
   getHelpBlocks() {
     return [
       Blocks.Section({

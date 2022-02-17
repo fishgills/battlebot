@@ -27,6 +27,7 @@ export type Scalars = {
 
 export type CharacterType = {
   __typename?: 'CharacterType';
+  active: Scalars['Boolean'];
   attacking?: Maybe<Array<CombatModel>>;
   created_at: Scalars['DateTime'];
   defending?: Maybe<Array<CombatModel>>;
@@ -199,11 +200,13 @@ export type SlackInstallModel = {
   team_id: Scalars['String'];
 };
 
+/** Update a character's properties */
 export type UpdateCharacterInput = {
-  defense: Scalars['Float'];
-  extraPoints: Scalars['Float'];
-  strength: Scalars['Float'];
-  vitality: Scalars['Float'];
+  active?: InputMaybe<Scalars['Boolean']>;
+  defense?: InputMaybe<Scalars['Float']>;
+  extraPoints?: InputMaybe<Scalars['Float']>;
+  strength?: InputMaybe<Scalars['Float']>;
+  vitality?: InputMaybe<Scalars['Float']>;
 };
 
 export type UpdateSlackInstallInput = {
@@ -236,6 +239,7 @@ export type CharacterPartsFragment = {
   teamId: string;
   updated_at: any;
   extraPoints: number;
+  active: boolean;
 };
 
 export type SlackInstallPartsFragment = {
@@ -268,6 +272,7 @@ export type AddCharacterMutation = {
     teamId: string;
     updated_at: any;
     extraPoints: number;
+    active: boolean;
   };
 };
 
@@ -339,6 +344,7 @@ export type CharacterByOwnerQuery = {
     teamId: string;
     updated_at: any;
     extraPoints: number;
+    active: boolean;
   };
 };
 
@@ -365,6 +371,7 @@ export type RollCharacterMutation = {
     teamId: string;
     updated_at: any;
     extraPoints: number;
+    active: boolean;
   };
 };
 
@@ -465,6 +472,7 @@ export const CharacterPartsFragmentDoc = gql`
     teamId
     updated_at
     extraPoints
+    active
   }
 `;
 export const SlackInstallPartsFragmentDoc = gql`

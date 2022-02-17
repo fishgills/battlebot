@@ -1,16 +1,12 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { CharacterEntity } from 'characters/character.entity';
-import { CharacterType } from 'characters/character.type';
-import { type } from 'ormconfig-migrations';
+import { CharacterEntity } from '../characters/character.entity';
+import { CharacterType } from '../characters/character.type';
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
-  OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';

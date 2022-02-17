@@ -1,6 +1,6 @@
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { CharacterType } from 'characters/character.type';
+import { CharacterType } from './characters/character.type';
 
 export const modifier = (value: number) => {
   return Math.floor((value - 10) / 2);

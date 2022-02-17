@@ -68,4 +68,7 @@ export class CharacterType {
 
   @Field()
   extraPoints: number;
+
+  @Field()
+  active: boolean;
 }
