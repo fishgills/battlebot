@@ -1,8 +1,20 @@
-// import { ActionSubject } from './action-subject';
+import {
+  AllMiddlewareArgs,
+  BlockButtonAction,
+  SlackActionMiddlewareArgs,
+} from '@slack/bolt';
 import { Subject } from 'rxjs';
-// import { StatsObserver } from './stats';
+import { RerollObserver } from './reroll-observer';
+import { StatsObserver } from './stats-observer';
 
-export const Action$ = new Subject();
-// export const Action$ = new ActionSubject();
+export type ObserveType = SlackActionMiddlewareArgs<BlockButtonAction> &
+  AllMiddlewareArgs;
 
-// Action$.attach(new StatsObserver('stat-incr'));
+export const ActionsRegex = new RegExp(['reroll', 'stat-inc'].join('|'), 'gi');
+
+export const Action$ = new Subject<ObserveType>();
+const statsAction = new StatsObserver();
+const rerollAction = new RerollObserver();
+
+Action$.subscribe((e) => rerollAction.listener(e));
+Action$.subscribe((e) => statsAction.listener(e));

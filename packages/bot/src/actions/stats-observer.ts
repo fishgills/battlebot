@@ -1,22 +1,25 @@
-import { SectionBuilder } from 'slack-block-builder';
-import { CharacterType, UpdateCharacterInput } from '../generated/graphql';
+import { ObserveType } from '.';
 import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
 import { ActionObserver } from './action-observer';
 
 export class StatsObserver extends ActionObserver {
-  async update(): Promise<void> {
+  constructor() {
+    super();
+    this.command = 'stat-incr';
+  }
+  async update(event: ObserveType): Promise<void> {
     const { findByOwner } = await sdk.characterByOwner({
-      owner: this.event.body.user.id,
-      teamId: this.event.context.teamId,
+      owner: event.body.user.id,
+      teamId: event.context.teamId,
     });
 
     if (findByOwner.extraPoints <= 0) {
-      this.msgUser('You have no points to distribute.');
+      this.msgUser(event, 'You have no points to distribute.');
       return;
     }
 
-    findByOwner[this.event.action.value] += 1;
+    findByOwner[event.action.value] += 1;
     await sdk.CharacterUpdate({
       characterUpdateId: findByOwner.id,
       input: {
@@ -26,9 +29,6 @@ export class StatsObserver extends ActionObserver {
         extraPoints: findByOwner.extraPoints - 1,
       },
     });
-    await this.msgUser(editCharacterModal(findByOwner));
-  }
-  getHelpBlocks(): void | readonly SectionBuilder[] {
-    throw new Error('Method not implemented.');
+    await this.msgUser(event, editCharacterModal(findByOwner));
   }
 }

@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import { App, BlockAction } from '@slack/bolt';
+import { App, BlockAction, BlockButtonAction } from '@slack/bolt';
 import debug from 'debug';
 
 import { Logger } from './logger';
@@ -10,7 +10,7 @@ import { sdk } from './utils/gql';
 import { editCharacterModal } from './views/character';
 import { isGenericMessageEvent } from './utils/helpers';
 import { Command$ } from './mention_handler';
-import { Action$ } from './actions';
+import { Action$, ActionsRegex } from './actions';
 import { Shield$ } from './shield_handler';
 
 const app = new App({
@@ -41,10 +41,6 @@ const app = new App({
   });
   Logger.info('Starting bolt', info);
 })();
-
-// app.event('app_mention', async (args) => {
-//   Mention$.event(args);
-// });
 
 app.message(':shield:', async (args) => {
   if (!isGenericMessageEvent(args.message)) {
@@ -113,30 +109,30 @@ app.event('app_home_opened', async (args) => {
     debug(error);
   }
 });
-app.action(new RegExp(['reroll', 'stat-inc'].join('|'), 'gi'), async (args) => {
+app.action<BlockButtonAction>(ActionsRegex, async (args) => {
   await args.ack();
   Action$.next(args);
 });
 
-app.action<BlockAction>('reroll', async (args) => {
-  try {
-    let char = (
-      await sdk.characterByOwner({
-        owner: args.body.user.id,
-        teamId: args.context.teamId,
-      })
-    ).findByOwner;
-    args.ack();
-    char = (
-      await sdk.rollCharacter({
-        id: char.id,
-      })
-    ).reroll;
-    await args.respond({
-      response_type: 'ephemeral',
-      blocks: editCharacterModal(char),
-    });
-  } catch (e) {
-    await args.respond(e.response.errors[0].message);
-  }
-});
+// app.action<BlockAction>('reroll', async (args) => {
+//   try {
+//     let char = (
+//       await sdk.characterByOwner({
+//         owner: args.body.user.id,
+//         teamId: args.context.teamId,
+//       })
+//     ).findByOwner;
+//     args.ack();
+//     char = (
+//       await sdk.rollCharacter({
+//         id: char.id,
+//       })
+//     ).reroll;
+//     await args.respond({
+//       response_type: 'ephemeral',
+//       blocks: editCharacterModal(char),
+//     });
+//   } catch (e) {
+//     await args.respond(e.response.errors[0].message);
+//   }
+// });
