@@ -1,5 +1,14 @@
 import { Inject } from '@nestjs/common';
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { UserInputError } from 'apollo-server-core';
 
 import { CharacterService } from './character.service';

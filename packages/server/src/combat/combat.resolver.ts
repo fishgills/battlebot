@@ -1,6 +1,14 @@
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Inject } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+  Context,
+} from '@nestjs/graphql';
 import { CharacterType } from 'characters/character.type';
 import { FindManyOptions } from 'typeorm';
 import { CharacterService } from '../characters/character.service';
@@ -192,5 +200,14 @@ export class CombatResolver {
       log.combat = [];
     }
     log.combat.push(roundLog);
+  }
+  @ResolveField()
+  public async defender(@Parent() combat: CombatModel, @Context() context) {
+    return context.loaders.characterLoader.load(combat.defenderId);
+  }
+
+  @ResolveField()
+  public async attacker(@Parent() combat: CombatModel, @Context() context) {
+    return context.loaders.characterLoader.load(combat.attackerId);
   }
 }

@@ -10,10 +10,17 @@ import { AuthModule } from './auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
 import {
   ApolloServerPluginInlineTrace,
+  ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from 'apollo-server-core';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import {
+  ApolloDriver,
+  ApolloDriverAsyncConfig,
+  ApolloDriverConfig,
+} from '@nestjs/apollo';
+import { DataloaderModule } from 'dataloader/dataloader.module';
+import { DataloaderService } from 'dataloader/dataloader.service';
 @Module({
   imports: [
     CharacterModule,
@@ -22,19 +29,27 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     RewardModule,
     HttpModule,
     TypeOrmModule.forRoot(database.database),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      debug: true,
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
+      imports: [DataloaderModule],
+      inject: [DataloaderService],
       driver: ApolloDriver,
-      playground: false,
-      autoSchemaFile: 'schema.gql',
-      plugins: [
-        ApolloServerPluginInlineTrace(),
-        process.env['NODE_ENV'] === 'production'
-          ? ApolloServerPluginLandingPageProductionDefault()
-          : ApolloServerPluginLandingPageLocalDefault({
-              footer: false,
-            }),
-      ],
+      useFactory: (dlService: DataloaderService) => {
+        return {
+          playground: false,
+          plugins: [
+            ApolloServerPluginInlineTrace(),
+            process.env['NODE_ENV'] === 'production'
+              ? ApolloServerPluginLandingPageProductionDefault()
+              : ApolloServerPluginLandingPageLocalDefault({
+                  footer: false,
+                }),
+          ],
+          autoSchemaFile: true,
+          context: () => ({
+            loaders: dlService.createLoaders(),
+          }),
+        };
+      },
     }),
     AuthModule,
   ],

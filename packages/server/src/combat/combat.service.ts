@@ -18,6 +18,13 @@ export class CombatService {
     return this.combatRepo.find(options);
   }
 
+  findByIds(
+    ids: string[],
+    options?: FindManyOptions<CombatModel>,
+  ): Promise<CombatModel[]> {
+    return this.combatRepo.findByIds(ids, options);
+  }
+
   findOne(id: string, options?: FindOneOptions<CombatModel>) {
     return this.combatRepo.findOneOrFail(id, options);
   }

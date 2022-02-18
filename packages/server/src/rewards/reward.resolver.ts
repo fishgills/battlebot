@@ -4,7 +4,7 @@ import { CreateRewardInput } from './dto/reward.create';
 
 import { RewardType } from './types/reward.type';
 import { RewardService } from './reward.service';
-import { RewardScore } from './types/reward.scoreboard.type';
+import { RewardScore } from './reward.scoreboard.type';
 import { RewardsScoreBoardInput } from './dto/scoreboard';
 
 @Resolver(() => RewardType)
