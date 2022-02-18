@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-import { App, BlockButtonAction } from '@slack/bolt';
+import { App, BlockButtonAction, subtype } from '@slack/bolt';
 import debug from 'debug';
 
 import { Logger } from './logger';
@@ -9,7 +9,8 @@ import { Store } from './installation_store';
 import { isGenericMessageEvent } from './utils/helpers';
 import { Command$ } from './mention_handler';
 import { Action$, ActionsRegex } from './actions';
-import { Shield$ } from './shield_handler';
+import { Shield$ } from './reward_handler';
+import { homePage } from './views/home';
 
 const app = new App({
   clientId: process.env.SLACK_CLIENT_ID,
@@ -77,31 +78,13 @@ app.command('/presentator-dev', async (args) => {
 });
 
 app.event('app_home_opened', async (args) => {
+  if (args.payload.tab !== 'home') return;
   try {
+    const content = await homePage(args.context.teamId, args.payload.user);
     // Call views.publish with the built-in client
     await args.client.views.publish({
-      // Use the user ID associated with the event
       user_id: args.event.user,
-      view: {
-        // Home tabs must be enabled in your app configuration page under "App Home"
-        type: 'home',
-        blocks: [
-          {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: '*Welcome home, <@' + args.event.user + '> :house:*',
-            },
-          },
-          {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: 'Learn how home tabs can be more useful and interactive <https://api.slack.com/surfaces/tabs/using|*in the documentation*>.',
-            },
-          },
-        ],
-      },
+      view: content,
     });
   } catch (error) {
     debug(error);

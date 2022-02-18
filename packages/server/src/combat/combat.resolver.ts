@@ -2,6 +2,7 @@ import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Inject } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { CharacterType } from 'characters/character.type';
+import { FindManyOptions } from 'typeorm';
 import { CharacterService } from '../characters/character.service';
 import { CombatLog, CombatRound, levelUp, modifier } from '../gamerules';
 import { CombatModel } from './combat.model';
@@ -15,8 +16,20 @@ export class CombatResolver {
   ) {}
 
   @Query(() => [CombatModel])
-  async combats() {
-    return this.combatService.findAll();
+  async combats(
+    @Args('attacker', {
+      nullable: true,
+    })
+    attacker?: string,
+  ) {
+    const options: FindManyOptions<CombatModel> = {};
+
+    if (attacker) {
+      options.where = {
+        attackerId: attacker,
+      };
+    }
+    return this.combatService.findAll(options);
   }
 
   @Mutation(() => CombatModel)

@@ -9,6 +9,7 @@ import { SlackInstallModule } from './installs/install.module';
 import { AuthModule } from './auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
 import {
+  ApolloServerPluginInlineTrace,
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from 'apollo-server-core';
@@ -27,6 +28,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       playground: false,
       autoSchemaFile: 'schema.gql',
       plugins: [
+        ApolloServerPluginInlineTrace(),
         process.env['NODE_ENV'] === 'production'
           ? ApolloServerPluginLandingPageProductionDefault()
           : ApolloServerPluginLandingPageLocalDefault({

@@ -12,4 +12,7 @@ export class CreateRewardInput {
     nullable: true,
   })
   value: number;
+
+  @Field()
+  teamId: string;
 }

@@ -25,6 +25,14 @@ export type Scalars = {
   JSON: any;
 };
 
+/** Supported scoreboard directions */
+export enum AllowedDirections {
+  /** rewards from users */
+  From = 'FROM',
+  /** rewards to users */
+  To = 'TO',
+}
+
 export type CharacterType = {
   __typename?: 'CharacterType';
   active: Scalars['Boolean'];
@@ -92,6 +100,7 @@ export type CreateCombatInput = {
 
 export type CreateRewardInput = {
   from: Scalars['String'];
+  teamId: Scalars['String'];
   to: Scalars['String'];
   value?: InputMaybe<Scalars['Float']>;
 };
@@ -154,14 +163,23 @@ export type MutationUpdateInstallArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  ScoreBoard: Array<RewardScore>;
   characters: Array<CharacterType>;
   combats: Array<CombatModel>;
   findByOwner: CharacterType;
-  getUserScore: Array<RewardModel>;
+  getUserScore: Array<RewardType>;
   install: SlackInstallModel;
   installs: Array<SlackInstallModel>;
-  rewards: Array<RewardModel>;
+  rewards: Array<RewardType>;
   rewardsGivenToday: Scalars['Int'];
+};
+
+export type QueryScoreBoardArgs = {
+  input: RewardsScoreBoardInput;
+};
+
+export type QueryCombatsArgs = {
+  attacker?: InputMaybe<Scalars['String']>;
 };
 
 export type QueryFindByOwnerArgs = {
@@ -171,6 +189,7 @@ export type QueryFindByOwnerArgs = {
 
 export type QueryGetUserScoreArgs = {
   listType?: InputMaybe<Scalars['String']>;
+  teamId: Scalars['String'];
   userId: Scalars['String'];
 };
 
@@ -179,17 +198,32 @@ export type QueryInstallArgs = {
 };
 
 export type QueryRewardsGivenTodayArgs = {
+  teamId: Scalars['String'];
   user: Scalars['String'];
 };
 
-export type RewardModel = {
-  __typename?: 'RewardModel';
+export type RewardScore = {
+  __typename?: 'RewardScore';
+  count: Scalars['Float'];
+  teamId: Scalars['String'];
+  userId: Scalars['String'];
+};
+
+export type RewardType = {
+  __typename?: 'RewardType';
   created_at: Scalars['DateTime'];
   from: Scalars['String'];
   id: Scalars['String'];
+  teamId: Scalars['String'];
   to: Scalars['String'];
   updated_at: Scalars['DateTime'];
   value: Scalars['Float'];
+};
+
+export type RewardsScoreBoardInput = {
+  direction: AllowedDirections;
+  teamId: Scalars['String'];
+  today?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type SlackInstallModel = {
@@ -429,6 +463,7 @@ export type RemoveInstallMutation = {
 export type GiveRewardMutationVariables = Exact<{
   from: Scalars['String'];
   to: Scalars['String'];
+  tid: Scalars['String'];
 }>;
 
 export type GiveRewardMutation = {
@@ -438,6 +473,7 @@ export type GiveRewardMutation = {
 
 export type RewardsGivenTodayQueryVariables = Exact<{
   user: Scalars['String'];
+  teamId: Scalars['String'];
 }>;
 
 export type RewardsGivenTodayQuery = {
@@ -453,6 +489,20 @@ export type CharacterUpdateMutationVariables = Exact<{
 export type CharacterUpdateMutation = {
   __typename?: 'Mutation';
   CharacterUpdate: number;
+};
+
+export type ScoreBoardQueryVariables = Exact<{
+  input: RewardsScoreBoardInput;
+}>;
+
+export type ScoreBoardQuery = {
+  __typename?: 'Query';
+  ScoreBoard: Array<{
+    __typename?: 'RewardScore';
+    teamId: string;
+    userId: string;
+    count: number;
+  }>;
 };
 
 export const CharacterPartsFragmentDoc = gql`
@@ -691,8 +741,8 @@ export class RemoveInstallGQL extends Apollo.Mutation<
   }
 }
 export const GiveRewardDocument = gql`
-  mutation giveReward($from: String!, $to: String!) {
-    giveReward(input: { from: $from, to: $to })
+  mutation giveReward($from: String!, $to: String!, $tid: String!) {
+    giveReward(input: { from: $from, to: $to, teamId: $tid })
   }
 `;
 
@@ -710,8 +760,8 @@ export class GiveRewardGQL extends Apollo.Mutation<
   }
 }
 export const RewardsGivenTodayDocument = gql`
-  query rewardsGivenToday($user: String!) {
-    rewardsGivenToday(user: $user)
+  query rewardsGivenToday($user: String!, $teamId: String!) {
+    rewardsGivenToday(user: $user, teamId: $teamId)
   }
 `;
 
@@ -745,6 +795,29 @@ export class CharacterUpdateGQL extends Apollo.Mutation<
   CharacterUpdateMutationVariables
 > {
   document = CharacterUpdateDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const ScoreBoardDocument = gql`
+  query ScoreBoard($input: RewardsScoreBoardInput!) {
+    ScoreBoard(input: $input) {
+      teamId
+      userId
+      count
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ScoreBoardGQL extends Apollo.Query<
+  ScoreBoardQuery,
+  ScoreBoardQueryVariables
+> {
+  document = ScoreBoardDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);

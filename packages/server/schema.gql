@@ -74,24 +74,47 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 """
 scalar JSON
 
-type RewardModel {
+type RewardType {
   id: String!
   to: String!
   from: String!
   value: Float!
   created_at: DateTime!
   updated_at: DateTime!
+  teamId: String!
+}
+
+type RewardScore {
+  teamId: String!
+  userId: String!
+  count: Float!
 }
 
 type Query {
   characters: [CharacterType!]!
   findByOwner(owner: String!, teamId: String): CharacterType!
-  combats: [CombatModel!]!
+  combats(attacker: String): [CombatModel!]!
   installs: [SlackInstallModel!]!
   install(team_id: String!): SlackInstallModel!
-  rewards: [RewardModel!]!
-  rewardsGivenToday(user: String!): Int!
-  getUserScore(userId: String!, listType: String = "from"): [RewardModel!]!
+  rewards: [RewardType!]!
+  rewardsGivenToday(user: String!, teamId: String!): Int!
+  getUserScore(teamId: String!, userId: String!, listType: String = "from"): [RewardType!]!
+  ScoreBoard(input: RewardsScoreBoardInput!): [RewardScore!]!
+}
+
+input RewardsScoreBoardInput {
+  direction: AllowedDirections!
+  teamId: String!
+  today: Boolean = true
+}
+
+"""Supported scoreboard directions"""
+enum AllowedDirections {
+  """rewards from users"""
+  FROM
+
+  """rewards to users"""
+  TO
 }
 
 type Mutation {
@@ -143,4 +166,5 @@ input CreateRewardInput {
   from: String!
   to: String!
   value: Float
+  teamId: String!
 }

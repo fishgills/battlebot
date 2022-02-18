@@ -104,12 +104,12 @@ mutation removeInstall($team_id: String!) {
   removeInstall(team_id: $team_id)
 }
 
-mutation giveReward($from: String!, $to: String!) {
-  giveReward(input: { from: $from, to: $to })
+mutation giveReward($from: String!, $to: String!, $tid: String!) {
+  giveReward(input: { from: $from, to: $to, teamId: $tid })
 }
 
-query rewardsGivenToday($user: String!) {
-  rewardsGivenToday(user: $user)
+query rewardsGivenToday($user: String!, $teamId: String!) {
+  rewardsGivenToday(user: $user, teamId: $teamId)
 }
 
 mutation CharacterUpdate(
@@ -117,4 +117,12 @@ mutation CharacterUpdate(
   $input: UpdateCharacterInput!
 ) {
   CharacterUpdate(id: $characterUpdateId, input: $input)
+}
+
+query ScoreBoard($input: RewardsScoreBoardInput!) {
+  ScoreBoard(input: $input) {
+    teamId
+    userId
+    count
+  }
 }

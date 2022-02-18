@@ -4,7 +4,7 @@ import { Observer } from '../common/AbstractObserver';
 import { sdk } from '../utils/gql';
 import { getUsernames, isGenericMessageEvent } from '../utils/helpers';
 
-export class ShieldObserver extends Observer<
+export class RewardObserver extends Observer<
   SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs
 > {
   msgUser(
@@ -12,11 +12,14 @@ export class ShieldObserver extends Observer<
     content: string,
   ): Promise<ChatPostMessageResponse> {
     if (!isGenericMessageEvent(e.message)) return;
-    return e.client.chat.postMessage({
+
+    return e.client.chat.postEphemeral({
       text: content,
-      channel: e.message.user,
-      token: e.context.botToken,
-      icon_emoji: ':shield:',
+      user: e.message.user,
+      channel: e.payload.channel,
+      // channel: e.message.user,
+      // token: e.context.botToken,
+      // icon_emoji: ':loudspeaker:',
     });
   }
   msgThread(): Promise<ChatPostMessageResponse> {
@@ -39,6 +42,7 @@ export class ShieldObserver extends Observer<
 
     const givenRewards = (
       await sdk.rewardsGivenToday({
+        teamId: e.context.teamId,
         user: e.message.user,
       })
     ).rewardsGivenToday;
@@ -48,14 +52,22 @@ export class ShieldObserver extends Observer<
       if (users.length > diff) {
         this.msgUser(
           e,
-          `You are trying to give away ${users.length} shields, but you only have ${diff} shields left today!`,
+          `You are trying to give away ${users.length} rewards, but you only have ${diff} left today!`,
         );
         return;
+      } else {
+        this.msgUser(
+          e,
+          `You have given out ${givenRewards + 1} rewards today. You have ${
+            diff - 1
+          } left.`,
+        );
       }
     }
 
     for (const user of users) {
       await sdk.giveReward({
+        tid: e.context.teamId,
         from: e.message.user,
         to: user.id,
       });

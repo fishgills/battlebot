@@ -1,5 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -7,30 +7,26 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@ObjectType()
-@Entity()
-export class RewardModel {
+@Entity('reward_model')
+export class RewardEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  @Field()
   id: string;
 
   @Column()
-  @Field()
   to: string;
 
   @Column()
-  @Field()
   from: string;
 
+  @Column()
+  teamId: string;
+
   @Column({ default: 1 })
-  @Field({ defaultValue: 1 })
   value: number;
 
-  @Field()
   @Column({ type: 'timestamp' })
   @CreateDateColumn()
   created_at: Date;
-  @Field()
   @Column({ type: 'timestamp' })
   @UpdateDateColumn()
   updated_at: Date;
