@@ -1,5 +1,6 @@
 import { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from '@slack/bolt';
 import { Blocks } from 'slack-block-builder';
+import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
 import { MentionObserver } from './observer';
@@ -11,10 +12,10 @@ export class SheetObserver extends MentionObserver {
   getHelpBlocks() {
     return [
       Blocks.Section({
-        text: "To retrieve your presentation's stats.",
+        text: t('sheet_help_description'),
       }),
       Blocks.Section({
-        text: '`/presentaor sheet`',
+        text: t('sheet_help_command', t('command')),
       }),
     ];
   }
@@ -33,10 +34,7 @@ export class SheetObserver extends MentionObserver {
       await this.msgUser(event, editCharacterModal(char));
     } catch (e) {
       this.log(`character not found`);
-      await this.msgUser(
-        event,
-        `You have no character. \`create <name>\` to make one.`,
-      );
+      await this.msgUser(event, t('sheet_no_character'));
     }
   }
 }

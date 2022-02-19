@@ -1,8 +1,14 @@
 import * as dotenv from 'dotenv';
+import { gaia, t } from './locale';
+
 dotenv.config();
 
-import { App, BlockButtonAction, subtype } from '@slack/bolt';
-import debug from 'debug';
+gaia.init({
+  supportedLocales: ['en-us'],
+  locale: 'en-us',
+});
+
+import { App, BlockButtonAction } from '@slack/bolt';
 
 import { Logger } from './logger';
 import { Store } from './installation_store';
@@ -16,6 +22,7 @@ const app = new App({
   clientId: process.env.SLACK_CLIENT_ID,
   clientSecret: process.env.SLACK_CLIENT_SECRET,
   appToken: process.env.SLACK_APP_TOKEN,
+
   customRoutes: [
     {
       path: '/health-check',
@@ -41,56 +48,55 @@ const app = new App({
   Logger.info('Starting bolt', info);
 })();
 
-app.message(':loudspeaker:', async (args) => {
+app.message(t('reward_emoji'), async (args) => {
   if (!isGenericMessageEvent(args.message)) {
     return;
   }
   Shield$.next(args);
 });
 
-// app.event('member_joined_channel', async (args) => {
-//   await args.client.chat.postMessage({
-//     channel: args.payload.channel,
-//     token: args.context.botToken,
-//     text:
-//       'Welcome <@' +
-//       args.payload.user +
-//       '>! Mention me with one of the following commands: `create <character_name`, `fight @<userToFight>`, `sheet`. For example `@DM fight @bubba` to start a fight.',
-//   });
-// });
-
-app.event('team_join', async (args) => {
-  await args.client.chat.postMessage({
-    channel: args.payload.user.id,
-    token: args.context.botToken,
-    text: 'Welcome. Join #adventureland to start',
-  });
-});
-
-app.command('/presentator', async (args) => {
+app.command(t('command'), async (args) => {
   await args.ack();
   Command$.next(args);
 });
 
-app.command('/presentator-dev', async (args) => {
+app.command(`${t('command')}-dev`, async (args) => {
   await args.ack();
   Command$.next(args);
 });
 
 app.event('app_home_opened', async (args) => {
   if (args.payload.tab !== 'home') return;
-  try {
-    const content = await homePage(args.context.teamId, args.payload.user);
-    // Call views.publish with the built-in client
-    await args.client.views.publish({
-      user_id: args.event.user,
-      view: content,
-    });
-  } catch (error) {
-    debug(error);
-  }
+  const content = await homePage(args.context.teamId, args.payload.user);
+  // Call views.publish with the built-in client
+  await args.client.views.publish({
+    user_id: args.event.user,
+    view: content,
+  });
 });
 app.action<BlockButtonAction>(ActionsRegex, async (args) => {
   await args.ack();
   Action$.next(args);
+});
+
+app.use(async (args: any) => {
+  let user: string;
+
+  if (args.event) {
+    user = args.event.user;
+  }
+
+  if (args.payload.user_id) {
+    user = args.payload.user_id;
+  }
+
+  if (args.body && args.body.user) {
+    user = args.body.user.id;
+  }
+  const userInfo = await args.client.users.info({
+    user,
+    include_locale: true,
+  });
+  gaia.setLocale(userInfo.user.locale);
+  args.next();
 });

@@ -5,16 +5,13 @@ import {
   CharacterType,
   RewardScore,
 } from '../generated/graphql';
+import { t } from '../locale';
 import { client, sdk } from '../utils/gql';
 import { characterSheetBlocks } from './character';
 
 const characterStats = (character: CharacterType, home: HomeTabBuilder) => {
   character.active = true;
   home.blocks(
-    Blocks.Section({
-      text: '*Presentation Power*',
-    }),
-    Blocks.Divider(),
     ...characterSheetBlocks(character),
     Blocks.Section().fields([
       '*Meetings Called*',
@@ -25,7 +22,7 @@ const characterStats = (character: CharacterType, home: HomeTabBuilder) => {
   );
 };
 
-const scoreBoard = (
+const rewardScores = (
   toScoreBoard: RewardScore[],
   fromScoreBoard: RewardScore[],
   home: HomeTabBuilder,
@@ -37,7 +34,7 @@ const scoreBoard = (
 
   home.blocks(
     Blocks.Section({
-      text: '*Received Rewards Scoreboard*',
+      text: `*${t('received_reward_score_board')}*`,
     }),
     Blocks.Divider(),
     Blocks.Section().fields(
@@ -56,13 +53,13 @@ const scoreBoard = (
 export const homePage = async (teamId: string, userId: string) => {
   const { ScoreBoard: toScoreBoard } = await sdk.ScoreBoard({
     input: {
-      teamId,
+      teamId: teamId,
       direction: AllowedDirections.To,
     },
   });
   const { ScoreBoard: fromScoreBoard } = await sdk.ScoreBoard({
     input: {
-      teamId,
+      teamId: teamId,
       direction: AllowedDirections.From,
     },
   });
@@ -91,7 +88,7 @@ export const homePage = async (teamId: string, userId: string) => {
     `,
     {
       owner: userId,
-      teamId,
+      teamId: teamId,
     },
   );
 
@@ -100,7 +97,7 @@ export const homePage = async (teamId: string, userId: string) => {
   home.callbackId('home-tab');
   home.externalId(`home-${teamId}`);
   characterStats(character, home);
-  scoreBoard(toScoreBoard, fromScoreBoard, home);
+  rewardScores(toScoreBoard, fromScoreBoard, home);
 
   return home.buildToObject();
 };

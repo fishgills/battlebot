@@ -1,6 +1,7 @@
 import { SlackCommandMiddlewareArgs, AllMiddlewareArgs } from '@slack/bolt';
 import { Blocks } from 'slack-block-builder';
 import { CharacterByOwnerQuery } from '../generated/graphql';
+import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { getUsernames, to } from '../utils/helpers';
 import { battleLog, notifyLevelUp } from '../views/character';
@@ -13,10 +14,10 @@ export class CombatObserver extends MentionObserver {
   getHelpBlocks() {
     return [
       Blocks.Section({
-        text: 'To start a presentation:',
+        text: t('combat_help_description'),
       }),
       Blocks.Section({
-        text: '`/presentor fight @Someone`',
+        text: t('combat_help_command', t('command')),
       }),
     ];
   }
@@ -34,22 +35,19 @@ export class CombatObserver extends MentionObserver {
     ).findByOwner;
 
     if (!char.id) {
-      this.msgUser(e, 'You need to create a presentation.');
+      this.msgUser(e, t('combat_update_no_character'));
       this.log('no character');
       return;
     }
 
     if (!char.active) {
-      this.msgUser(
-        e,
-        'You need to finish your presentation. Check your presentation stats.',
-      );
+      this.msgUser(e, t('combat_update_unfinished_character'));
       return;
     }
     const targets = getUsernames(e.payload.text);
 
     if (targets.length > 1) {
-      this.msgUser(e, 'Can only present to one person at a time.');
+      this.msgUser(e, t('combat_update_too_man_targets'));
       return;
     }
 
@@ -63,13 +61,10 @@ export class CombatObserver extends MentionObserver {
       });
     } catch (e) {
       this.log('target has no character');
-      this.msgUser(
-        e,
-        `<@${targetUser.id}> does not have a presentation to counter yours with.`,
-      );
+      this.msgUser(e, t('combat_update_target_no_char', targetUser.id));
       e.client.chat.postMessage({
         channel: targetUser.id,
-        text: `${e.payload.user_name} tried to show you their presentation but you need a counter-presentation. :cry: Type \`/presentor\` to get started.`,
+        text: t('combat_update_target_nochar_dm', e.payload.user_name),
       });
     }
 
@@ -87,7 +82,7 @@ export class CombatObserver extends MentionObserver {
     );
     if (err) {
       if (err.message.indexOf('Combat started too fast') > -1) {
-        this.msgUser(e, 'Please wait a bit before initiating another fight.');
+        this.msgUser(e, t('combat_update_throttle'));
         return;
       }
       this.logger(err.message);
@@ -101,7 +96,6 @@ export class CombatObserver extends MentionObserver {
 
     await e.respond({
       ...log,
-      text: `${char.name} is presenting to ${target.findByOwner.name}. ${combatLog.start.winner.name} has won!.`,
     });
 
     await e.client.chat.postMessage({

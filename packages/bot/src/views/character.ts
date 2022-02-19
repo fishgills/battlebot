@@ -1,13 +1,8 @@
 import { RespondFn } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
-import {
-  ActionsBuilder,
-  Blocks,
-  Elements,
-  Message,
-  setIfTruthy,
-} from 'slack-block-builder';
+import { Blocks, Elements, Message, setIfTruthy } from 'slack-block-builder';
 import { CharacterType, StartCombatMutation } from '../generated/graphql';
+import { t } from '../locale';
 import { nextLevel, numToEmoji } from '../utils/helpers';
 
 export const notifyLevelUp = (
@@ -21,7 +16,7 @@ export const notifyLevelUp = (
   if (winner.id === org_attacker.id && winner.level > org_attacker.level) {
     return attacker_resp({
       response_type: 'ephemeral',
-      text: "Your presentation software has received a free upgrade! Check your presentation's settings.",
+      text: t('character_level_up'),
     }).then();
   }
 
@@ -29,7 +24,7 @@ export const notifyLevelUp = (
     return event.chat
       .postMessage({
         channel: org_def_slack_id,
-        text: "Your presentation software has received a free upgrade! Check your presentation's settings.",
+        text: t('character_level_up'),
       })
       .then();
   }
@@ -48,7 +43,7 @@ const saveBlock = (char: Partial<CharacterType>) => {
     block.elements(
       Elements.Button({
         actionId: 'reroll',
-        text: 'Redo Abilities',
+        text: t('character_reroll_button'),
       }),
     );
   }
@@ -56,7 +51,7 @@ const saveBlock = (char: Partial<CharacterType>) => {
   block.elements(
     Elements.Button({
       actionId: 'complete',
-      text: 'Done',
+      text: t('character_done_button'),
     }),
   );
 
@@ -67,29 +62,29 @@ export const statBlock = (character: Partial<CharacterType>) => {
   const stats = [
     {
       id: 'strength',
-      emoji: ':loudspeaker:',
+      emoji: t('character_strength_emoji'),
       value: character.strength,
     },
     {
       id: 'defense',
-      emoji: ':hear_no_evil:',
+      emoji: t('character_defense_emoji'),
       value: character.defense,
     },
     {
       id: 'vitality',
-      emoji: ':coffee:',
+      emoji: t('character_vitality_emoji'),
       value: character.vitality,
     },
   ];
 
   return stats.map((stat) => {
     const block = Blocks.Section({
-      text: `${stat.emoji}: ${stat.value}`,
+      text: t('key_pair', stat.emoji, stat.value),
     });
     if (character.extraPoints > 0) {
       block.accessory(
         Elements.Button({
-          text: ':heavy_plus_sign:',
+          text: t('character_stat_incr_button'),
         })
           .value(stat.id)
           .actionId('stat-incr'),
@@ -102,31 +97,33 @@ export const statBlock = (character: Partial<CharacterType>) => {
 export const characterSheetBlocks = (character: Partial<CharacterType>) => {
   return [
     Blocks.Section({
-      text: `*Name*: ${character.name}`,
+      text: t('character_name', character.name),
     }),
     Blocks.Divider(),
     setIfTruthy(character.rolls < 5 && !character.active, [
       Blocks.Section({
-        text: `You can redownload the Presentator software ${
-          5 - character.rolls
-        } times. Choose wisely. *18* is the highest versions you can get.`,
+        text: t('character_reroll', 5 - character.rolls),
       }),
     ]),
     statBlock(character),
     Blocks.Section({
-      text: `:astonished:: ${character.hp}`,
+      text: t('key_pair', t('character_hp_emoji'), character.hp),
     }),
     Blocks.Section({
-      text: `:moneybag: ${character.gold}`,
+      text: t('key_pair', t('character_gold_emoji'), character.gold),
     }),
     saveBlock(character),
     Blocks.Divider(),
     Blocks.Section({
-      text: `${character.name}, which is currently version ${
-        character.level
-      }, has *${character.xp}/${nextLevel(
+      text: t(
+        `character_level_stats`,
+        character.name,
         character.level,
-      )}* kudo points towards update ${character.level + 1}`,
+        character.xp,
+        nextLevel(character.level),
+        character.level,
+        character.level + 1,
+      ),
     }),
     Blocks.Divider(),
   ];
@@ -143,35 +140,46 @@ export const battleLog = (options: {
 }) => {
   const blocks = [
     Blocks.Header({
-      text: `${options.combat.start.attacker.name} is presenting to ${options.combat.start.defender.name}!`,
+      text: t(
+        'battlelog_header',
+        options.combat.start.attacker.name,
+        options.combat.start.defender.name,
+      ),
     }),
     Blocks.Section({
-      text: `:crossed_swords: ${options.combat.start.log.combat[0].attacker.name} gets to start their deck first! Pay attention ${options.combat.start.log.combat[0].defender.name}!`,
+      text: t(
+        'battlelog_initiative_header',
+        options.combat.start.log.combat[0].attacker.name,
+        options.combat.start.log.combat[0].defender.name,
+      ),
     }),
   ];
 
   for (const log of options.combat.start.log.combat) {
     let blockStr: string;
     if (log.attackRoll === 20) {
-      blockStr = `*${log.attacker.name}* creates an epic slide!`;
+      blockStr = t('battlelog_critical_roll', log.attacker.name);
     } else {
-      blockStr = `*${log.attacker.name}* displays a slide and gets ${numToEmoji(
-        log.attackRoll,
-      )} long blinks of attention, then adds ${numToEmoji(
-        log.attackBonus,
-      )} GIFs for a total slide power of ${numToEmoji(
-        log.attackBonus + log.attackRoll,
-      )}. *${log.defender.name}* has read ${numToEmoji(
-        log.defenderDefense,
-      )} emails of information beforehand.`;
+      blockStr = t(
+        'battlelog_attack_roll',
+        log.attacker.name,
+        numToEmoji(log.attackRoll),
+        numToEmoji(log.attackBonus),
+        numToEmoji(log.attackBonus + log.attackRoll),
+        log.defender.name,
+        numToEmoji(log.defenderDefense),
+      );
     }
 
     if (log.hit) {
-      blockStr += ` ${log.attacker.name} gives ${numToEmoji(
-        log.damage,
-      )} points of :astonished: damage!`;
+      blockStr += t(
+        'battlelog_hit',
+        log.attacker.name,
+        numToEmoji(log.damage),
+        t('character_hp_emoji'),
+      );
     } else {
-      blockStr += ` ${log.attacker.name} gets distracted by a squirrel!`;
+      blockStr += t('batlelog_miss', log.attacker.name);
     }
     blocks.push(
       Blocks.Section({
@@ -182,18 +190,26 @@ export const battleLog = (options: {
     if (log.defenderHealth > 0) {
       blocks.push(
         Blocks.Section({
-          text: `*${log.defender.name}* has ${numToEmoji(
-            log.defenderHealth,
-          )} :astonished: points left.`,
+          text: t(
+            'battlelog_hp_report',
+            log.defender.name,
+            numToEmoji(log.defenderHealth),
+            t('character_hp_emoji'),
+          ),
         }),
       );
     } else {
       blocks.push(
         Blocks.Section({
-          text: `*${log.defender.name}* leaves the room :astonished: first.`,
+          text: t('battlelog_defeated', log.defender.name),
         }),
         Blocks.Section({
-          text: `*${log.attacker.name}* gets a bonus of ${options.combat.start.rewardGold} :moneybag:!`,
+          text: t(
+            'battlelog_gold_report',
+            log.attacker.name,
+            options.combat.start.rewardGold,
+            t('character_gold_emoji'),
+          ),
         }),
       );
     }

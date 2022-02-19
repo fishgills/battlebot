@@ -1,6 +1,7 @@
 import { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { ChatPostMessageResponse } from '@slack/web-api';
 import { Observer } from '../common/AbstractObserver';
+import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { getUsernames, isGenericMessageEvent } from '../utils/helpers';
 
@@ -50,18 +51,10 @@ export class RewardObserver extends Observer<
     const diff = 10 - givenRewards;
     if (users) {
       if (users.length > diff) {
-        this.msgUser(
-          e,
-          `You are trying to give away ${users.length} rewards, but you only have ${diff} left today!`,
-        );
+        this.msgUser(e, t('reward_left', users.length, diff));
         return;
       } else {
-        this.msgUser(
-          e,
-          `You have given out ${givenRewards + 1} rewards today. You have ${
-            diff - 1
-          } left.`,
-        );
+        this.msgUser(e, t('reward_given', givenRewards + 1, diff - 1));
       }
     }
 
@@ -75,6 +68,6 @@ export class RewardObserver extends Observer<
   }
 
   getHandleText(): string {
-    return ':shield:'; // We use the Slack Bolt API already to filter. Always matches
+    return t('reward_emoji'); // We use the Slack Bolt API already to filter. Always matches
   }
 }

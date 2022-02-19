@@ -1,4 +1,5 @@
 import { ObserveType } from '.';
+import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
 import { ActionObserver } from './action-observer';
@@ -15,7 +16,7 @@ export class StatsObserver extends ActionObserver {
     });
 
     if (findByOwner.extraPoints <= 0) {
-      this.msgUser(event, 'You have no points to distribute.');
+      this.msgUser(event, t('no_points'));
       return;
     }
 

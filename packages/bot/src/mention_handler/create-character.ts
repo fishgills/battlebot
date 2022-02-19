@@ -1,5 +1,6 @@
 import { SlackCommandMiddlewareArgs, AllMiddlewareArgs } from '@slack/bolt';
 import { Blocks } from 'slack-block-builder';
+import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { MentionObserver } from './observer';
 
@@ -10,10 +11,10 @@ export class CharacterCreateObserver extends MentionObserver {
   getHelpBlocks() {
     return [
       Blocks.Section({
-        text: 'To create a presentation:',
+        text: t('create_help_description'),
       }),
       Blocks.Section({
-        text: '`/presentor create <PresentationName>`',
+        text: t('create_help_command', t('command')),
       }),
     ];
   }
@@ -25,7 +26,7 @@ export class CharacterCreateObserver extends MentionObserver {
       e.payload.text.trim().split(' ').length !== 2 ||
       e.payload.text.length > 100
     ) {
-      this.msgUser(e, 'Invalid command. Should be `create PresentationName`');
+      this.msgUser(e, t('create_update_invalid'));
       return;
     }
     try {
@@ -36,7 +37,7 @@ export class CharacterCreateObserver extends MentionObserver {
         })
       ).findByOwner;
       if (char.id) {
-        this.msgUser(e, `You already have a presentation.`);
+        this.msgUser(e, t('create_update_already_have_char'));
         return;
       }
     } catch (e) {
@@ -47,7 +48,7 @@ export class CharacterCreateObserver extends MentionObserver {
           teamId: e.payload.team_id,
         },
       });
-      this.msgUser(e, `Presentation created!`);
+      this.msgUser(e, t('create_update_char_created'));
     }
   }
 }

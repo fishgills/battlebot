@@ -1,5 +1,6 @@
 import { SlackCommandMiddlewareArgs, AllMiddlewareArgs } from '@slack/bolt';
 import { Blocks, Message, SectionBuilder } from 'slack-block-builder';
+import { t } from '../locale';
 import { MentionObserver } from './observer';
 
 export class HelpObserver extends MentionObserver {
@@ -8,16 +9,13 @@ export class HelpObserver extends MentionObserver {
   public addBlocks(blocks: SectionBuilder[]) {
     this.blocks.push(...blocks);
   }
-  getHelpBlocks() {
-    return;
-  }
   async update(
     e: SlackCommandMiddlewareArgs & AllMiddlewareArgs,
   ): Promise<void> {
     const helpBlocks = Message()
       .blocks(
         Blocks.Section({
-          text: 'No command received. :cry:',
+          text: t('help_no_command'),
         }),
         this.blocks,
       )
