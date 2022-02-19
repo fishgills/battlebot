@@ -1,6 +1,12 @@
 import { RespondFn } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
-import { Blocks, Elements, Message, setIfTruthy } from 'slack-block-builder';
+import {
+  ActionsBuilder,
+  Blocks,
+  Elements,
+  Message,
+  setIfTruthy,
+} from 'slack-block-builder';
 import { CharacterType, StartCombatMutation } from '../generated/graphql';
 import { nextLevel, numToEmoji } from '../utils/helpers';
 
@@ -31,7 +37,7 @@ export const notifyLevelUp = (
 
 const saveBlock = (char: Partial<CharacterType>) => {
   if (char.active) {
-    return [];
+    return;
   }
 
   const block = Blocks.Actions({
@@ -57,7 +63,7 @@ const saveBlock = (char: Partial<CharacterType>) => {
   return block;
 };
 
-const statBlock = (character: Partial<CharacterType>) => {
+export const statBlock = (character: Partial<CharacterType>) => {
   const stats = [
     {
       id: 'strength',
@@ -92,38 +98,42 @@ const statBlock = (character: Partial<CharacterType>) => {
     return block;
   });
 };
+
+export const characterSheetBlocks = (character: Partial<CharacterType>) => {
+  return [
+    Blocks.Section({
+      text: `*Name*: ${character.name}`,
+    }),
+    Blocks.Divider(),
+    setIfTruthy(character.rolls < 5 && !character.active, [
+      Blocks.Section({
+        text: `You can redownload the Presentator software ${
+          5 - character.rolls
+        } times. Choose wisely. *18* is the highest versions you can get.`,
+      }),
+    ]),
+    statBlock(character),
+    Blocks.Section({
+      text: `:astonished:: ${character.hp}`,
+    }),
+    Blocks.Section({
+      text: `:moneybag: ${character.gold}`,
+    }),
+    saveBlock(character),
+    Blocks.Divider(),
+    Blocks.Section({
+      text: `${character.name}, which is currently version ${
+        character.level
+      }, has *${character.xp}/${nextLevel(
+        character.level,
+      )}* kudo points towards update ${character.level + 1}`,
+    }),
+    Blocks.Divider(),
+  ];
+};
 export const editCharacterModal = (character: Partial<CharacterType>) => {
   return Message()
-    .blocks(
-      Blocks.Section({
-        text: `*Name*: ${character.name}`,
-      }),
-      Blocks.Divider(),
-      setIfTruthy(character.rolls < 5 && !character.active, [
-        Blocks.Section({
-          text: `You can redownload the Presentator software ${
-            5 - character.rolls
-          } times. Choose wisely. *18* is the highest versions you can get.`,
-        }),
-      ]),
-      statBlock(character),
-      Blocks.Section({
-        text: `:astonished:: ${character.hp}`,
-      }),
-      Blocks.Section({
-        text: `:moneybag: ${character.gold}`,
-      }),
-      saveBlock(character),
-      Blocks.Divider(),
-      Blocks.Section({
-        text: `${character.name}, which is currently version ${
-          character.level
-        }, has *${character.xp}/${nextLevel(
-          character.level,
-        )}* kudo points towards update ${character.level + 1}`,
-      }),
-      Blocks.Divider(),
-    )
+    .blocks(...characterSheetBlocks(character))
     .getBlocks();
 };
 

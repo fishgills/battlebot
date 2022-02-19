@@ -505,6 +505,19 @@ export type ScoreBoardQuery = {
   }>;
 };
 
+export type CombatTotalsQueryVariables = Exact<{
+  attacker?: InputMaybe<Scalars['String']>;
+}>;
+
+export type CombatTotalsQuery = {
+  __typename?: 'Query';
+  combats: Array<{
+    __typename?: 'CombatModel';
+    attackerId: string;
+    defenderId: string;
+  }>;
+};
+
 export const CharacterPartsFragmentDoc = gql`
   fragment CharacterParts on CharacterType {
     defense
@@ -652,6 +665,14 @@ export const ScoreBoardDocument = gql`
       teamId
       userId
       count
+    }
+  }
+`;
+export const CombatTotalsDocument = gql`
+  query CombatTotals($attacker: String) {
+    combats(attacker: $attacker) {
+      attackerId
+      defenderId
     }
   }
 `;
@@ -830,6 +851,19 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'ScoreBoard',
+      );
+    },
+    CombatTotals(
+      variables?: CombatTotalsQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<CombatTotalsQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<CombatTotalsQuery>(CombatTotalsDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'CombatTotals',
       );
     },
   };

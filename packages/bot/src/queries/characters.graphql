@@ -126,3 +126,10 @@ query ScoreBoard($input: RewardsScoreBoardInput!) {
     count
   }
 }
+
+query CombatTotals($attacker: String) {
+  combats(attacker: $attacker) {
+    attackerId
+    defenderId
+  }
+}

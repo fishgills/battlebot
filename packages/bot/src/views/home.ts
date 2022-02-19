@@ -1,57 +1,106 @@
+import { gql } from 'graphql-request';
+import { Blocks, HomeTab, HomeTabBuilder } from 'slack-block-builder';
 import {
-  Blocks,
-  HomeTab,
-  HomeTabBuilder,
-  Section,
-  SectionBuilder,
-  user,
-} from 'slack-block-builder';
-import { AllowedDirections } from '../generated/graphql';
-import { sdk } from '../utils/gql';
-import { numToEmoji } from '../utils/helpers';
+  AllowedDirections,
+  CharacterType,
+  RewardScore,
+} from '../generated/graphql';
+import { client, sdk } from '../utils/gql';
+import { characterSheetBlocks } from './character';
 
-const userStats = async (
-  teamId: string,
-  home: HomeTabBuilder,
-  userId: string,
-) => {
-  const { findByOwner } = await sdk.characterByOwner({
-    owner: userId,
-    teamId: teamId,
-  });
-  // home.blocks(
-  //   Blocks.Section().fields(),
-  // );
+const characterStats = (character: CharacterType, home: HomeTabBuilder) => {
+  character.active = true;
+  home.blocks(
+    Blocks.Section({
+      text: '*Presentation Power*',
+    }),
+    Blocks.Divider(),
+    ...characterSheetBlocks(character),
+    Blocks.Section().fields([
+      '*Meetings Called*',
+      character.attacking.length + '',
+      '*Meetings Attended*',
+      character.defending.length + '',
+    ]),
+  );
 };
 
-const scoreBoard = async (teamId: string, home: HomeTabBuilder) => {
-  const { ScoreBoard } = await sdk.ScoreBoard({
-    input: {
-      teamId,
-      direction: AllowedDirections.To,
-    },
-  });
+const scoreBoard = (
+  toScoreBoard: RewardScore[],
+  fromScoreBoard: RewardScore[],
+  home: HomeTabBuilder,
+) => {
+  const rewardScoreReduce = (prev, curr, index, arr) => {
+    prev.push(`${index + 1}) <@${curr.userId}>`, curr.count + '');
+    return prev;
+  };
 
   home.blocks(
     Blocks.Section({
       text: '*Received Rewards Scoreboard*',
     }),
     Blocks.Divider(),
-    ScoreBoard.map((score, index) => {
-      return Blocks.Section({
-        text: `${index + 1}) <@${score.userId}> ${numToEmoji(score.count)}`,
-      });
+    Blocks.Section().fields(
+      toScoreBoard.reduce<Array<string>>(rewardScoreReduce, []),
+    ),
+    Blocks.Section({
+      text: '*Given Rewards Scoreboard*',
     }),
+    Blocks.Divider(),
+    Blocks.Section().fields(
+      fromScoreBoard.reduce<Array<string>>(rewardScoreReduce, []),
+    ),
   );
 };
 
 export const homePage = async (teamId: string, userId: string) => {
+  const { ScoreBoard: toScoreBoard } = await sdk.ScoreBoard({
+    input: {
+      teamId,
+      direction: AllowedDirections.To,
+    },
+  });
+  const { ScoreBoard: fromScoreBoard } = await sdk.ScoreBoard({
+    input: {
+      teamId,
+      direction: AllowedDirections.From,
+    },
+  });
+
+  const { findByOwner: character } = await client.request(
+    gql`
+      query OwnerCharacter($owner: String!, $teamId: String) {
+        findByOwner(owner: $owner, teamId: $teamId) {
+          defending {
+            id
+          }
+          attacking {
+            id
+          }
+          xp
+          hp
+          gold
+          level
+          vitality
+          defense
+          strength
+          id
+          name
+        }
+      }
+    `,
+    {
+      owner: userId,
+      teamId,
+    },
+  );
+
   const home = HomeTab();
 
   home.callbackId('home-tab');
   home.externalId(`home-${teamId}`);
-  await userStats(teamId, home, userId);
-  await scoreBoard(teamId, home);
+  characterStats(character, home);
+  scoreBoard(toScoreBoard, fromScoreBoard, home);
 
   return home.buildToObject();
 };
