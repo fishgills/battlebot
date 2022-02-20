@@ -59,12 +59,12 @@ export class CombatObserver extends MentionObserver {
         owner: targetUser.id,
         teamId: e.payload.team_id,
       });
-    } catch (e) {
+    } catch (exception) {
       this.log('target has no character');
       this.msgUser(e, t('combat_update_target_no_char', targetUser.id));
       e.client.chat.postMessage({
         channel: targetUser.id,
-        text: t('combat_update_target_nochar_dm', e.payload.user_name),
+        text: t('combat_update_target_nochar_dm', e.payload.user_id),
       });
     }
 
