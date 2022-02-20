@@ -87,6 +87,14 @@ export type CombatRound = {
   hit: Scalars['Boolean'];
 };
 
+export type ConvoType = {
+  __typename?: 'ConvoType';
+  convoId: Scalars['String'];
+  expiresAt: Scalars['Float'];
+  id: Scalars['String'];
+  value: Scalars['String'];
+};
+
 export type CreateCharacterInput = {
   name: Scalars['String'];
   owner: Scalars['String'];
@@ -96,6 +104,12 @@ export type CreateCharacterInput = {
 export type CreateCombatInput = {
   attackerId: Scalars['String'];
   defenderId: Scalars['String'];
+};
+
+export type CreateConvoInput = {
+  convoId: Scalars['String'];
+  expiresAt: Scalars['Float'];
+  value: Scalars['String'];
 };
 
 export type CreateRewardInput = {
@@ -116,7 +130,9 @@ export type Mutation = {
   CharacterUpdate: Scalars['Int'];
   createCharacter: CharacterType;
   createCombat: CombatModel;
+  createConvo: ConvoType;
   createInstall: SlackInstallModel;
+  deleteConvo: Scalars['Int'];
   giveReward: Scalars['Boolean'];
   removeInstall: Scalars['String'];
   reroll: CharacterType;
@@ -137,8 +153,16 @@ export type MutationCreateCombatArgs = {
   input: CreateCombatInput;
 };
 
+export type MutationCreateConvoArgs = {
+  input: CreateConvoInput;
+};
+
 export type MutationCreateInstallArgs = {
   input: CreateSlackInstallInput;
+};
+
+export type MutationDeleteConvoArgs = {
+  convoId: Scalars['String'];
 };
 
 export type MutationGiveRewardArgs = {
@@ -166,6 +190,7 @@ export type Query = {
   ScoreBoard: Array<RewardScore>;
   characters: Array<CharacterType>;
   combats: Array<CombatModel>;
+  convo: ConvoType;
   findByOwner: CharacterType;
   getUserScore: Array<RewardType>;
   install: SlackInstallModel;
@@ -180,6 +205,10 @@ export type QueryScoreBoardArgs = {
 
 export type QueryCombatsArgs = {
   attacker?: InputMaybe<Scalars['String']>;
+};
+
+export type QueryConvoArgs = {
+  convoId: Scalars['String'];
 };
 
 export type QueryFindByOwnerArgs = {
@@ -518,6 +547,44 @@ export type CombatTotalsQuery = {
   }>;
 };
 
+export type DeleteConvoMutationVariables = Exact<{
+  convoId: Scalars['String'];
+}>;
+
+export type DeleteConvoMutation = {
+  __typename?: 'Mutation';
+  deleteConvo: number;
+};
+
+export type ConvoQueryVariables = Exact<{
+  convoId: Scalars['String'];
+}>;
+
+export type ConvoQuery = {
+  __typename?: 'Query';
+  convo: {
+    __typename?: 'ConvoType';
+    convoId: string;
+    expiresAt: number;
+    value: string;
+  };
+};
+
+export type CreateConvoMutationVariables = Exact<{
+  input: CreateConvoInput;
+}>;
+
+export type CreateConvoMutation = {
+  __typename?: 'Mutation';
+  createConvo: {
+    __typename?: 'ConvoType';
+    expiresAt: number;
+    value: string;
+    convoId: string;
+    id: string;
+  };
+};
+
 export const CharacterPartsFragmentDoc = gql`
   fragment CharacterParts on CharacterType {
     defense
@@ -853,6 +920,69 @@ export class CombatTotalsGQL extends Apollo.Query<
   CombatTotalsQueryVariables
 > {
   document = CombatTotalsDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const DeleteConvoDocument = gql`
+  mutation DeleteConvo($convoId: String!) {
+    deleteConvo(convoId: $convoId)
+  }
+`;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class DeleteConvoGQL extends Apollo.Mutation<
+  DeleteConvoMutation,
+  DeleteConvoMutationVariables
+> {
+  document = DeleteConvoDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const ConvoDocument = gql`
+  query Convo($convoId: String!) {
+    convo(convoId: $convoId) {
+      convoId
+      expiresAt
+      value
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ConvoGQL extends Apollo.Query<ConvoQuery, ConvoQueryVariables> {
+  document = ConvoDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const CreateConvoDocument = gql`
+  mutation CreateConvo($input: CreateConvoInput!) {
+    createConvo(input: $input) {
+      expiresAt
+      value
+      convoId
+      id
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CreateConvoGQL extends Apollo.Mutation<
+  CreateConvoMutation,
+  CreateConvoMutationVariables
+> {
+  document = CreateConvoDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);

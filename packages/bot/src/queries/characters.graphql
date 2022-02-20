@@ -133,3 +133,24 @@ query CombatTotals($attacker: String) {
     defenderId
   }
 }
+
+mutation DeleteConvo($convoId: String!) {
+  deleteConvo(convoId: $convoId)
+}
+
+query Convo($convoId: String!) {
+  convo(convoId: $convoId) {
+    convoId
+    expiresAt
+    value
+  }
+}
+
+mutation CreateConvo($input: CreateConvoInput!) {
+  createConvo(input: $input) {
+    expiresAt
+    value
+    convoId
+    id
+  }
+}

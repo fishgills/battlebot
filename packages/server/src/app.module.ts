@@ -10,17 +10,13 @@ import { AuthModule } from './auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
 import {
   ApolloServerPluginInlineTrace,
-  ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from 'apollo-server-core';
-import {
-  ApolloDriver,
-  ApolloDriverAsyncConfig,
-  ApolloDriverConfig,
-} from '@nestjs/apollo';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DataloaderModule } from 'dataloader/dataloader.module';
 import { DataloaderService } from 'dataloader/dataloader.service';
+import { ConvoModule } from 'convostore/convo.module';
 @Module({
   imports: [
     CharacterModule,
@@ -28,6 +24,7 @@ import { DataloaderService } from 'dataloader/dataloader.service';
     SlackInstallModule,
     RewardModule,
     HttpModule,
+    ConvoModule,
     TypeOrmModule.forRoot(database.database),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       imports: [DataloaderModule],

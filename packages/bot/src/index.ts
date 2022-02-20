@@ -17,6 +17,7 @@ import { Command$ } from './mention_handler';
 import { Action$, ActionsRegex } from './actions';
 import { Shield$ } from './reward_handler';
 import { homePage } from './views/home';
+import { BotStore } from './convo-store';
 
 const app = new App({
   clientId: process.env.SLACK_CLIENT_ID,
@@ -32,6 +33,7 @@ const app = new App({
       },
     },
   ],
+  convoStore: new BotStore(),
   developerMode: process.env.NODE_ENV !== 'production',
   logger: Logger,
   socketMode: true,
