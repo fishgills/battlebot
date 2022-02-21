@@ -17,6 +17,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DataloaderModule } from 'dataloader/dataloader.module';
 import { DataloaderService } from 'dataloader/dataloader.service';
 import { ConvoModule } from 'convostore/convo.module';
+import { StripeModule } from './stripe/stripe.module';
 @Module({
   imports: [
     CharacterModule,
@@ -49,6 +50,7 @@ import { ConvoModule } from 'convostore/convo.module';
       },
     }),
     AuthModule,
+    StripeModule,
   ],
   controllers: [],
 })

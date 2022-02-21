@@ -10,28 +10,20 @@ export class BotStore implements ConversationStore {
       },
     });
   }
-  get(conversationId: string) {
-    return new Promise<string>((resolve, reject) => {
-      sdk
-        .Convo({
+  async get(conversationId: string) {
+    try {
+      const { convo: entry } = await sdk.Convo({
+        convoId: conversationId,
+      });
+      if (Date.now() > entry.expiresAt) {
+        await sdk.DeleteConvo({
           convoId: conversationId,
-        })
-        .then(({ convo }) => {
-          if (convo) {
-            if (convo.expiresAt !== undefined && Date.now() > convo.expiresAt) {
-              sdk
-                .DeleteConvo({
-                  convoId: convo.convoId,
-                })
-                .then(() => {
-                  reject(new Error('Conversation expired'));
-                });
-            }
-            resolve(convo.value);
-          } else {
-            reject(new Error(`Convo not found: ${conversationId}`));
-          }
         });
-    });
+        throw new Error('Convo expired, deleted');
+      }
+      return entry.value;
+    } catch (e) {
+      return new Error(`SQL Convo not found: ${conversationId}`);
+    }
   }
 }

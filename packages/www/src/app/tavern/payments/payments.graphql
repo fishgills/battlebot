@@ -1,0 +1,5 @@
+mutation CreateStripeSession($priceId: String!) {
+  CreateStripeCheckoutSession(priceId: $priceId) {
+    id
+  }
+}

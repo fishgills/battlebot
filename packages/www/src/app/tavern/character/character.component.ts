@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { switchMap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth.service';
-import { CharacterByOwnerGQL, CharacterModel } from 'src/generated/graphql';
+import { CharacterByOwnerGQL, CharacterType } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-character',
@@ -10,7 +10,7 @@ import { CharacterByOwnerGQL, CharacterModel } from 'src/generated/graphql';
   styleUrls: ['./character.component.css'],
 })
 export class CharacterComponent implements OnInit {
-  public character: CharacterModel;
+  public character: CharacterType;
 
   constructor(
     private authService: AuthService,

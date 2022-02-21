@@ -13,6 +13,7 @@ import { APOLLO_OPTIONS } from 'apollo-angular';
 import { InMemoryCache } from '@apollo/client/core';
 import { HttpLink } from 'apollo-angular/http';
 import { environment } from 'src/environments/environment';
+
 @NgModule({
   declarations: [AppComponent, NavbarComponent],
   imports: [

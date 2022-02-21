@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { GameRulesService } from 'src/app/game-rules.service';
-import { CharacterModel } from 'src/generated/graphql';
+import { CharacterType } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-sheet',
@@ -8,7 +8,7 @@ import { CharacterModel } from 'src/generated/graphql';
   styleUrls: ['./sheet.component.css'],
 })
 export class SheetComponent {
-  @Input() character!: CharacterModel;
+  @Input() character!: CharacterType;
 
   constructor(public gameRules: GameRulesService) {}
 }

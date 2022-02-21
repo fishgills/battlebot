@@ -128,6 +128,7 @@ export type CreateSlackInstallInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   CharacterUpdate: Scalars['Int'];
+  CreateStripeCheckoutSession: StripeSession;
   createCharacter: CharacterType;
   createCombat: CombatModel;
   createConvo: ConvoType;
@@ -143,6 +144,10 @@ export type Mutation = {
 export type MutationCharacterUpdateArgs = {
   id: Scalars['String'];
   input: UpdateCharacterInput;
+};
+
+export type MutationCreateStripeCheckoutSessionArgs = {
+  priceId: Scalars['String'];
 };
 
 export type MutationCreateCharacterArgs = {
@@ -261,6 +266,11 @@ export type SlackInstallModel = {
   id: Scalars['String'];
   installObj: Scalars['JSON'];
   team_id: Scalars['String'];
+};
+
+export type StripeSession = {
+  __typename?: 'StripeSession';
+  id: Scalars['String'];
 };
 
 /** Update a character's properties */
@@ -585,6 +595,15 @@ export type CreateConvoMutation = {
   };
 };
 
+export type CreateStripeSessionMutationVariables = Exact<{
+  priceId: Scalars['String'];
+}>;
+
+export type CreateStripeSessionMutation = {
+  __typename?: 'Mutation';
+  CreateStripeCheckoutSession: { __typename?: 'StripeSession'; id: string };
+};
+
 export const CharacterPartsFragmentDoc = gql`
   fragment CharacterParts on CharacterType {
     defense
@@ -763,6 +782,13 @@ export const CreateConvoDocument = gql`
       expiresAt
       value
       convoId
+      id
+    }
+  }
+`;
+export const CreateStripeSessionDocument = gql`
+  mutation CreateStripeSession($priceId: String!) {
+    CreateStripeCheckoutSession(priceId: $priceId) {
       id
     }
   }
@@ -994,6 +1020,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'CreateConvo',
+      );
+    },
+    CreateStripeSession(
+      variables: CreateStripeSessionMutationVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<CreateStripeSessionMutation> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<CreateStripeSessionMutation>(
+            CreateStripeSessionDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders },
+          ),
+        'CreateStripeSession',
       );
     },
   };

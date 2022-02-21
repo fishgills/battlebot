@@ -128,6 +128,7 @@ export type CreateSlackInstallInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   CharacterUpdate: Scalars['Int'];
+  CreateStripeCheckoutSession: StripeSession;
   createCharacter: CharacterType;
   createCombat: CombatModel;
   createConvo: ConvoType;
@@ -143,6 +144,10 @@ export type Mutation = {
 export type MutationCharacterUpdateArgs = {
   id: Scalars['String'];
   input: UpdateCharacterInput;
+};
+
+export type MutationCreateStripeCheckoutSessionArgs = {
+  priceId: Scalars['String'];
 };
 
 export type MutationCreateCharacterArgs = {
@@ -261,6 +266,11 @@ export type SlackInstallModel = {
   id: Scalars['String'];
   installObj: Scalars['JSON'];
   team_id: Scalars['String'];
+};
+
+export type StripeSession = {
+  __typename?: 'StripeSession';
+  id: Scalars['String'];
 };
 
 /** Update a character's properties */
@@ -583,6 +593,15 @@ export type CreateConvoMutation = {
     convoId: string;
     id: string;
   };
+};
+
+export type CreateStripeSessionMutationVariables = Exact<{
+  priceId: Scalars['String'];
+}>;
+
+export type CreateStripeSessionMutation = {
+  __typename?: 'Mutation';
+  CreateStripeCheckoutSession: { __typename?: 'StripeSession'; id: string };
 };
 
 export const CharacterPartsFragmentDoc = gql`
@@ -983,6 +1002,27 @@ export class CreateConvoGQL extends Apollo.Mutation<
   CreateConvoMutationVariables
 > {
   document = CreateConvoDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const CreateStripeSessionDocument = gql`
+  mutation CreateStripeSession($priceId: String!) {
+    CreateStripeCheckoutSession(priceId: $priceId) {
+      id
+    }
+  }
+`;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CreateStripeSessionGQL extends Apollo.Mutation<
+  CreateStripeSessionMutation,
+  CreateStripeSessionMutationVariables
+> {
+  document = CreateStripeSessionDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);
