@@ -13,6 +13,10 @@
       "path": "packages/bot"
     },
     {
+      "name": "stripe",
+      "path": "packages/stripe"
+    },
+    {
       "path": ".",
       "name": "root"
     }
