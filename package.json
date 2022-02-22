@@ -68,5 +68,6 @@
   "bugs": {
     "url": "https://github.com/fishgills/battlebot/issues"
   },
-  "homepage": "https://github.com/fishgills/battlebot#readme"
+  "homepage": "https://github.com/fishgills/battlebot#readme",
+  "packageManager": "yarn@3.2.0"
 }
