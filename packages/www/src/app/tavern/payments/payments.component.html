@@ -1,1 +1,10 @@
-<button (click)="checkout('price_1KVVwVIhYgDhNhELoyG6NASk')">pay me</button>
+<button
+  (click)="checkout('price_1KVVwVIhYgDhNhELoyG6NASk')"
+  *ngIf="authService.isAuthenticated$ | async"
+>
+  pay me
+</button>
+
+<pre>
+    {{ authService.isAuthenticated$ | async | json }}
+</pre>

@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
     CommonModule,
     ReactiveFormsModule,
     PaymentsRoutingModule,
-    NgxStripeModule.forChild(environment.stripe_key),
+    NgxStripeModule.forChild(environment.stripe.stripe_key),
   ],
 })
 export class PaymentsModule {}

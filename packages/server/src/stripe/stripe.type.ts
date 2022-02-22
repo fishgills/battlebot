@@ -4,4 +4,9 @@ import Stripe from 'stripe';
 export class StripeSession implements Partial<Stripe.Checkout.Session> {
   @Field()
   id: string;
+
+  @Field()
+  cancel_url?: string;
+  @Field()
+  success_url?: string;
 }

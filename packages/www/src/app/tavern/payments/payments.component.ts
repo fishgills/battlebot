@@ -1,13 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { StripeService, StripeCardComponent } from 'ngx-stripe';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {
-  StripeCardElementOptions,
-  StripeElementsOptions,
-} from '@stripe/stripe-js';
-import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { StripeService } from 'ngx-stripe';
 import { switchMap, tap } from 'rxjs/operators';
 import { CreateStripeSessionGQL } from 'src/generated/graphql';
+import { AuthService } from 'src/app/auth.service';
 @Component({
   selector: 'app-payments',
   templateUrl: './payments.component.html',
@@ -15,9 +10,9 @@ import { CreateStripeSessionGQL } from 'src/generated/graphql';
 })
 export class PaymentsComponent {
   constructor(
-    private http: HttpClient,
     private stripeService: StripeService,
     private service: CreateStripeSessionGQL,
+    public authService: AuthService,
   ) {}
 
   checkout(priceId: string) {

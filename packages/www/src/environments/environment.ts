@@ -5,8 +5,13 @@
 export const environment = {
   production: false,
   hostname: 'battlebot.ngrok.io',
-  stripe_key:
-    'pk_test_51KVVrJIhYgDhNhELXnBG8vGclY1HO9CvVF1HM76nURJxEW8v1zjufMCoyDbdhP0ds94AfdZ9PzyyAWrtTxKfwnbX00xuy3GFNo',
+
+  stripe: {
+    stripe_key:
+      'pk_test_51KVVrJIhYgDhNhELXnBG8vGclY1HO9CvVF1HM76nURJxEW8v1zjufMCoyDbdhP0ds94AfdZ9PzyyAWrtTxKfwnbX00xuy3GFNo',
+    successUrl: 'https://api.battlebot.ngrok.io/stripe/success',
+    cancelUrl: 'https://api.battlebot.ngrok.io/stripe/cancel',
+  },
 };
 
 /*

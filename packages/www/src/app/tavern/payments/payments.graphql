@@ -1,5 +1,7 @@
 mutation CreateStripeSession($priceId: String!) {
   CreateStripeCheckoutSession(priceId: $priceId) {
     id
+    cancel_url
+    success_url
   }
 }

@@ -265,12 +265,15 @@ export type SlackInstallModel = {
   channelId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   installObj: Scalars['JSON'];
+  stripeId?: Maybe<Scalars['String']>;
   team_id: Scalars['String'];
 };
 
 export type StripeSession = {
   __typename?: 'StripeSession';
+  cancel_url: Scalars['String'];
   id: Scalars['String'];
+  success_url: Scalars['String'];
 };
 
 /** Update a character's properties */
@@ -286,6 +289,7 @@ export type UpdateSlackInstallInput = {
   channelId?: InputMaybe<Scalars['String']>;
   id: Scalars['String'];
   installObj?: InputMaybe<Scalars['JSON']>;
+  stripeId?: InputMaybe<Scalars['String']>;
   team_id?: InputMaybe<Scalars['String']>;
 };
 
@@ -595,13 +599,34 @@ export type CreateConvoMutation = {
   };
 };
 
+export type InstallQueryVariables = Exact<{
+  teamId: Scalars['String'];
+}>;
+
+export type InstallQuery = {
+  __typename?: 'Query';
+  install: {
+    __typename?: 'SlackInstallModel';
+    stripeId?: string | null;
+    channelId?: string | null;
+    installObj: any;
+    team_id: string;
+    id: string;
+  };
+};
+
 export type CreateStripeSessionMutationVariables = Exact<{
   priceId: Scalars['String'];
 }>;
 
 export type CreateStripeSessionMutation = {
   __typename?: 'Mutation';
-  CreateStripeCheckoutSession: { __typename?: 'StripeSession'; id: string };
+  CreateStripeCheckoutSession: {
+    __typename?: 'StripeSession';
+    id: string;
+    cancel_url: string;
+    success_url: string;
+  };
 };
 
 export const CharacterPartsFragmentDoc = gql`
@@ -786,10 +811,23 @@ export const CreateConvoDocument = gql`
     }
   }
 `;
+export const InstallDocument = gql`
+  query Install($teamId: String!) {
+    install(team_id: $teamId) {
+      stripeId
+      channelId
+      installObj
+      team_id
+      id
+    }
+  }
+`;
 export const CreateStripeSessionDocument = gql`
   mutation CreateStripeSession($priceId: String!) {
     CreateStripeCheckoutSession(priceId: $priceId) {
       id
+      cancel_url
+      success_url
     }
   }
 `;
@@ -1020,6 +1058,19 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'CreateConvo',
+      );
+    },
+    Install(
+      variables: InstallQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<InstallQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<InstallQuery>(InstallDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'Install',
       );
     },
     CreateStripeSession(

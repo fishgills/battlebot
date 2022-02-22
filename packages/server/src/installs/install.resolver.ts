@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { CreateSlackInstallInput } from './create-install.dto';
 import { SlackInstallModel } from './install.model';
 import { SlackInstallService } from './install.service';
@@ -32,13 +32,18 @@ export class SlackInstallResolver {
 
   @Mutation(() => SlackInstallModel)
   updateInstall(@Args('input') input: UpdateSlackInstallInput) {
-    return this.service.update(input);
+    return this.service.update(
+      {
+        id: input.id,
+      },
+      input,
+    );
   }
 
-  @Mutation(() => String)
+  @Mutation(() => Int)
   removeInstall(
     @Args('team_id', { type: () => String, nullable: false }) team_id: string,
   ) {
-    return this.service.deleteInstall(team_id);
+    return this.service.deleteInstall({ team_id });
   }
 }

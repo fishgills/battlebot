@@ -20,8 +20,8 @@ export class StripeResolver {
             price: priceId,
           },
         ],
-        success_url: `https://www.${process.env.DOMAIN}/stripe/success?sid={CHECKOUT_SESSION_ID}`,
-        cancel_url: `https://www.${process.env.DOMAIN}/stripe/cancel`,
+        success_url: `https://api.${process.env.DOMAIN}/stripe/success?sid={CHECKOUT_SESSION_ID}`,
+        cancel_url: `https://api.${process.env.DOMAIN}/stripe/cancel`,
       });
     return session;
   }

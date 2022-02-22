@@ -28,4 +28,12 @@ export class SlackInstallModel {
     nullable: true,
   })
   channelId: string;
+
+  @Field({
+    nullable: true,
+  })
+  @Column({
+    nullable: true,
+  })
+  stripeId: string;
 }

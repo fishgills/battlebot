@@ -2,6 +2,13 @@
   <button mat-flat-button [routerLink]="'character'">Character</button>
   <button mat-flat-button [routerLink]="'store'">Store</button>
   <button mat-flat-button [routerLink]="'boards'">Leaderboards</button>
-  <button mat-flat-button [routerLink]="'payments'">Subscribe</button>
+  <button
+    mat-flat-button
+    [routerLink]="'payments'"
+    *ngIf="!(installService.teamData$ | async)?.stripeId"
+  >
+    Subscribe
+  </button>
 </mat-toolbar>
+
 <router-outlet></router-outlet>

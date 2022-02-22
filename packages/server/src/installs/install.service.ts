@@ -1,6 +1,7 @@
+import { ResultGroup } from '@dice-roller/rpg-dice-roller/types/results';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindConditions, Repository } from 'typeorm';
 import { CreateSlackInstallInput } from './create-install.dto';
 import { SlackInstallModel } from './install.model';
 import { UpdateSlackInstallInput } from './update-install.dto';
@@ -28,20 +29,22 @@ export class SlackInstallService {
     return this.slackRepo.upsert(input, ['team_id']);
   }
 
-  async update(input: UpdateSlackInstallInput): Promise<SlackInstallModel> {
-    const found = await this.slackRepo.findOne(input.id);
-    return await this.slackRepo.save({ ...found, ...input });
+  async updateByTeamId(input: Partial<UpdateSlackInstallInput>) {
+    return await this.slackRepo.update({ team_id: input.team_id }, input);
   }
 
-  public async deleteInstall(team_id: string) {
-    const found = await this.slackRepo.findOne({
-      where: {
-        team_id,
-      },
-    });
-    if (found) {
-      await this.slackRepo.remove(found);
-      return team_id;
+  async update(
+    conditions: FindConditions<SlackInstallModel>,
+    entity: Partial<SlackInstallModel>,
+  ): Promise<SlackInstallModel> {
+    await this.slackRepo.update(conditions, entity);
+    return this.slackRepo.findOne(entity.id);
+  }
+
+  public async deleteInstall(conditions: FindConditions<SlackInstallModel>) {
+    const reuslt = await this.slackRepo.delete(conditions);
+    if (reuslt.affected > 0) {
+      return reuslt.affected;
     } else {
       return null;
     }

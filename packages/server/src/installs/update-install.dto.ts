@@ -7,4 +7,9 @@ export class UpdateSlackInstallInput extends PartialType(
 ) {
   @Field(() => String)
   id: string;
+
+  @Field({
+    nullable: true,
+  })
+  stripeId?: string;
 }
