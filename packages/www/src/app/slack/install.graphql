@@ -1,6 +1,8 @@
 query Install($teamId: String!) {
   install(team_id: $teamId) {
-    stripeId
+    stripeCusId
+    stripeCOSId
+    stripeSubId
     channelId
     installObj
     team_id

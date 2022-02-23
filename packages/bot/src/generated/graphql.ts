@@ -135,7 +135,7 @@ export type Mutation = {
   createInstall: SlackInstallModel;
   deleteConvo: Scalars['Int'];
   giveReward: Scalars['Boolean'];
-  removeInstall: Scalars['String'];
+  removeInstall: Scalars['Int'];
   reroll: CharacterType;
   start: CombatModel;
   updateInstall: SlackInstallModel;
@@ -148,6 +148,7 @@ export type MutationCharacterUpdateArgs = {
 
 export type MutationCreateStripeCheckoutSessionArgs = {
   priceId: Scalars['String'];
+  teamId: Scalars['String'];
 };
 
 export type MutationCreateCharacterArgs = {
@@ -265,7 +266,9 @@ export type SlackInstallModel = {
   channelId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   installObj: Scalars['JSON'];
-  stripeId?: Maybe<Scalars['String']>;
+  stripeCOSId: Scalars['String'];
+  stripeCusId: Scalars['String'];
+  stripeSubId?: Maybe<Scalars['String']>;
   team_id: Scalars['String'];
 };
 
@@ -500,7 +503,7 @@ export type RemoveInstallMutationVariables = Exact<{
 
 export type RemoveInstallMutation = {
   __typename?: 'Mutation';
-  removeInstall: string;
+  removeInstall: number;
 };
 
 export type GiveRewardMutationVariables = Exact<{
@@ -607,7 +610,9 @@ export type InstallQuery = {
   __typename?: 'Query';
   install: {
     __typename?: 'SlackInstallModel';
-    stripeId?: string | null;
+    stripeCusId: string;
+    stripeCOSId: string;
+    stripeSubId?: string | null;
     channelId?: string | null;
     installObj: any;
     team_id: string;
@@ -617,6 +622,7 @@ export type InstallQuery = {
 
 export type CreateStripeSessionMutationVariables = Exact<{
   priceId: Scalars['String'];
+  teamId: Scalars['String'];
 }>;
 
 export type CreateStripeSessionMutation = {
@@ -814,7 +820,9 @@ export const CreateConvoDocument = gql`
 export const InstallDocument = gql`
   query Install($teamId: String!) {
     install(team_id: $teamId) {
-      stripeId
+      stripeCusId
+      stripeCOSId
+      stripeSubId
       channelId
       installObj
       team_id
@@ -823,8 +831,8 @@ export const InstallDocument = gql`
   }
 `;
 export const CreateStripeSessionDocument = gql`
-  mutation CreateStripeSession($priceId: String!) {
-    CreateStripeCheckoutSession(priceId: $priceId) {
+  mutation CreateStripeSession($priceId: String!, $teamId: String!) {
+    CreateStripeCheckoutSession(priceId: $priceId, teamId: $teamId) {
       id
       cancel_url
       success_url

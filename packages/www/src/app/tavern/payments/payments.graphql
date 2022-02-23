@@ -1,5 +1,5 @@
-mutation CreateStripeSession($priceId: String!) {
-  CreateStripeCheckoutSession(priceId: $priceId) {
+mutation CreateStripeSession($priceId: String!, $teamId: String!) {
+  CreateStripeCheckoutSession(priceId: $priceId, teamId: $teamId) {
     id
     cancel_url
     success_url

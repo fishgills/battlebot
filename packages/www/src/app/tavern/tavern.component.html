@@ -5,9 +5,17 @@
   <button
     mat-flat-button
     [routerLink]="'payments'"
-    *ngIf="!(installService.teamData$ | async)?.stripeId"
+    *ngIf="!(installService.teamData$ | async)?.stripeSubId"
   >
     Subscribe
+  </button>
+
+  <button
+    (click)="openStripePortal()"
+    mat-flat-button
+    *ngIf="(installService.teamData$ | async)?.stripeSubId"
+  >
+    Stripe Portal
   </button>
 </mat-toolbar>
 

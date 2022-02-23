@@ -17,20 +17,24 @@
     "noUnusedLocals": true,
     "resolveJsonModule": true,
     "paths": {
-      "@server/*": ["projects/server/src/*"],
-      "@bot/*": ["projects/bot/src/*"],
-      "@www/*": ["projects/www/src/*"]
+      "@server/*": ["server/*"],
+      "@bot/*": ["bot/src/*"],
+      "@www/*": ["www/src/*"],
+      "@stripe/*": ["stripe/src/*"]
     }
   },
   // "references": [
   //   {
-  //     "path": "projects/www"
+  //     "path": "packages/www"
   //   },
   //   {
-  //     "path": "projects/server"
+  //     "path": "packages/server"
   //   },
   //   {
-  //     "path": "projects/bot"
+  //     "path": "packages/bot"
+  //   },
+  //   {
+  //     "path": "packages/stripe"
   //   }
   // ],
   "exclude": ["node_modules", "dist", "*.d.ts"]

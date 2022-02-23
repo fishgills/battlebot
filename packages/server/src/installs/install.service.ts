@@ -17,12 +17,8 @@ export class SlackInstallService {
     return this.slackRepo.find();
   }
 
-  public findOne(team_id: string) {
-    return this.slackRepo.findOneOrFail({
-      where: {
-        team_id,
-      },
-    });
+  public findOne(options: FindConditions<SlackInstallModel>) {
+    return this.slackRepo.findOneOrFail(options);
   }
 
   public createInstall(input: CreateSlackInstallInput) {

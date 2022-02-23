@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Apollo, gql } from 'apollo-angular';
 import { PopupLoginService } from './popup-login.service';
 
 @Component({

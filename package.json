@@ -7,10 +7,6 @@
   "workspaces": {
     "packages": [
       "packages/*"
-    ],
-    "nohoist": [
-      "**/@angular/**",
-      "**/@nestjs/**"
     ]
   },
   "dependencies": {
