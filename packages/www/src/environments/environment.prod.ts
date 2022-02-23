@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  hostname: 'slackbattlebot.com',
   gql: 'https://api.slackbattlebot.com/graphql',
   stripe: {
     stripe_key:
