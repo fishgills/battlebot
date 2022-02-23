@@ -3,6 +3,7 @@ import { StripeService } from 'ngx-stripe';
 import { switchMap, tap } from 'rxjs/operators';
 import { CreateStripeSessionGQL } from 'src/generated/graphql';
 import { AuthService, Userinfo } from 'src/app/auth.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-payments',
   templateUrl: './payments.component.html',
@@ -10,6 +11,7 @@ import { AuthService, Userinfo } from 'src/app/auth.service';
 })
 export class PaymentsComponent implements OnInit {
   private userInfo: Userinfo;
+  public environment = environment;
   constructor(
     private stripeService: StripeService,
     private service: CreateStripeSessionGQL,

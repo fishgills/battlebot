@@ -1,5 +1,5 @@
 <button
-  (click)="checkout('price_1KVVwVIhYgDhNhELoyG6NASk')"
+  (click)="checkout(environment.stripe.productKey)"
   *ngIf="authService.isAuthenticated$ | async"
 >
   pay me

@@ -94,10 +94,6 @@ export class StripeController {
           );
         }
         break;
-      case 'invoice.paid':
-        break;
-      case 'invoice.payment_failed':
-        break;
       case 'customer.subscription.deleted':
         {
           const stripeObject = stripeDto.data.object as Stripe.Subscription;
