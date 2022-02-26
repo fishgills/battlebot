@@ -26,7 +26,7 @@ export class CharacterCreateObserver extends MentionObserver {
       e.payload.text.trim().split(' ').length !== 2 ||
       e.payload.text.length > 100
     ) {
-      this.msgUser(e, t('create_update_invalid'));
+      await this.msgUser(e, t('create_update_invalid'));
       return;
     }
     try {
@@ -37,7 +37,7 @@ export class CharacterCreateObserver extends MentionObserver {
         })
       ).findByOwner;
       if (char.id) {
-        this.msgUser(e, t('create_update_already_have_char'));
+        await this.msgUser(e, t('create_update_already_have_char'));
         return;
       }
     } catch (e) {
@@ -48,7 +48,7 @@ export class CharacterCreateObserver extends MentionObserver {
           teamId: e.payload.team_id,
         },
       });
-      this.msgUser(e, t('create_update_char_created'));
+      await this.msgUser(e, t('create_update_char_created'));
     }
   }
 }

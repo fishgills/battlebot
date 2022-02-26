@@ -40,5 +40,7 @@
   "combat_update_throttle": "Woah! You can't start your meetings that fast. Please wait.",
   "character_reroll_button": "Reschedule",
   "character_done_button": "Done",
-  "character_level_up": "Your meeting just got more interesting. Better check its settings."
+  "character_level_up": "Your meeting just got more interesting. Better check its settings.",
+  "delete_help_description": "To delete your meeting:",
+  "delete_help_command": "`${0} delete`"
 }

@@ -3,6 +3,7 @@ import { Subject } from 'rxjs';
 import { SheetObserver } from './character-sheet';
 import { CombatObserver } from './combat';
 import { CharacterCreateObserver } from './create-character';
+import { CharacterDeleteObserver } from './delete-character';
 import { HelpObserver } from './help';
 export const Command$ = new Subject<
   SlackCommandMiddlewareArgs & AllMiddlewareArgs
@@ -10,7 +11,12 @@ export const Command$ = new Subject<
 
 const helpObserver = new HelpObserver();
 
-[SheetObserver, CombatObserver, CharacterCreateObserver].forEach((t) => {
+[
+  SheetObserver,
+  CombatObserver,
+  CharacterCreateObserver,
+  CharacterDeleteObserver,
+].forEach((t) => {
   const obs = new t();
   helpObserver.addBlocks(obs.getHelpBlocks());
   Command$.subscribe((e) => obs.listener(e));

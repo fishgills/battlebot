@@ -6,6 +6,7 @@ import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { CharacterEntity } from './character.entity';
 import { CharacterType } from './character.type';
 import { CreateCharacterInput } from './dto/create-character.dto';
+import { DeleteCharacterInput } from './dto/delete-character.dto';
 import { UpdateCharacterInput } from './dto/update-character.dto';
 @Injectable()
 export class CharacterService {
@@ -20,6 +21,13 @@ export class CharacterService {
     this.rollCharacter(char);
     char.level = 1;
     return this.charRepo.save(char);
+  }
+
+  delete(input: DeleteCharacterInput) {
+    return this.charRepo.delete({
+      teamId: input.teamId,
+      owner: input.owner,
+    });
   }
 
   find(options?: FindManyOptions<CharacterEntity>): Promise<CharacterType[]> {

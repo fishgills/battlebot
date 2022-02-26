@@ -1,25 +1,19 @@
 import { Inject } from '@nestjs/common';
-import {
-  Args,
-  Context,
-  Int,
-  Mutation,
-  Parent,
-  Query,
-  ResolveField,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserInputError } from 'apollo-server-core';
+import { StripeService } from 'stripe/stripe.service';
 
 import { CharacterService } from './character.service';
 import { CharacterType } from './character.type';
 import { CreateCharacterInput } from './dto/create-character.dto';
+import { DeleteCharacterInput } from './dto/delete-character.dto';
 import { UpdateCharacterInput } from './dto/update-character.dto';
 
 @Resolver(() => CharacterType)
 export class CharacterResolver {
   constructor(
     @Inject(CharacterService) private charService: CharacterService,
+    @Inject(StripeService) private stripe: StripeService,
   ) {}
 
   @Query(() => [CharacterType])
@@ -74,7 +68,18 @@ export class CharacterResolver {
   }
 
   @Mutation(() => CharacterType)
-  createCharacter(@Args('input') input: CreateCharacterInput) {
-    return this.charService.create(input);
+  async createCharacter(@Args('input') input: CreateCharacterInput) {
+    const char = await this.charService.create(input);
+    await this.stripe.updateUsage(input.teamId);
+    return char;
+  }
+
+  @Mutation(() => Int)
+  async deleteCharacter(@Args('input') input: DeleteCharacterInput) {
+    const result = await this.charService.delete(input);
+    if (result.affected && result.affected > 0) {
+      await this.stripe.updateUsage(input.teamId);
+    }
+    return result.affected;
   }
 }
