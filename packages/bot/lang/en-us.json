@@ -42,5 +42,6 @@
   "character_done_button": "Done",
   "character_level_up": "Your meeting just got more interesting. Better check its settings.",
   "delete_help_description": "To delete your meeting:",
-  "delete_help_command": "`${0} delete`"
+  "delete_help_command": "`{0} delete`",
+  "visit_web_site": "Head to https://www.google.com to delete."
 }

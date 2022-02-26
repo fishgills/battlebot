@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CharacterModule } from './characters/character.module';
@@ -20,7 +20,8 @@ import { ConvoModule } from 'convostore/convo.module';
 import { StripeModule } from './stripe/stripe.module';
 @Module({
   imports: [
-    CharacterModule,
+    forwardRef(() => StripeModule),
+    forwardRef(() => CharacterModule),
     CombatModule,
     SlackInstallModule,
     RewardModule,
@@ -50,7 +51,6 @@ import { StripeModule } from './stripe/stripe.module';
       },
     }),
     AuthModule,
-    StripeModule,
   ],
   controllers: [],
 })

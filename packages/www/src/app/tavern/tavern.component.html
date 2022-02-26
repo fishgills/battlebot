@@ -5,7 +5,10 @@
   <button
     mat-flat-button
     [routerLink]="'payments'"
-    *ngIf="!(installService.teamData$ | async)?.stripeSubId"
+    *ngIf="
+      environment.stripe.enabled &&
+      !(installService.teamData$ | async)?.stripeSubId
+    "
   >
     Subscribe
   </button>

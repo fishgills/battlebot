@@ -8,6 +8,7 @@ import { InstallService } from '../slack';
   styleUrls: ['./tavern.component.css'],
 })
 export class TavernComponent implements OnInit {
+  public environment = environment;
   constructor(public installService: InstallService) {}
   ngOnInit(): void {
     // this.installService.teamData$.subscribe((value) => console.log(value));

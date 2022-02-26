@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv';
-import { gaia, t } from './locale';
+import { gab, t } from './locale';
 
 dotenv.config();
 
-gaia.init({
+gab.init({
   supportedLocales: ['en-us'],
   locale: 'en-us',
 });
@@ -99,6 +99,6 @@ app.use(async (args: any) => {
     user,
     include_locale: true,
   });
-  gaia.setLocale(userInfo.user.locale);
+  gab.setLocale(userInfo.user.locale);
   args.next();
 });

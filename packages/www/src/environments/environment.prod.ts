@@ -3,6 +3,7 @@ export const environment = {
   hostname: 'slackbattlebot.com',
   gql: 'https://api.slackbattlebot.com/graphql',
   stripe: {
+    enabled: true,
     stripe_key:
       'pk_live_51KVVrJIhYgDhNhELgzFu6dnAwoo5pJl0gko4SRs0ZLPSt1yQrCJGpeieJXYW9OZMoI0A1kjCV7PJtq1iVjHUbMT600kLi1y0Kz',
     successUrl: 'https://api.slackbattlebot.com/stripe/success',

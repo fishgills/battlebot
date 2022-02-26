@@ -49,7 +49,7 @@ export function find<T>(
   }
 }
 
-export const gaia = {
+export const gab = {
   init(options: { supportedLocales: string[]; locale: string }): string {
     if (!options.supportedLocales || options.supportedLocales.length === 0) {
       throw new Error(
@@ -79,7 +79,7 @@ export const gaia = {
    * @param locale The locale to check.
    */
   isSupported(locale: string): boolean {
-    return containsNormalized(gaia.supportedLocales, locale);
+    return containsNormalized(gab.supportedLocales, locale);
   },
 
   /**
@@ -114,11 +114,11 @@ export const gaia = {
   },
 };
 
-export const t = gaia.t;
+export const t = gab.t;
 
 // Private
 function loadAndSet(locale: string): void {
-  if (!gaia.isSupported(locale)) {
+  if (!gab.isSupported(locale)) {
     throw new Error(
       `Locale ${locale} is not in supported ` +
         `locales given: [${_supportedLocales.join(', ')}].`,

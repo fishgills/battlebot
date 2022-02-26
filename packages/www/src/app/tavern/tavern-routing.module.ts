@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { environment } from 'src/environments/environment';
 import { AuthGuard } from '../auth.guard';
+import { PaymentsGuard } from './payments/payments.guard';
 import { TavernComponent } from './tavern.component';
 
 const routes: Routes = [
@@ -16,6 +18,7 @@ const routes: Routes = [
       },
       {
         path: 'payments',
+        canActivate: [PaymentsGuard],
         loadChildren: () =>
           import('./payments/payments.module').then((m) => m.PaymentsModule),
       },

@@ -5,6 +5,8 @@ import Stripe from 'stripe';
 
 @Injectable()
 export class StripeService {
+  public static enabled = true;
+
   constructor(
     private charService: CharacterService,
     private slackService: SlackInstallService,
@@ -14,6 +16,9 @@ export class StripeService {
   });
 
   public async updateUsage(teamId: string) {
+    if (!StripeService.enabled) {
+      return;
+    }
     if (!teamId) {
       throw new Error('Update Usage failed, no team id?');
     }
