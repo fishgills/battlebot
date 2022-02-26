@@ -92,6 +92,7 @@ export class StripeController {
               stripeCusId: stripeObject.customer as string,
             },
           );
+          await this.stripeService.updateUsage(stripeObject.metadata.teamId);
         }
         break;
       case 'customer.subscription.deleted':

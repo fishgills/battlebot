@@ -30,6 +30,9 @@ export class CharacterService {
     return this.charRepo.find();
   }
 
+  findAndcount(options: FindManyOptions<CharacterEntity>) {
+    return this.charRepo.findAndCount(options);
+  }
   findByIds(
     ids: string[],
     options?: FindManyOptions<CharacterEntity>,

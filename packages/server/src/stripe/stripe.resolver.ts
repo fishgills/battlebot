@@ -1,4 +1,5 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { CharacterService } from 'characters/character.service';
 import { SlackInstallService } from 'installs/install.service';
 import Stripe from 'stripe';
 import { StripeService } from './stripe.service';
@@ -8,6 +9,7 @@ export class StripeResolver {
   constructor(
     private service: SlackInstallService,
     private stripeService: StripeService,
+    private charService: CharacterService,
   ) {}
   @Mutation((returns) => StripeSession)
   async CreateStripeCheckoutSession(

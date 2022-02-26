@@ -11,7 +11,7 @@ export const environment = {
       'pk_test_51KVVrJIhYgDhNhELXnBG8vGclY1HO9CvVF1HM76nURJxEW8v1zjufMCoyDbdhP0ds94AfdZ9PzyyAWrtTxKfwnbX00xuy3GFNo',
     successUrl: 'https://api.battlebot.ngrok.io/stripe/success',
     cancelUrl: 'https://api.battlebot.ngrok.io/stripe/cancel',
-    productKey: 'price_1KVVwVIhYgDhNhELoyG6NASk',
+    productKey: 'price_1KXLVqIhYgDhNhELu65PKKZZ',
   },
 };
 
