@@ -6,14 +6,15 @@ import passport from 'passport';
 import session from 'express-session';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DBStore } from './auth/session-store';
+import { DBStore } from './slack-auth/session-store';
 import { getConnection } from 'typeorm';
-import { SessionModel } from './auth/session-model';
+import { SessionModel } from './slack-auth/session-model';
 import { Logger } from '@nestjs/common';
 const whitelist = [
   'battlebot.ngrok.io',
   'slackbattlebot.com',
   'studio.apollographql.com',
+  'postman.co',
 ];
 const sessionLengthInMinutes = 10;
 const sessionLengthInSeconds = sessionLengthInMinutes * 60;

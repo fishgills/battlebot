@@ -8,7 +8,6 @@ import {
   TokenSet,
   Issuer,
 } from 'openid-client';
-import { AuthService } from './auth.service';
 
 export const buildOpenIdClient = async () => {
   const TrustIssuer = await Issuer.discover(
@@ -25,7 +24,7 @@ export const buildOpenIdClient = async () => {
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
   client: Client;
 
-  constructor(private readonly authService: AuthService, client: Client) {
+  constructor(client: Client) {
     super({
       client: client,
       params: {

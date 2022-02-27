@@ -35,17 +35,21 @@ export class SlackInstallModel {
   @Column({
     nullable: true,
   })
-  stripeSubId: string;
+  stripeSubId?: string;
 
   @Column({
     nullable: true,
   })
-  @Field()
-  stripeCOSId: string;
+  @Field({
+    nullable: true,
+  })
+  stripeCOSId?: string;
 
   @Column({
     nullable: true,
   })
-  @Field()
-  stripeCusId: string;
+  @Field({
+    nullable: true,
+  })
+  stripeCusId?: string;
 }

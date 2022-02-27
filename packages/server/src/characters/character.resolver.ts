@@ -1,6 +1,8 @@
-import { Inject } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserInputError } from 'apollo-server-core';
+import { GqlAuthGuard } from 'auth/auth.gql.guard';
+
 import { StripeService } from 'stripe/stripe.service';
 
 import { CharacterService } from './character.service';
@@ -16,6 +18,7 @@ export class CharacterResolver {
     @Inject(StripeService) private stripe: StripeService,
   ) {}
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => [CharacterType])
   characters() {
     return this.charService.findAll();

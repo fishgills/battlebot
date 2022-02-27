@@ -1,4 +1,4 @@
-import { SessionModel } from '../auth/session-model';
+import { SessionModel } from '../slack-auth/session-model';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { CombatModel } from '../combat/combat.model';
 import { SlackInstallModel } from '../installs/install.model';

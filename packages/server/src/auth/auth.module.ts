@@ -1,26 +1,22 @@
-// src/auth/auth.module.ts
 import { Module } from '@nestjs/common';
-import { PassportModule } from '@nestjs/passport';
-import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { buildOpenIdClient, OidcStrategy } from './oidc.strategy';
-import { SessionSerializer } from './session.serializer';
-
-const OidcStrategyFactory = {
-  provide: 'OidcStrategy',
-  useFactory: async (authService: AuthService) => {
-    const client = await buildOpenIdClient(); // secret sauce! build the dynamic client before injecting it into the strategy for use in the constructor super call.
-    const strategy = new OidcStrategy(authService, client);
-    return strategy;
-  },
-  inject: [AuthService],
-};
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './constant';
+import { LocalStrategy } from './local.strategy';
+import { AuthController } from './auth.controller';
+import { MyStrategy } from './jwt.strategy';
 
 @Module({
-  imports: [
-    PassportModule.register({ session: true, defaultStrategy: 'oidc' }),
-  ],
   controllers: [AuthController],
-  providers: [OidcStrategyFactory, SessionSerializer, AuthService],
+  imports: [
+    PassportModule,
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: { expiresIn: '7d' },
+    }),
+  ],
+  providers: [AuthService, LocalStrategy, MyStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

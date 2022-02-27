@@ -6,7 +6,7 @@ import { CombatModule } from './combat/combat.module';
 import * as database from './config/database.config';
 import { RewardModule } from './rewards/reward.module';
 import { SlackInstallModule } from './installs/install.module';
-import { AuthModule } from './auth/auth.module';
+import { SlackAuthModule } from './slack-auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
 import {
   ApolloServerPluginInlineTrace,
@@ -18,6 +18,9 @@ import { DataloaderModule } from 'dataloader/dataloader.module';
 import { DataloaderService } from 'dataloader/dataloader.service';
 import { ConvoModule } from 'convostore/convo.module';
 import { StripeModule } from './stripe/stripe.module';
+import { AuthModule } from 'auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from 'auth/jwt-auth.guard';
 @Module({
   imports: [
     forwardRef(() => StripeModule),
@@ -51,7 +54,14 @@ import { StripeModule } from './stripe/stripe.module';
       },
     }),
     AuthModule,
+    SlackAuthModule,
   ],
+  // providers: [
+  //   {
+  //     provide: APP_GUARD,
+  //     useClass: JwtAuthGuard,
+  //   },
+  // ],
   controllers: [],
 })
 export class AppModule {}
