@@ -19,8 +19,7 @@ import { DataloaderService } from 'dataloader/dataloader.service';
 import { ConvoModule } from 'convostore/convo.module';
 import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from 'auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from 'auth/jwt-auth.guard';
+import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     forwardRef(() => StripeModule),
@@ -55,7 +54,9 @@ import { JwtAuthGuard } from 'auth/jwt-auth.guard';
     }),
     AuthModule,
     SlackAuthModule,
+    UsersModule,
   ],
+  providers: [],
   // providers: [
   //   {
   //     provide: APP_GUARD,

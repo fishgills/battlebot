@@ -1,22 +1,17 @@
-import { Controller, Get, Post, Request, Res, UseGuards } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
+import { UserType } from 'users/users.type';
+
 import { AuthService } from './auth.service';
-import { LocalAuthGuard } from './local-auth.guard';
-import { Public } from './make-public';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  @Public()
-  async login(@Request() req) {
-    return this.authService.login(req.user);
-  }
-
-  @Get('test')
-  test(@Res() resp: Response) {
-    return resp.send('hi');
+  login(@Req() req: Request) {
+    return this.authService.login(req.user as UserType);
   }
 }

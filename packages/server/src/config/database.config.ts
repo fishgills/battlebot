@@ -5,6 +5,7 @@ import { SlackInstallModel } from '../installs/install.model';
 import { CharacterEntity } from '../characters/character.entity';
 import { RewardEntity } from '../rewards/reward.entity';
 import { ConvoEntity } from '../convostore/convo.entity';
+import { UserEntity } from '../users/users.entity';
 
 export const database: MysqlConnectionOptions = {
   type: 'mysql',
@@ -29,5 +30,6 @@ export const database: MysqlConnectionOptions = {
     RewardEntity,
     SessionModel,
     ConvoEntity,
+    UserEntity,
   ],
 };
