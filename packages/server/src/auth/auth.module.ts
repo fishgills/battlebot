@@ -8,6 +8,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { UsersModule } from 'users/users.module';
 import { AuthResolver } from './gql/auth.resolvers';
 import { AuthController } from './auth.controller';
+import { APP_GUARD } from '@nestjs/core';
+import { GqlAuthGuard } from './guards/auth.gql.guard';
 
 @Module({
   imports: [
@@ -19,6 +21,15 @@ import { AuthController } from './auth.controller';
     }),
   ],
   controllers: [AuthController],
-  providers: [LocalStrategy, AuthService, AuthResolver, JwtStrategy],
+  providers: [
+    LocalStrategy,
+    AuthService,
+    AuthResolver,
+    JwtStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: GqlAuthGuard,
+    },
+  ],
 })
 export class AuthModule {}
