@@ -1,18 +1,22 @@
 import { Inject } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { CurrentUser } from 'auth/gql/auth.resolvers';
+import { Roles } from 'auth/roles.decorator';
+import { Role } from 'auth/roles/role.enum';
 import { CreateSlackInstallInput } from './create-install.dto';
 import { SlackInstallModel } from './install.model';
 import { SlackInstallService } from './install.service';
 import { UpdateSlackInstallInput } from './update-install.dto';
 
 @Resolver(() => SlackInstallModel)
+@Roles(Role.Bot)
 export class SlackInstallResolver {
   constructor(
     @Inject(SlackInstallService) readonly service: SlackInstallService,
   ) {}
 
   @Query(() => [SlackInstallModel])
-  installs() {
+  installs(@CurrentUser() user) {
     return this.service.findAll();
   }
 

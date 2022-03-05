@@ -10,14 +10,16 @@ import { UsersService } from 'users/users.service';
 import { UserType } from 'users/users.type';
 import { AuthService } from 'auth/auth.service';
 
-export const CurrentUser = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
-    const ctx = GqlExecutionContext.create(context);
-    const request = ctx.getContext();
-    request.body = ctx.getArgs();
-    return request.user;
-  },
-);
+export const CurrentUser = createParamDecorator<
+  unknown,
+  ExecutionContext,
+  UserType
+>((data, context) => {
+  const ctx = GqlExecutionContext.create(context);
+  const request = ctx.getContext().req;
+  // request.body = ctx.getArgs();
+  return request.user;
+});
 
 @Resolver('App')
 export class AuthResolver {

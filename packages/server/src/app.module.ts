@@ -46,9 +46,15 @@ import { UsersModule } from './users/users.module';
                 }),
           ],
           autoSchemaFile: true,
-          context: () => ({
-            loaders: dlService.createLoaders(),
-          }),
+          context: (obj) => {
+            return {
+              req: obj.req,
+              loaders: dlService.createLoaders(),
+            };
+          },
+          // context: (obj) => ({
+          //   loaders: dlService.createLoaders(),
+          // }),
         };
       },
     }),

@@ -10,6 +10,7 @@ import { AuthResolver } from './gql/auth.resolvers';
 import { AuthController } from './auth.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { GqlAuthGuard } from './guards/auth.gql.guard';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { GqlAuthGuard } from './guards/auth.gql.guard';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '30s' },
+      signOptions: { expiresIn: '30m' },
     }),
   ],
   controllers: [AuthController],
@@ -29,6 +30,10 @@ import { GqlAuthGuard } from './guards/auth.gql.guard';
     {
       provide: APP_GUARD,
       useClass: GqlAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })
