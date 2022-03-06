@@ -98,7 +98,7 @@ jobs:
           remote-docker-layer-caching: true
           checkout: false
           create-repo: true
-          tag: '${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest'
+          tag: '${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest'
 
   deploy:
     parameters:
@@ -114,7 +114,7 @@ jobs:
           family: '<< parameters.package_name >>-task'
           cluster-name: 'bot-cluster'
           service-name: '<< parameters.package_name >>-service-fargate-spot'
-          container-image-name-updates: 'container=<< parameters.package_name >>-container,tag=${CIRCLE_BRANCH}_${CIRCLE_SHA1}'
+          container-image-name-updates: 'container=<< parameters.package_name >>-container,tag=${CIRCLE_SHA1}'
 
 workflows:
   version: 2
