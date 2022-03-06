@@ -6,7 +6,7 @@ import {
   RewardScore,
 } from '../generated/graphql';
 import { t } from '../locale';
-import { sdk } from '../utils/gql';
+import { client, sdk } from '../utils/gql';
 import { characterSheetBlocks } from './character';
 
 const characterStats = (character: CharacterType, home: HomeTabBuilder) => {
@@ -64,10 +64,33 @@ export const homePage = async (teamId: string, userId: string) => {
     },
   });
 
-  const { findByOwner: character } = await sdk.characterByOwner({
-    owner: userId,
-    teamId,
-  });
+  const { findByOwner: character } = await client.request(
+    gql`
+      query OwnerCharacter($owner: String!, $teamId: String) {
+        findByOwner(owner: $owner, teamId: $teamId) {
+          defending {
+            id
+          }
+          attacking {
+            id
+          }
+          xp
+          hp
+          gold
+          level
+          vitality
+          defense
+          strength
+          id
+          name
+        }
+      }
+    `,
+    {
+      owner: userId,
+      teamId: teamId,
+    },
+  );
 
   const home = HomeTab();
 

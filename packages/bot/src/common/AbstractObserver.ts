@@ -1,19 +1,19 @@
 import { ChatPostMessageResponse } from '@slack/web-api';
 import { SlackBlockDto } from 'slack-block-builder';
-import { Logger } from 'tslog';
+import { Debug } from '../logger';
 
 export abstract class Observer<T> {
   command: string;
-  private logger: Logger;
+  logger: Debug.Debugger;
 
   constructor(command?: string) {
     this.command = command;
-    this.logger = new Logger({ name: `observer: ${this.command}` });
-    this.logger.info('created');
+    this.logger = Debug(`battlebot:observer-${this.command}`);
+    this.logger('created');
   }
 
   protected log(...msg: string[]) {
-    this.logger.debug(msg);
+    this.logger(msg);
   }
 
   abstract msgUser(

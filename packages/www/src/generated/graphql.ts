@@ -125,21 +125,14 @@ export type CreateSlackInstallInput = {
   team_id: Scalars['String'];
 };
 
-export type DeleteCharacterInput = {
-  owner: Scalars['String'];
-  teamId: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   CharacterUpdate: Scalars['Int'];
   CreateStripeCheckoutSession: StripeSession;
-  create: UserType;
   createCharacter: CharacterType;
   createCombat: CombatModel;
   createConvo: ConvoType;
   createInstall: SlackInstallModel;
-  deleteCharacter: Scalars['Int'];
   deleteConvo: Scalars['Int'];
   giveReward: Scalars['Boolean'];
   removeInstall: Scalars['Int'];
@@ -158,11 +151,6 @@ export type MutationCreateStripeCheckoutSessionArgs = {
   teamId: Scalars['String'];
 };
 
-export type MutationCreateArgs = {
-  password: Scalars['String'];
-  username: Scalars['String'];
-};
-
 export type MutationCreateCharacterArgs = {
   input: CreateCharacterInput;
 };
@@ -177,10 +165,6 @@ export type MutationCreateConvoArgs = {
 
 export type MutationCreateInstallArgs = {
   input: CreateSlackInstallInput;
-};
-
-export type MutationDeleteCharacterArgs = {
-  input: DeleteCharacterInput;
 };
 
 export type MutationDeleteConvoArgs = {
@@ -282,8 +266,8 @@ export type SlackInstallModel = {
   channelId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   installObj: Scalars['JSON'];
-  stripeCOSId?: Maybe<Scalars['String']>;
-  stripeCusId?: Maybe<Scalars['String']>;
+  stripeCOSId: Scalars['String'];
+  stripeCusId: Scalars['String'];
   stripeSubId?: Maybe<Scalars['String']>;
   team_id: Scalars['String'];
 };
@@ -310,12 +294,6 @@ export type UpdateSlackInstallInput = {
   installObj?: InputMaybe<Scalars['JSON']>;
   stripeId?: InputMaybe<Scalars['String']>;
   team_id?: InputMaybe<Scalars['String']>;
-};
-
-export type UserType = {
-  __typename?: 'UserType';
-  id: Scalars['String'];
-  username: Scalars['String'];
 };
 
 export type WhoGoesFirst = {
@@ -632,8 +610,8 @@ export type InstallQuery = {
   __typename?: 'Query';
   install: {
     __typename?: 'SlackInstallModel';
-    stripeCusId?: string | null;
-    stripeCOSId?: string | null;
+    stripeCusId: string;
+    stripeCOSId: string;
     stripeSubId?: string | null;
     channelId?: string | null;
     installObj: any;

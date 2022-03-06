@@ -9,6 +9,8 @@ gab.init({
 });
 
 import { App, BlockButtonAction } from '@slack/bolt';
+
+import { Logger } from './logger';
 import { Store } from './installation_store';
 import { isGenericMessageEvent } from './utils/helpers';
 import { Command$ } from './mention_handler';
@@ -16,7 +18,6 @@ import { Action$, ActionsRegex } from './actions';
 import { Shield$ } from './reward_handler';
 import { homePage } from './views/home';
 import { BotStore } from './convo-store';
-import { Logger } from './logger';
 
 const app = new App({
   clientId: process.env.SLACK_CLIENT_ID,
@@ -43,10 +44,10 @@ const app = new App({
 
 (async () => {
   const port = Number(process.env.PORT);
-  await app.start({
+  const info = await app.start({
     port,
   });
-  Logger.info('Starting bolt', port);
+  Logger.info('Starting bolt', info);
 })();
 
 app.message(t('reward_emoji'), async (args) => {
