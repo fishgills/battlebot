@@ -1,16 +1,8 @@
-// import { GraphQLClient } from 'graphql-request';
-// import { getSdk } from '../generated/graphql';
-
-// const client = new GraphQLClient(process.env.GRAPHQL_ENDPOINT as string, {});
-// const sdk = getSdk(client);
-
-// export { sdk, client };
 import fetch from 'cross-fetch';
-import { DocumentNode, GraphQLError } from 'graphql';
+import { DocumentNode } from 'graphql';
 import { getSdk, Requester } from '../generated/graphql';
 import {
   ApolloClient,
-  from,
   InMemoryCache,
   QueryOptions,
   MutationOptions,
@@ -104,7 +96,7 @@ export function getSdkApollo<C>(client: ApolloClient<C>) {
 
 const refreshToken = new TokenRefreshLink({
   accessTokenField: 'token',
-  isTokenValidOrUndefined: (options) => {
+  isTokenValidOrUndefined: () => {
     if (!token) {
       return false;
     }
