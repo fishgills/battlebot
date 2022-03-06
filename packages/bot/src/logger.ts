@@ -1,12 +1,9 @@
 import { Logger, LogLevel } from '@slack/web-api';
-import Debug from 'debug';
-
-const info = Debug('battlebot:info');
-const debug = Debug('battlebot:debug');
-const warn = Debug('battlebot:warn');
-const error = Debug('battlebot:error');
+import { Logger as tsLogger } from 'tslog';
 
 export class BotLogger implements Logger {
+  private log: tsLogger;
+
   /** Setting for level */
   private level: LogLevel;
 
@@ -23,7 +20,7 @@ export class BotLogger implements Logger {
 
   public constructor() {
     this.level = LogLevel.INFO;
-    this.name = '';
+    this.log = new tsLogger();
   }
 
   public getLevel(): LogLevel {
@@ -35,6 +32,10 @@ export class BotLogger implements Logger {
    */
   public setLevel(level: LogLevel): void {
     this.level = level;
+    console.log('Set level', level);
+    this.log.setSettings({
+      minLevel: level,
+    });
   }
 
   /**
@@ -42,6 +43,9 @@ export class BotLogger implements Logger {
    */
   public setName(name: string): void {
     this.name = name;
+    this.log.setSettings({
+      name,
+    });
   }
 
   /**
@@ -49,7 +53,7 @@ export class BotLogger implements Logger {
    */
   public debug(...msg: any[]): void {
     if (BotLogger.isMoreOrEqualSevere(LogLevel.DEBUG, this.level)) {
-      debug(this.name, ...msg);
+      this.log.debug(...msg);
     }
   }
 
@@ -58,7 +62,7 @@ export class BotLogger implements Logger {
    */
   public info(...msg: any[]): void {
     if (BotLogger.isMoreOrEqualSevere(LogLevel.INFO, this.level)) {
-      info(this.name, ...msg);
+      this.log.info(...msg);
     }
   }
 
@@ -67,7 +71,7 @@ export class BotLogger implements Logger {
    */
   public warn(...msg: any[]): void {
     if (BotLogger.isMoreOrEqualSevere(LogLevel.WARN, this.level)) {
-      warn(this.name, ...msg);
+      this.log.warn(...msg);
     }
   }
 
@@ -76,7 +80,7 @@ export class BotLogger implements Logger {
    */
   public error(...msg: any[]): void {
     if (BotLogger.isMoreOrEqualSevere(LogLevel.ERROR, this.level)) {
-      error(this.name, ...msg);
+      this.log.error(...msg);
     }
   }
 
@@ -89,4 +93,4 @@ export class BotLogger implements Logger {
 }
 const Logger = new BotLogger();
 
-export { Debug, Logger };
+export { Logger };

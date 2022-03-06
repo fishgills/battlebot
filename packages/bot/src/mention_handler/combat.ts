@@ -85,7 +85,7 @@ export class CombatObserver extends MentionObserver {
         this.msgUser(e, t('combat_update_throttle'));
         return;
       }
-      this.logger(err.message);
+      this.log(err.message);
       return;
     }
 
