@@ -7,7 +7,7 @@ import {
 import { sdk } from './utils/gql';
 
 export class Store implements InstallationStore {
-  storeInstallation<AuthVersion extends 'v1' | 'v2'>(
+  async storeInstallation<AuthVersion extends 'v1' | 'v2'>(
     installation: Installation<AuthVersion, boolean>,
     logger?: Logger,
   ): Promise<void> {
@@ -15,7 +15,7 @@ export class Store implements InstallationStore {
       installation.isEnterpriseInstall &&
       installation.enterprise !== undefined
     ) {
-      sdk.createInstall({
+      await sdk.createInstall({
         input: {
           team_id: installation.enterprise.id,
           installObj: installation,
@@ -24,7 +24,7 @@ export class Store implements InstallationStore {
       return;
     }
     if (installation.team !== undefined) {
-      sdk.createInstall({
+      await sdk.createInstall({
         input: {
           team_id: installation.team.id,
           installObj: installation,

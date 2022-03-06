@@ -1,5 +1,5 @@
-import { GraphQLClient } from 'graphql-request';
-import * as Dom from 'graphql-request/dist/types.dom';
+/* eslint-disable */
+import { DocumentNode } from 'graphql';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -125,14 +125,21 @@ export type CreateSlackInstallInput = {
   team_id: Scalars['String'];
 };
 
+export type DeleteCharacterInput = {
+  owner: Scalars['String'];
+  teamId: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   CharacterUpdate: Scalars['Int'];
   CreateStripeCheckoutSession: StripeSession;
+  create: UserType;
   createCharacter: CharacterType;
   createCombat: CombatModel;
   createConvo: ConvoType;
   createInstall: SlackInstallModel;
+  deleteCharacter: Scalars['Int'];
   deleteConvo: Scalars['Int'];
   giveReward: Scalars['Boolean'];
   removeInstall: Scalars['Int'];
@@ -151,6 +158,11 @@ export type MutationCreateStripeCheckoutSessionArgs = {
   teamId: Scalars['String'];
 };
 
+export type MutationCreateArgs = {
+  password: Scalars['String'];
+  username: Scalars['String'];
+};
+
 export type MutationCreateCharacterArgs = {
   input: CreateCharacterInput;
 };
@@ -165,6 +177,10 @@ export type MutationCreateConvoArgs = {
 
 export type MutationCreateInstallArgs = {
   input: CreateSlackInstallInput;
+};
+
+export type MutationDeleteCharacterArgs = {
+  input: DeleteCharacterInput;
 };
 
 export type MutationDeleteConvoArgs = {
@@ -266,8 +282,8 @@ export type SlackInstallModel = {
   channelId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   installObj: Scalars['JSON'];
-  stripeCOSId: Scalars['String'];
-  stripeCusId: Scalars['String'];
+  stripeCOSId?: Maybe<Scalars['String']>;
+  stripeCusId?: Maybe<Scalars['String']>;
   stripeSubId?: Maybe<Scalars['String']>;
   team_id: Scalars['String'];
 };
@@ -294,6 +310,12 @@ export type UpdateSlackInstallInput = {
   installObj?: InputMaybe<Scalars['JSON']>;
   stripeId?: InputMaybe<Scalars['String']>;
   team_id?: InputMaybe<Scalars['String']>;
+};
+
+export type UserType = {
+  __typename?: 'UserType';
+  id: Scalars['String'];
+  username: Scalars['String'];
 };
 
 export type WhoGoesFirst = {
@@ -610,8 +632,8 @@ export type InstallQuery = {
   __typename?: 'Query';
   install: {
     __typename?: 'SlackInstallModel';
-    stripeCusId: string;
-    stripeCOSId: string;
+    stripeCusId?: string | null;
+    stripeCOSId?: string | null;
     stripeSubId?: string | null;
     channelId?: string | null;
     installObj: any;
@@ -839,261 +861,187 @@ export const CreateStripeSessionDocument = gql`
     }
   }
 `;
-
-export type SdkFunctionWrapper = <T>(
-  action: (requestHeaders?: Record<string, string>) => Promise<T>,
-  operationName: string,
-) => Promise<T>;
-
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
-
-export function getSdk(
-  client: GraphQLClient,
-  withWrapper: SdkFunctionWrapper = defaultWrapper,
-) {
+export type Requester<C = {}> = <R, V>(
+  doc: DocumentNode,
+  vars?: V,
+  options?: C,
+) => Promise<R>;
+export function getSdk<C>(requester: Requester<C>) {
   return {
     addCharacter(
       variables: AddCharacterMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<AddCharacterMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<AddCharacterMutation>(
-            AddCharacterDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'addCharacter',
+      return requester<AddCharacterMutation, AddCharacterMutationVariables>(
+        AddCharacterDocument,
+        variables,
+        options,
       );
     },
     startCombat(
       variables: StartCombatMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<StartCombatMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<StartCombatMutation>(StartCombatDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'startCombat',
+      return requester<StartCombatMutation, StartCombatMutationVariables>(
+        StartCombatDocument,
+        variables,
+        options,
       );
     },
     characterByOwner(
       variables: CharacterByOwnerQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<CharacterByOwnerQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CharacterByOwnerQuery>(
-            CharacterByOwnerDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'characterByOwner',
+      return requester<CharacterByOwnerQuery, CharacterByOwnerQueryVariables>(
+        CharacterByOwnerDocument,
+        variables,
+        options,
       );
     },
     rollCharacter(
       variables: RollCharacterMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<RollCharacterMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<RollCharacterMutation>(
-            RollCharacterDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'rollCharacter',
+      return requester<RollCharacterMutation, RollCharacterMutationVariables>(
+        RollCharacterDocument,
+        variables,
+        options,
       );
     },
     getInstall(
       variables: GetInstallQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<GetInstallQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GetInstallQuery>(GetInstallDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'getInstall',
+      return requester<GetInstallQuery, GetInstallQueryVariables>(
+        GetInstallDocument,
+        variables,
+        options,
       );
     },
     updateInstall(
       variables: UpdateInstallMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<UpdateInstallMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<UpdateInstallMutation>(
-            UpdateInstallDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'updateInstall',
+      return requester<UpdateInstallMutation, UpdateInstallMutationVariables>(
+        UpdateInstallDocument,
+        variables,
+        options,
       );
     },
     createInstall(
       variables: CreateInstallMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<CreateInstallMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CreateInstallMutation>(
-            CreateInstallDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'createInstall',
+      return requester<CreateInstallMutation, CreateInstallMutationVariables>(
+        CreateInstallDocument,
+        variables,
+        options,
       );
     },
     removeInstall(
       variables: RemoveInstallMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<RemoveInstallMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<RemoveInstallMutation>(
-            RemoveInstallDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'removeInstall',
+      return requester<RemoveInstallMutation, RemoveInstallMutationVariables>(
+        RemoveInstallDocument,
+        variables,
+        options,
       );
     },
     giveReward(
       variables: GiveRewardMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<GiveRewardMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<GiveRewardMutation>(GiveRewardDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'giveReward',
+      return requester<GiveRewardMutation, GiveRewardMutationVariables>(
+        GiveRewardDocument,
+        variables,
+        options,
       );
     },
     rewardsGivenToday(
       variables: RewardsGivenTodayQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<RewardsGivenTodayQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<RewardsGivenTodayQuery>(
-            RewardsGivenTodayDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'rewardsGivenToday',
+      return requester<RewardsGivenTodayQuery, RewardsGivenTodayQueryVariables>(
+        RewardsGivenTodayDocument,
+        variables,
+        options,
       );
     },
     CharacterUpdate(
       variables: CharacterUpdateMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<CharacterUpdateMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CharacterUpdateMutation>(
-            CharacterUpdateDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'CharacterUpdate',
-      );
+      return requester<
+        CharacterUpdateMutation,
+        CharacterUpdateMutationVariables
+      >(CharacterUpdateDocument, variables, options);
     },
     ScoreBoard(
       variables: ScoreBoardQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<ScoreBoardQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<ScoreBoardQuery>(ScoreBoardDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'ScoreBoard',
+      return requester<ScoreBoardQuery, ScoreBoardQueryVariables>(
+        ScoreBoardDocument,
+        variables,
+        options,
       );
     },
     CombatTotals(
       variables?: CombatTotalsQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<CombatTotalsQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CombatTotalsQuery>(CombatTotalsDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'CombatTotals',
+      return requester<CombatTotalsQuery, CombatTotalsQueryVariables>(
+        CombatTotalsDocument,
+        variables,
+        options,
       );
     },
     DeleteConvo(
       variables: DeleteConvoMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<DeleteConvoMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<DeleteConvoMutation>(DeleteConvoDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'DeleteConvo',
+      return requester<DeleteConvoMutation, DeleteConvoMutationVariables>(
+        DeleteConvoDocument,
+        variables,
+        options,
       );
     },
-    Convo(
-      variables: ConvoQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
-    ): Promise<ConvoQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<ConvoQuery>(ConvoDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'Convo',
+    Convo(variables: ConvoQueryVariables, options?: C): Promise<ConvoQuery> {
+      return requester<ConvoQuery, ConvoQueryVariables>(
+        ConvoDocument,
+        variables,
+        options,
       );
     },
     CreateConvo(
       variables: CreateConvoMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<CreateConvoMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CreateConvoMutation>(CreateConvoDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'CreateConvo',
+      return requester<CreateConvoMutation, CreateConvoMutationVariables>(
+        CreateConvoDocument,
+        variables,
+        options,
       );
     },
     Install(
       variables: InstallQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<InstallQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<InstallQuery>(InstallDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'Install',
+      return requester<InstallQuery, InstallQueryVariables>(
+        InstallDocument,
+        variables,
+        options,
       );
     },
     CreateStripeSession(
       variables: CreateStripeSessionMutationVariables,
-      requestHeaders?: Dom.RequestInit['headers'],
+      options?: C,
     ): Promise<CreateStripeSessionMutation> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<CreateStripeSessionMutation>(
-            CreateStripeSessionDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders },
-          ),
-        'CreateStripeSession',
-      );
+      return requester<
+        CreateStripeSessionMutation,
+        CreateStripeSessionMutationVariables
+      >(CreateStripeSessionDocument, variables, options);
     },
   };
 }
