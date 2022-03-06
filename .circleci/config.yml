@@ -133,6 +133,10 @@ workflows:
     jobs:
       - ng-build
       - copy-to-s3:
+          filters:
+            branches:
+              only:
+                - master
           context: EnvVariables
           requires:
             - ng-build
@@ -145,6 +149,10 @@ workflows:
           package_name: server
           context: EnvVariables
       - deploy:
+          filters:
+            branches:
+              only:
+                - master
           name: server-deploy
           context: EnvVariables
           package_name: server
@@ -159,6 +167,10 @@ workflows:
           package_name: bot
           context: EnvVariables
       - deploy:
+          filters:
+            branches:
+              only:
+                - master
           name: bot-deploy
           context: EnvVariables
           package_name: bot
