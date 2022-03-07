@@ -1,4 +1,3 @@
-import { gql } from 'graphql-request';
 import { Blocks, HomeTab, HomeTabBuilder } from 'slack-block-builder';
 import {
   AllowedDirections,
