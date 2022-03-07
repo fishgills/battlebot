@@ -98,7 +98,7 @@ jobs:
           remote-docker-layer-caching: true
           checkout: false
           create-repo: true
-          tag: '${CIRCLE_SHA1},$($CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
+          tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
 
   deploy:
     parameters:
