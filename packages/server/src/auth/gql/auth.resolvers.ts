@@ -1,8 +1,16 @@
 import { Mutation, Resolver, GqlExecutionContext, Args } from '@nestjs/graphql';
-import { createParamDecorator, ExecutionContext, Inject } from '@nestjs/common';
+import {
+  createParamDecorator,
+  ExecutionContext,
+  Inject,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from 'users/users.service';
 import { UserType } from 'users/users.type';
 import { AuthService } from 'auth/auth.service';
+import { Role } from 'auth/roles/role.enum';
+import { Public } from 'auth/make-public';
+import { CreateUserGuard } from 'auth/guards/create-user.guard';
 
 export const CurrentUser = createParamDecorator<
   unknown,
@@ -23,10 +31,12 @@ export class AuthResolver {
   ) {}
 
   @Mutation((returns) => UserType)
+  @UseGuards(CreateUserGuard)
+  @Public()
   public async create(
     @Args('username') username: string,
     @Args('password') password: string,
   ) {
-    return this.service.create(username, password);
+    return this.service.create(username, password, Role.Bot);
   }
 }
