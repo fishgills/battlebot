@@ -98,7 +98,7 @@ jobs:
           remote-docker-layer-caching: true
           checkout: false
           create-repo: true
-          tag: '${CIRCLE_BRANCH}_${CIRCLE_SHA1},${CIRCLE_BRANCH}_latest'
+          tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
 
   deploy:
     parameters:
@@ -114,7 +114,7 @@ jobs:
           family: '<< parameters.package_name >>-task'
           cluster-name: 'bot-cluster'
           service-name: '<< parameters.package_name >>-service-fargate-spot'
-          container-image-name-updates: 'container=<< parameters.package_name >>-container,tag=${CIRCLE_BRANCH}_${CIRCLE_SHA1}'
+          container-image-name-updates: 'container=<< parameters.package_name >>-container,tag=${CIRCLE_SHA1}'
 
 workflows:
   version: 2
@@ -133,6 +133,10 @@ workflows:
     jobs:
       - ng-build
       - copy-to-s3:
+          filters:
+            branches:
+              only:
+                - master
           context: EnvVariables
           requires:
             - ng-build
@@ -145,6 +149,10 @@ workflows:
           package_name: server
           context: EnvVariables
       - deploy:
+          filters:
+            branches:
+              only:
+                - master
           name: server-deploy
           context: EnvVariables
           package_name: server
@@ -159,6 +167,10 @@ workflows:
           package_name: bot
           context: EnvVariables
       - deploy:
+          filters:
+            branches:
+              only:
+                - master
           name: bot-deploy
           context: EnvVariables
           package_name: bot

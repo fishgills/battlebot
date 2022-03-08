@@ -5,9 +5,6 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { Public } from './make-public';
-import { Roles } from './roles.decorator';
-import { Role } from './roles/role.enum';
-
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

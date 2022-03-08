@@ -6,12 +6,18 @@ hooks:
     - prettier --write
 generates:
   packages/bot/src/generated/graphql.ts:
+    config:
+      noSchemaStitching: true
     withHooks: false
     plugins:
+      - add:
+          content: '/* eslint-disable */'
       - 'typescript'
       - 'typescript-operations'
-      - 'typescript-graphql-request'
+      - 'typescript-generic-sdk'
   packages/www/src/generated/graphql.ts:
+    config:
+      noSchemaStitching: true
     plugins:
       - 'typescript'
       - 'typescript-operations'
