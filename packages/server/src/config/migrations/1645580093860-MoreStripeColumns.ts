@@ -5,9 +5,6 @@ export class MoreStripeColumns1645580093860 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE \`slack_install_model\` DROP COLUMN \`stripeCOSID\``,
-    );
-    await queryRunner.query(
       `ALTER TABLE \`slack_install_model\` ADD \`stripeCOSId\` varchar(255) NULL`,
     );
     await queryRunner.query(
@@ -27,9 +24,6 @@ export class MoreStripeColumns1645580093860 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE \`slack_install_model\` DROP COLUMN \`stripeCOSId\``,
-    );
-    await queryRunner.query(
-      `ALTER TABLE \`slack_install_model\` ADD \`stripeCOSID\` varchar(255) NOT NULL`,
     );
   }
 }
