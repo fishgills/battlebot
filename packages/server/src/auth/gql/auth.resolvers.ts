@@ -3,6 +3,7 @@ import {
   createParamDecorator,
   ExecutionContext,
   Inject,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from 'users/users.service';
@@ -11,6 +12,7 @@ import { AuthService } from 'auth/auth.service';
 import { Role } from 'auth/roles/role.enum';
 import { Public } from 'auth/make-public';
 import { CreateUserGuard } from 'auth/guards/create-user.guard';
+import { LocalAuthGuard } from 'auth/guards/local-auth.guard';
 
 export const CurrentUser = createParamDecorator<
   unknown,
@@ -38,5 +40,12 @@ export class AuthResolver {
     @Args('password') password: string,
   ) {
     return this.service.create(username, password, Role.Bot);
+  }
+
+  @Mutation((returns) => String)
+  @Public()
+  @UseGuards(LocalAuthGuard)
+  login(@Req() req) {
+    return this.authService.login(req.user as UserType);
   }
 }
