@@ -15,6 +15,7 @@ const whitelist = [
   'slackbattlebot.com',
   'studio.apollographql.com',
   'postman.co',
+  'electron://altair',
 ];
 const sessionLengthInMinutes = 10;
 const sessionLengthInSeconds = sessionLengthInMinutes * 60;
