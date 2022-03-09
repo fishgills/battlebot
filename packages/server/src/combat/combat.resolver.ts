@@ -1,5 +1,5 @@
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import {
   Resolver,
   Query,
@@ -18,6 +18,7 @@ import { CombatService } from './combat.service';
 import { CreateCombatInput } from './dto/create-combat.input';
 @Resolver(() => CombatModel)
 export class CombatResolver {
+  private readonly logger = new Logger(CombatResolver.name);
   constructor(
     @Inject(CombatService) private combatService: CombatService,
     @Inject(CharacterService) private charService: CharacterService,
@@ -85,7 +86,7 @@ export class CombatResolver {
       const aTotal = aRoll.total + modifier(a.defense);
       const bTotal = bRoll.total + modifier(b.defense);
 
-      console.log(
+      this.logger.log(
         `Who's first Rolls: A(${a.name}): ${aRoll.total} + ${modifier(
           a.defense,
         )} = ${aTotal}. B(${b.name}): ${bRoll.total} + ${modifier(
@@ -99,11 +100,11 @@ export class CombatResolver {
 
     while (max > 0) {
       max--;
-      console.log(`Combat Rounds Left: ${max}`);
-      console.log(participants.map((c) => `${c.name}:${c.hp}`).join(' - '));
+      this.logger.log(`Combat Rounds Left: ${max}`);
+      this.logger.log(participants.map((c) => `${c.name}:${c.hp}`).join(' - '));
 
       if (participants.filter((c) => c.hp > 0).length !== 2) {
-        console.log(`Combat end due to defeat of character.`);
+        this.logger.log(`Combat end due to defeat of character.`);
         break;
       }
       this.battleRound(participants, log);
@@ -153,7 +154,7 @@ export class CombatResolver {
     const attackModifier = modifier(attacker.strength);
     const defenderDefense = 10 + modifier(defender.defense);
 
-    console.log(
+    this.logger.log(
       `${
         attacker.name
       } Rolled ${attackRoll} with modifer of ${attackModifier} is attacking ${
@@ -166,13 +167,13 @@ export class CombatResolver {
       (attackRoll > 1 && attackRoll + attackModifier > defenderDefense) ||
       attackRoll === 20
     ) {
-      console.log('hit!');
+      this.logger.log('hit!');
       let roll = '1d6';
       if (attackRoll == 20) {
         roll = '2d6';
       }
       const damage = Math.max(new DiceRoll(roll).total + attackModifier, 0);
-      console.log(damage, ' damage done.');
+      this.logger.log(damage, ' damage done.');
       defender.hp = defender.hp - damage;
       roundLog = {
         attackRoll,
@@ -185,7 +186,7 @@ export class CombatResolver {
         damage,
       };
     } else {
-      console.log('miss');
+      this.logger.log('miss');
       roundLog = {
         attackBonus: attackModifier,
         attackRoll,

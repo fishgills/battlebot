@@ -1,17 +1,24 @@
 // auth/auth.controller.ts
-import { Controller, Get, Request, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Logger,
+  Request,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { Issuer } from 'openid-client';
 
 import { SlackLoginGuard } from './login.guard';
-// import { Issuer } from 'openid-client';
 
 @Controller()
 export class SlackAuthController {
+  private readonly logger = new Logger(SlackAuthController.name);
   @UseGuards(SlackLoginGuard)
   @Get('/login')
   login() {
-    console.log('slack login');
+    this.logger.log('slack login');
   }
 
   @Get('/user')

@@ -179,7 +179,7 @@ export const battleLog = (options: {
         t('character_hp_emoji'),
       );
     } else {
-      blockStr += t('batlelog_miss', log.attacker.name);
+      blockStr += ' ' + t('battlelog_miss', log.attacker.name);
     }
     blocks.push(
       Blocks.Section({

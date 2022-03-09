@@ -2066,6 +2066,7 @@ __metadata:
     source-map-support: ^0.5.21
     stripe: ^8.203.0
     ts-node: ^10.4.0
+    tslog: ^3.3.2
     typeorm: ^0.2.41
     typescript: ~4.3.0
   languageName: unknown
