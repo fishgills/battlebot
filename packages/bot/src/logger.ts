@@ -34,7 +34,6 @@ export class BotLogger implements Logger {
    */
   public setLevel(level: LogLevel): void {
     this.level = level;
-    console.log('Set level', level);
     this.log.setSettings({
       minLevel: level,
     });
