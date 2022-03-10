@@ -115,6 +115,7 @@ jobs:
           cluster-name: 'bot-cluster'
           service-name: '<< parameters.package_name >>-service-fargate-spot'
           container-image-name-updates: 'container=<< parameters.package_name >>-container,tag=${CIRCLE_SHA1}'
+          container-env-var-updates: 'container=<< parameters.package_name >>-container,name=DD_VERSION,value=CIRCLE_SHA1'
 
 workflows:
   version: 2
