@@ -8,10 +8,15 @@ import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { characterSheetBlocks } from './character';
 
-const characterStats = (character: CharacterType, home: HomeTabBuilder) => {
-  character.active = true;
+const characterStats = (
+  character: Omit<CharacterType, 'attacking' | 'defending'> & {
+    defending?: { __typename?: 'CombatModel'; id: string }[];
+    attacking?: { __typename?: 'CombatModel'; id: string }[];
+  },
+  home: HomeTabBuilder,
+) => {
   home.blocks(
-    ...characterSheetBlocks(character),
+    ...characterSheetBlocks(character as CharacterType),
     Blocks.Section().fields([
       '*Meetings Called*',
       character.attacking.length + '',
@@ -31,20 +36,26 @@ const rewardScores = (
     return prev;
   };
 
+  const fromScoreBlocks = fromScoreBoard.reduce<Array<string>>(
+    rewardScoreReduce,
+    [],
+  );
+  const toScoreBlocks = toScoreBoard.reduce<Array<string>>(
+    rewardScoreReduce,
+    [],
+  );
   home.blocks(
     Blocks.Section({
       text: `*${t('received_reward_score_board')}*`,
     }),
     Blocks.Divider(),
-    Blocks.Section().fields(
-      toScoreBoard.reduce<Array<string>>(rewardScoreReduce, []),
-    ),
+    Blocks.Section().fields(toScoreBlocks.length > 0 ? toScoreBlocks : 'None'),
     Blocks.Section({
       text: '*Given Rewards Scoreboard*',
     }),
     Blocks.Divider(),
     Blocks.Section().fields(
-      fromScoreBoard.reduce<Array<string>>(rewardScoreReduce, []),
+      fromScoreBlocks.length > 0 ? fromScoreBlocks : 'None',
     ),
   );
 };
@@ -66,6 +77,7 @@ export const homePage = async (teamId: string, userId: string) => {
   const { findByOwner: character } = await sdk.characterByOwner({
     owner: userId,
     teamId,
+    withCombats: true,
   });
 
   const home = HomeTab();

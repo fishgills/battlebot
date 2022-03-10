@@ -1,6 +1,6 @@
 import { SlackCommandMiddlewareArgs, AllMiddlewareArgs } from '@slack/bolt';
 import { Blocks } from 'slack-block-builder';
-import { CharacterByOwnerQuery } from '../generated/graphql';
+import { CharacterByOwnerQuery, CharacterType } from '../generated/graphql';
 import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { getUsernames, to } from '../utils/helpers';
@@ -31,8 +31,9 @@ export class CombatObserver extends MentionObserver {
       await sdk.characterByOwner({
         owner: e.payload.user_id,
         teamId: e.payload.team_id,
+        withCombats: false,
       })
-    ).findByOwner;
+    ).findByOwner as CharacterType;
 
     if (!char.id) {
       this.msgUser(e, t('combat_update_no_character'));
@@ -58,6 +59,7 @@ export class CombatObserver extends MentionObserver {
       target = await sdk.characterByOwner({
         owner: targetUser.id,
         teamId: e.payload.team_id,
+        withCombats: false,
       });
     } catch (exception) {
       this.log('target has no character');
@@ -105,7 +107,7 @@ export class CombatObserver extends MentionObserver {
     await notifyLevelUp(
       combatLog.start.winner,
       char,
-      target.findByOwner,
+      target.findByOwner as CharacterType,
       e.respond,
       targetUser.id,
       e.client,

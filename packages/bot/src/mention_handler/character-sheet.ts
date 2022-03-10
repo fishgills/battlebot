@@ -1,5 +1,6 @@
 import { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from '@slack/bolt';
 import { Blocks } from 'slack-block-builder';
+import { CharacterType } from '../generated/graphql';
 import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
@@ -29,8 +30,9 @@ export class SheetObserver extends MentionObserver {
         await sdk.characterByOwner({
           owner: event.payload.user_id,
           teamId: event.payload.team_id,
+          withCombats: false,
         })
-      ).findByOwner;
+      ).findByOwner as CharacterType;
       await this.msgUser(event, editCharacterModal(char));
     } catch (e) {
       this.log(`character not found`);

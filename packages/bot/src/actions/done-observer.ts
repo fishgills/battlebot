@@ -1,4 +1,5 @@
 import { ObserveType } from '.';
+import { CharacterType } from '../generated/graphql';
 import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
 import { ActionObserver } from './action-observer';
@@ -12,6 +13,7 @@ export class DoneObserver extends ActionObserver {
     const { findByOwner } = await sdk.characterByOwner({
       owner: event.body.user.id,
       teamId: event.context.teamId,
+      withCombats: false,
     });
 
     if (findByOwner.active) {
@@ -25,6 +27,6 @@ export class DoneObserver extends ActionObserver {
       },
       characterUpdateId: findByOwner.id,
     });
-    await this.msgUser(event, editCharacterModal(findByOwner));
+    await this.msgUser(event, editCharacterModal(findByOwner as CharacterType));
   }
 }

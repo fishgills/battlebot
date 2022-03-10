@@ -31,9 +31,9 @@ export class CharacterResolver {
     owner: string,
     @Args('teamId', {
       type: () => String,
-      nullable: true,
+      nullable: false,
     })
-    teamId?: string | undefined,
+    teamId?: string,
   ) {
     return this.charService.findByOwner(owner, teamId);
   }

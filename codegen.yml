@@ -6,9 +6,10 @@ hooks:
     - prettier --write
 generates:
   packages/bot/src/generated/graphql.ts:
-    config:
-      noSchemaStitching: true
-    withHooks: false
+    # config:
+    #   noSchemaStitching: true
+    #   avoidOptionals: true
+    # withHooks: false
     plugins:
       - add:
           content: '/* eslint-disable */'

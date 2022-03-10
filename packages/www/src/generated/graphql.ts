@@ -142,6 +142,7 @@ export type Mutation = {
   deleteCharacter: Scalars['Int'];
   deleteConvo: Scalars['Int'];
   giveReward: Scalars['Boolean'];
+  login: Scalars['String'];
   removeInstall: Scalars['Int'];
   reroll: CharacterType;
   start: CombatModel;
@@ -235,7 +236,7 @@ export type QueryConvoArgs = {
 
 export type QueryFindByOwnerArgs = {
   owner: Scalars['String'];
-  teamId?: InputMaybe<Scalars['String']>;
+  teamId: Scalars['String'];
 };
 
 export type QueryGetUserScoreArgs = {
@@ -315,6 +316,7 @@ export type UpdateSlackInstallInput = {
 export type UserType = {
   __typename?: 'UserType';
   id: Scalars['String'];
+  role: Scalars['String'];
   username: Scalars['String'];
 };
 
@@ -425,6 +427,7 @@ export type StartCombatMutation = {
 export type CharacterByOwnerQueryVariables = Exact<{
   owner: Scalars['String'];
   teamId: Scalars['String'];
+  withCombats: Scalars['Boolean'];
 }>;
 
 export type CharacterByOwnerQuery = {
@@ -447,6 +450,8 @@ export type CharacterByOwnerQuery = {
     updated_at: any;
     extraPoints: number;
     active: boolean;
+    attacking?: Array<{ __typename?: 'CombatModel'; id: string }> | null;
+    defending?: Array<{ __typename?: 'CombatModel'; id: string }> | null;
   };
 };
 
@@ -764,9 +769,19 @@ export class StartCombatGQL extends Apollo.Mutation<
   }
 }
 export const CharacterByOwnerDocument = gql`
-  query characterByOwner($owner: String!, $teamId: String!) {
+  query characterByOwner(
+    $owner: String!
+    $teamId: String!
+    $withCombats: Boolean!
+  ) {
     findByOwner(owner: $owner, teamId: $teamId) {
       ...CharacterParts
+      attacking @include(if: $withCombats) {
+        id
+      }
+      defending @include(if: $withCombats) {
+        id
+      }
     }
   }
   ${CharacterPartsFragmentDoc}

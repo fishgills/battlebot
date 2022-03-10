@@ -70,9 +70,15 @@ mutation startCombat($input: CreateCombatInput!) {
     }
   }
 }
-query characterByOwner($owner: String!, $teamId: String!) {
+query characterByOwner($owner: String!, $teamId: String!, $withCombats: Boolean!) {
   findByOwner(owner: $owner, teamId: $teamId) {
     ...CharacterParts
+    attacking @include(if: $withCombats) {
+      id
+    }
+    defending @include(if: $withCombats) {
+      id
+    }
   }
 }
 

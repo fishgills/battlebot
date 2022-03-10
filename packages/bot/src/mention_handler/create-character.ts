@@ -34,6 +34,7 @@ export class CharacterCreateObserver extends MentionObserver {
         await sdk.characterByOwner({
           owner: e.payload.user_id,
           teamId: e.payload.team_id,
+          withCombats: false,
         })
       ).findByOwner;
       if (char.id) {
