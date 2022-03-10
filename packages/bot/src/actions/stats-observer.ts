@@ -1,5 +1,4 @@
 import { ObserveType } from '.';
-import { CharacterType } from '../generated/graphql';
 import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
@@ -14,7 +13,6 @@ export class StatsObserver extends ActionObserver {
     const { findByOwner } = await sdk.characterByOwner({
       owner: event.body.user.id,
       teamId: event.context.teamId,
-      withCombats: false,
     });
 
     if (findByOwner.extraPoints <= 0) {
@@ -32,6 +30,6 @@ export class StatsObserver extends ActionObserver {
         extraPoints: findByOwner.extraPoints - 1,
       },
     });
-    await this.msgUser(event, editCharacterModal(findByOwner as CharacterType));
+    await this.msgUser(event, editCharacterModal(findByOwner));
   }
 }

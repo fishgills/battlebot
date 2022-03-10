@@ -106,7 +106,10 @@ const refreshToken = new TokenRefreshLink({
     return false;
   },
   fetchAccessToken: async () => {
-    const response = await fetch('http://localhost:4000/auth/login', {
+    const endpoint = new URL(process.env['GRAPHQL_ENDPOINT']);
+
+    const fetchFrom = `${endpoint.protocol}//${endpoint.host}/auth/login`;
+    const response = await fetch(fetchFrom, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -142,7 +145,7 @@ const httpLink = new HttpLink({
   uri: process.env.GRAPHQL_ENDPOINT as string,
   fetch,
 });
-const client = new ApolloClient({
+export const client = new ApolloClient({
   uri: process.env.GRAPHQL_ENDPOINT as string,
   cache: new InMemoryCache(),
   link: refreshToken.concat(authLink).concat(httpLink),

@@ -427,7 +427,6 @@ export type StartCombatMutation = {
 export type CharacterByOwnerQueryVariables = Exact<{
   owner: Scalars['String'];
   teamId: Scalars['String'];
-  withCombats: Scalars['Boolean'];
 }>;
 
 export type CharacterByOwnerQuery = {
@@ -450,8 +449,6 @@ export type CharacterByOwnerQuery = {
     updated_at: any;
     extraPoints: number;
     active: boolean;
-    attacking?: Array<{ __typename?: 'CombatModel'; id: string }> | null;
-    defending?: Array<{ __typename?: 'CombatModel'; id: string }> | null;
   };
 };
 
@@ -769,19 +766,9 @@ export class StartCombatGQL extends Apollo.Mutation<
   }
 }
 export const CharacterByOwnerDocument = gql`
-  query characterByOwner(
-    $owner: String!
-    $teamId: String!
-    $withCombats: Boolean!
-  ) {
+  query characterByOwner($owner: String!, $teamId: String!) {
     findByOwner(owner: $owner, teamId: $teamId) {
       ...CharacterParts
-      attacking @include(if: $withCombats) {
-        id
-      }
-      defending @include(if: $withCombats) {
-        id
-      }
     }
   }
   ${CharacterPartsFragmentDoc}

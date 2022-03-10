@@ -1,5 +1,4 @@
 import { ObserveType } from '.';
-import { CharacterType } from '../generated/graphql';
 import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
 import { ActionObserver } from './action-observer';
@@ -15,7 +14,6 @@ export class RerollObserver extends ActionObserver {
         await sdk.characterByOwner({
           owner: event.body.user.id,
           teamId: event.context.teamId,
-          withCombats: false,
         })
       ).findByOwner;
       char = (
@@ -25,7 +23,7 @@ export class RerollObserver extends ActionObserver {
       ).reroll;
       await event.respond({
         response_type: 'ephemeral',
-        blocks: editCharacterModal(char as CharacterType),
+        blocks: editCharacterModal(char),
       });
     } catch (e) {
       await event.respond(e.response.errors[0].message);

@@ -1,7 +1,7 @@
 {
   "battlelog_header": "{0} is having a one on one meeting with {1}.",
   "battlelog_initiative_header": "{0} has the first talking point. {1}, pay attention.",
-  "character_defense_emoji": ":shield:",
+  "character_defense_emoji": ":hear_no_evil:",
   "character_gold_emoji": ":moneybag:",
   "character_hp_emoji": ":heart:",
   "character_level_stats": "{0} has level {1} communication. Currently {0} needs *{2}/{3}* more presentation skill points to increase their communication level to {4}.",
@@ -11,7 +11,8 @@
   "character_strength_emoji": ":heart_eyes:",
   "character_vitality_emoji": ":book:",
   "command": "/mediator",
-  "received_reward_score_board": "Received Awards",
+  "received_reward_score_board": "Received Compliments",
+  "given_reward_score_board": "Given Compliments",
   "sheet_help_command": "`{0} sheet`",
   "sheet_help_description": "To retrieve your meeting's power:",
   "key_pair": "{0}: {1}",
@@ -43,5 +44,7 @@
   "character_level_up": "You have increased your communication level.",
   "delete_help_description": "To delete your alter ego:",
   "delete_help_command": "`{0} delete`",
-  "visit_web_site": "Head to https://www.google.com to delete."
+  "visit_web_site": "Head to https://www.google.com to delete.",
+  "leaderboard_attacks": "One on Ones Requested",
+  "leaderboard_defends": "One on Ones Received"
 }
