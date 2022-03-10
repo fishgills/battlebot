@@ -2002,6 +2002,7 @@ __metadata:
     apollo-link-token-refresh: ^0.4.0
     concurrently: ^7.0.0
     cross-fetch: ^3.1.5
+    dd-trace: ^2.3.1
     dotenv: ^10.0.0
     graphql: ^15.0.0
     graphql-tag: ^2.12.6
@@ -2099,6 +2100,20 @@ __metadata:
   version: 1.4.0
   resolution: "@csstools/convert-colors@npm:1.4.0"
   checksum: 26069eeb845a506934c821c203feb97f5de634c5fbeb9978505a2271d6cfdb0ce400240fca9620a4ef2e68953928ea25aab92ea8454e0edf5cd074066d9ad57b
+  languageName: node
+  linkType: hard
+
+"@datadog/native-appsec@npm:^0.8.1":
+  version: 0.8.1
+  resolution: "@datadog/native-appsec@npm:0.8.1"
+  dependencies:
+    detect-libc: ^1.0.3
+    minimist: ^1.2.5
+    node-gyp: latest
+    tar: ^6.1.11
+  bin:
+    appsec-reinstall: bin/appsec-reinstall.js
+  checksum: 3684fe9a04c350125b5cac7fc0d95b7680dc21056a5593cbd289943147c256034ab191acfb4525691e8a50407a18831294b07301100c87fa7274d951cfef1f53
   languageName: node
   linkType: hard
 
@@ -7102,6 +7117,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dd-trace@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "dd-trace@npm:2.3.1"
+  dependencies:
+    "@datadog/native-appsec": ^0.8.1
+    "@datadog/native-metrics": ^1.1.0
+    "@datadog/pprof": ^0.3.0
+    "@datadog/sketches-js": ^1.0.4
+    "@types/node": ">=12"
+    crypto-randomuuid: ^1.0.0
+    diagnostics_channel: ^1.1.0
+    form-data: ^3.0.0
+    import-in-the-middle: ^1.2.1
+    koalas: ^1.0.2
+    limiter: ^1.1.4
+    lodash.kebabcase: ^4.1.1
+    lodash.pick: ^4.4.0
+    lodash.sortby: ^4.7.0
+    lodash.uniq: ^4.5.0
+    methods: ^1.1.2
+    module-details-from-path: ^1.0.3
+    multer: ^1.4.2
+    opentracing: ">=0.12.1"
+    path-to-regexp: ^0.1.2
+    performance-now: ^2.1.0
+    retry: ^0.10.1
+    semver: ^5.5.0
+  checksum: daed5aeb7d7e774ae6e5fff1f25b49d6e4f1cac154d2f8bef77bf46fea7c2cccc5d4620698e3c87a80ee378a72bd88d5e5bbb05292b5b1458f6c951f6e53b553
+  languageName: node
+  linkType: hard
+
 "debounce@npm:^1.0.0, debounce@npm:^1.2.0":
   version: 1.2.1
   resolution: "debounce@npm:1.2.1"
@@ -7403,6 +7449,13 @@ __metadata:
   version: 0.0.1
   resolution: "di@npm:0.0.1"
   checksum: 3f09a99534d33e49264585db7f863ea8bc76c25c4d5a60df387c946018ecf1e1516b2c05a2092e5ca51fcdc08cefe609a6adc5253fa831626cb78cad4746505e
+  languageName: node
+  linkType: hard
+
+"diagnostics_channel@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "diagnostics_channel@npm:1.1.0"
+  checksum: 08b058e6ddc5aac3151ba470b42738f31a70c0882e671b3d1aef35d0f1b7962063f0648471cfcd75c621a09ce681ba06eb0b3708f91909d56b84861f949e6894
   languageName: node
   linkType: hard
 
@@ -9866,6 +9919,15 @@ __metadata:
   dependencies:
     module-details-from-path: ^1.0.3
   checksum: 5a8b3eac05159006abf99141079c9e1d064d367934a60cd63521946fb05eac7f54525aba9742fdceedeef79d47c6c569068885b42f5a023c03768000589a2ab8
+  languageName: node
+  linkType: hard
+
+"import-in-the-middle@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "import-in-the-middle@npm:1.2.1"
+  dependencies:
+    module-details-from-path: ^1.0.3
+  checksum: 90f751c199afe1e6c4b2b8dd1ed9d0cee9669807a732f27fe6caf2fe928a45f814c9692a6953d3c8f8e88738358ab3ce85dcff90387bb33181f19f2aaaab7297
   languageName: node
   linkType: hard
 

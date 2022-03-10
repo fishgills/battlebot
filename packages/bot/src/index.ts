@@ -1,3 +1,4 @@
+import './tracer';
 import * as dotenv from 'dotenv';
 import { gab, t } from './locale';
 
