@@ -20,7 +20,9 @@ export class BotLogger implements Logger {
 
   public constructor() {
     this.level = LogLevel.INFO;
-    this.log = new tsLogger();
+    this.log = new tsLogger({
+      type: process.env['NODE_ENV'] === 'production' ? 'json' : 'pretty',
+    });
   }
 
   public getLevel(): LogLevel {
