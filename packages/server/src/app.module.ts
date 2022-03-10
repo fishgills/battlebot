@@ -47,8 +47,6 @@ import { UsersModule } from './users/users.module';
           ],
           autoSchemaFile: true,
           context: (obj) => {
-            console.log(obj.req.body.query);
-            console.log(obj.req.body.variables);
             return {
               req: obj.req,
               loaders: dlService.createLoaders(),
