@@ -7,7 +7,7 @@ import axios from 'axios';
 if (process.env.NODE_ENV === 'production') {
   const mytracer = tracer.init({
     env: process.env['NODE_ENV'],
-    service: 'service',
+    service: 'server',
   });
   mytracer.use('graphql');
 
