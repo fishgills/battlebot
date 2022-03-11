@@ -1,9 +1,12 @@
 import tracer from 'dd-trace';
-if (process.env.NODE_ENV === 'production') {
-  tracer.init({
-    env: process.env['NODE_ENV'],
-    service: 'bot',
-  });
-}
+const mytracer = tracer.init({
+  logInjection: true,
+  env: process.env['NODE_ENV'],
+  service: 'bot',
+});
+mytracer.use('bunyan', {
+  enabled: true,
+  service: 'bot',
+});
 
-export default tracer;
+export default mytracer;

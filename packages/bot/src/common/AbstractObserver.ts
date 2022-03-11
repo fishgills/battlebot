@@ -1,14 +1,14 @@
 import { ChatPostMessageResponse } from '@slack/web-api';
 import { SlackBlockDto } from 'slack-block-builder';
-import { Logger, pino } from 'pino';
+import { Logger } from '../logger';
 
 export abstract class Observer<T> {
   command: string;
-  private logger: Logger;
+  private logger: typeof Logger;
 
   constructor(command?: string) {
     this.command = command;
-    this.logger = pino({ name: `observer: ${this.command}` });
+    this.logger = Logger;
     this.logger.info('created');
   }
 

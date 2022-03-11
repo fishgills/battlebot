@@ -10,6 +10,7 @@ gab.init({
 });
 
 import { App, BlockButtonAction } from '@slack/bolt';
+import { LogLevel } from '@slack/web-api';
 import { Store } from './installation_store';
 import { isGenericMessageEvent } from './utils/helpers';
 import { Command$ } from './mention_handler';
@@ -36,6 +37,8 @@ const app = new App({
   convoStore: new BotStore(),
   developerMode: process.env.NODE_ENV !== 'production',
   logger: Logger,
+  logLevel:
+    process.env.NODE_ENV !== 'production' ? LogLevel.DEBUG : LogLevel.INFO,
   socketMode: true,
   stateSecret: 'awesome',
   scopes: ['users:read', 'channels:history', 'commands', 'chat:write'],

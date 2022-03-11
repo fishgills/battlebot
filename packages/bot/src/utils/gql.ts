@@ -11,6 +11,7 @@ import {
 } from '@apollo/client/core';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import { decode } from 'jsonwebtoken';
+import { Logger } from '../logger';
 
 export type ApolloRequesterOptions<V, R> =
   | Omit<QueryOptions<V>, 'variables' | 'query'>
@@ -106,6 +107,7 @@ const refreshToken = new TokenRefreshLink({
     return false;
   },
   fetchAccessToken: async () => {
+    Logger.info('Retrieve JWT Token');
     const endpoint = new URL(process.env['GRAPHQL_ENDPOINT']);
 
     const fetchFrom = `${endpoint.protocol}//${endpoint.host}/auth/login`;
