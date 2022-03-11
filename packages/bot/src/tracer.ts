@@ -10,20 +10,11 @@ if (process.env.NODE_ENV === 'production') {
     service: 'bot',
   });
 
-  // (async () => {
-  //   const { data: hostname } = await axios.get(
-  //     'http://169.254.169.254/latest/meta-data/local-ipv4',
-  //   );
-  //   console.log('host IP ', hostname);
-
-  //   mytracer.setUrl(`http://${hostname}:8126`);
-  // })();
-  // axios
-  //   .get('http://169.254.169.254/latest/meta-data/local-ipv4')
-  //   .then((resp) => {
-  //     console.log('Got IPV4 Info: ', JSON.stringify(resp));
-  //     mytracer.setUrl(`http://${resp.data}:8126`);
-  //   });
+  axios
+    .get('http://169.254.169.254/latest/meta-data/local-ipv4')
+    .then((resp) => {
+      mytracer.setUrl(`http://${resp.data}:8126`);
+    });
 }
 
 export default tracer;
