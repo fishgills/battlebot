@@ -10,14 +10,14 @@ if (process.env.NODE_ENV === 'production') {
     service: 'bot',
   });
 
-  (async () => {
-    const { data: hostname } = await axios.get(
-      'http://169.254.169.254/latest/meta-data/local-ipv4',
-    );
-    console.log('host IP ', hostname);
+  // (async () => {
+  //   const { data: hostname } = await axios.get(
+  //     'http://169.254.169.254/latest/meta-data/local-ipv4',
+  //   );
+  //   console.log('host IP ', hostname);
 
-    mytracer.setUrl(`http://${hostname}:8126`);
-  })();
+  //   mytracer.setUrl(`http://${hostname}:8126`);
+  // })();
   // axios
   //   .get('http://169.254.169.254/latest/meta-data/local-ipv4')
   //   .then((resp) => {
