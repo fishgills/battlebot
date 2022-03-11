@@ -20,6 +20,8 @@ import { ConvoModule } from 'convostore/convo.module';
 import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from 'auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { LoggerModule } from 'nestjs-pino';
+
 @Module({
   imports: [
     forwardRef(() => StripeModule),
@@ -29,6 +31,18 @@ import { UsersModule } from './users/users.module';
     RewardModule,
     HttpModule,
     ConvoModule,
+    LoggerModule.forRoot({
+      pinoHttp: [
+        {
+          level: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
+          transport:
+            process.env.NODE_ENV !== 'production'
+              ? { target: 'pino-pretty' }
+              : undefined,
+        },
+        process.stdout,
+      ],
+    }),
     TypeOrmModule.forRoot(database.database),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       imports: [DataloaderModule],

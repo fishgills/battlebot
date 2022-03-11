@@ -1,6 +1,6 @@
 import { ChatPostMessageResponse } from '@slack/web-api';
 import { SlackBlockDto } from 'slack-block-builder';
-import { Logger } from 'tslog';
+import { Logger, pino } from 'pino';
 
 export abstract class Observer<T> {
   command: string;
@@ -8,7 +8,7 @@ export abstract class Observer<T> {
 
   constructor(command?: string) {
     this.command = command;
-    this.logger = new Logger({ name: `observer: ${this.command}` });
+    this.logger = pino({ name: `observer: ${this.command}` });
     this.logger.info('created');
   }
 

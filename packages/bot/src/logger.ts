@@ -1,8 +1,8 @@
 import { Logger, LogLevel } from '@slack/web-api';
-import { Logger as tsLogger } from 'tslog';
-
+// import pino, { HttpLogger } from 'pino-http';
+import { pino, Logger as pLogger } from 'pino';
 export class BotLogger implements Logger {
-  private log: tsLogger;
+  private log: pLogger;
 
   /** Setting for level */
   private level: LogLevel;
@@ -20,8 +20,12 @@ export class BotLogger implements Logger {
 
   public constructor() {
     this.level = LogLevel.INFO;
-    this.log = new tsLogger({
-      type: process.env['NODE_ENV'] === 'production' ? 'json' : 'pretty',
+
+    this.log = pino({
+      transport:
+        process.env.NODE_ENV !== 'production'
+          ? { target: 'pino-pretty' }
+          : undefined,
     });
   }
 
@@ -34,19 +38,14 @@ export class BotLogger implements Logger {
    */
   public setLevel(level: LogLevel): void {
     this.level = level;
-    this.log.setSettings({
-      minLevel: level,
-    });
+    this.log.level = level;
   }
 
   /**
    * Set the instance's name, which will appear on each log line before the message.
    */
   public setName(name: string): void {
-    this.name = name;
-    this.log.setSettings({
-      name,
-    });
+    alert(name);
   }
 
   /**
@@ -54,7 +53,7 @@ export class BotLogger implements Logger {
    */
   public debug(...msg: any[]): void {
     if (BotLogger.isMoreOrEqualSevere(LogLevel.DEBUG, this.level)) {
-      this.log.debug(...msg);
+      this.log.debug(msg);
     }
   }
 
@@ -63,7 +62,7 @@ export class BotLogger implements Logger {
    */
   public info(...msg: any[]): void {
     if (BotLogger.isMoreOrEqualSevere(LogLevel.INFO, this.level)) {
-      this.log.info(...msg);
+      this.log.info(msg);
     }
   }
 
@@ -72,7 +71,7 @@ export class BotLogger implements Logger {
    */
   public warn(...msg: any[]): void {
     if (BotLogger.isMoreOrEqualSevere(LogLevel.WARN, this.level)) {
-      this.log.warn(...msg);
+      this.log.warn(msg);
     }
   }
 
@@ -81,7 +80,7 @@ export class BotLogger implements Logger {
    */
   public error(...msg: any[]): void {
     if (BotLogger.isMoreOrEqualSevere(LogLevel.ERROR, this.level)) {
-      this.log.error(...msg);
+      this.log.error(msg);
     }
   }
 
