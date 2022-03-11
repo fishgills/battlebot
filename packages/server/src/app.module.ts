@@ -21,6 +21,7 @@ import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from 'auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { LoggerModule } from 'nestjs-pino';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { LoggerModule } from 'nestjs-pino';
     AuthModule,
     SlackAuthModule,
     UsersModule,
+    HealthModule,
   ],
   providers: [],
   // providers: [
