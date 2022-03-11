@@ -1,4 +1,4 @@
-// import './tracer';
+import './tracer';
 import * as dotenv from 'dotenv';
 dotenv.config();
 import 'axios-debug-log';
