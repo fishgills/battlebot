@@ -102,6 +102,7 @@ const refreshToken = new TokenRefreshLink({
       return false;
     }
     if (expiresIn * 1000 > Date.now()) {
+      Logger.info('JWT Token expired.');
       return true;
     }
     return false;

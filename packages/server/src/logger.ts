@@ -14,6 +14,7 @@ export class MyLogger extends ConsoleLogger {
     if (process.env.NODE_ENV === 'production') {
       this.logger = bLogger.createLogger({
         name: 'server',
+        level: 'debug',
       });
     } else {
       this.logger = bLogger.createLogger({

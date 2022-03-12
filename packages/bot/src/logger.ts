@@ -14,6 +14,7 @@ export class BotLogger implements Logger {
     if (process.env.NODE_ENV === 'production') {
       this.log = bLogger.createLogger({
         name: 'bot',
+        level: 'debug',
       });
     } else {
       this.log = bLogger.createLogger({

@@ -33,5 +33,4 @@ RUN ls -al
 RUN chmod +rwx /tmp/docker-entrypoint.sh
 
 EXPOSE $PORT
-EXPOSE 9229
 ENTRYPOINT ["/tmp/docker-entrypoint.sh"]
