@@ -1995,8 +1995,8 @@ __metadata:
   resolution: "@battlebot/bot@workspace:packages/bot"
   dependencies:
     "@apollo/client": ^3.5.10
-    "@slack/bolt": ^3.9.0
-    "@slack/web-api": ^6.6.0
+    "@slack/bolt": ^3.10.0
+    "@slack/web-api": ^6.7.0
     "@types/bunyan": ^1
     "@types/jsonwebtoken": ^8.5.8
     "@types/node": ^17.0.18
@@ -2015,7 +2015,7 @@ __metadata:
     pino-http: ^6.6.0
     rimraf: ^3.0.2
     rxjs: ^7.5.4
-    slack-block-builder: ^2.4.2
+    slack-block-builder: ^2.5.0
     ts-node-dev: ^1.1.8
     typescript: ~4.3.0
   languageName: unknown
@@ -3403,15 +3403,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@slack/bolt@npm:^3.9.0":
-  version: 3.9.0
-  resolution: "@slack/bolt@npm:3.9.0"
+"@slack/bolt@npm:^3.10.0":
+  version: 3.10.0
+  resolution: "@slack/bolt@npm:3.10.0"
   dependencies:
     "@slack/logger": ^3.0.0
     "@slack/oauth": ^2.4.0
     "@slack/socket-mode": ^1.2.0
     "@slack/types": ^2.4.0
-    "@slack/web-api": ^6.6.0
+    "@slack/web-api": ^6.7.0
     "@types/express": ^4.16.1
     "@types/node": ">=12"
     "@types/promise.allsettled": ^1.0.3
@@ -3422,7 +3422,7 @@ __metadata:
     promise.allsettled: ^1.0.2
     raw-body: ^2.3.3
     tsscmp: ^1.0.6
-  checksum: cf38d8556f7562410a666bc39e1e1f000f1d5e002195a94909b19606a1db885feee3618c6b9a353f96e032efd5937c50e30bc9c2edb2e635f5d8ddee7ba708d1
+  checksum: 5a85032a33aa677f1280c3382054ed2031d7807c0c272968d6e99d88adc3cd0799a5fdd7dea6e6a5161a60f896be03a95c87d12a61c1e1478e783a52902d1ec3
   languageName: node
   linkType: hard
 
@@ -3493,9 +3493,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@slack/web-api@npm:^6.6.0":
-  version: 6.6.0
-  resolution: "@slack/web-api@npm:6.6.0"
+"@slack/web-api@npm:^6.7.0":
+  version: 6.7.0
+  resolution: "@slack/web-api@npm:6.7.0"
   dependencies:
     "@slack/logger": ^3.0.0
     "@slack/types": ^2.0.0
@@ -3508,7 +3508,7 @@ __metadata:
     is-stream: ^1.1.0
     p-queue: ^6.6.1
     p-retry: ^4.0.0
-  checksum: d3f385137643267f5eaed7413d7fef4e2416bdfedac971393c16307a504829b1c927efdbf0ed4b8895bdc9534a5013dbe840e266493c9db446af765e932babce
+  checksum: fe8327ea33d9c548a8196a90ae9f892dba658ac052c28858f0c6a69b186ca75b7627a18ed6d3a9fd0c14c1a460bc176f76b345fa6efd13df39984a1983542abb
   languageName: node
   linkType: hard
 
@@ -16131,10 +16131,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slack-block-builder@npm:^2.4.2":
-  version: 2.4.2
-  resolution: "slack-block-builder@npm:2.4.2"
-  checksum: 7ba3a2e71d6c60e3290bee262bf993510515959765d57db25abea278776c9836f16afbbb31e33b66dbb3b3073a9c49032b296c200990576dab123d741dcf9f85
+"slack-block-builder@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "slack-block-builder@npm:2.5.0"
+  checksum: f231c142e8c1a0c759a59cbaf39ccae3fe0a224fb17addd2f9cbba4c08b4a9435542ae9ba02efd7bcffa2316700c15cfe490afd1b6e3efc658c1c490b7dc7c76
   languageName: node
   linkType: hard
 

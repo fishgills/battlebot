@@ -19,6 +19,8 @@ import { homePage } from './views/home';
 import { Logger } from './logger';
 import { Store } from './installation_store';
 
+const scopes = ['users:read', 'channels:history', 'commands', 'chat:write'];
+
 const app = new App({
   clientId: process.env.SLACK_CLIENT_ID,
   clientSecret: process.env.SLACK_CLIENT_SECRET,
@@ -40,10 +42,13 @@ const app = new App({
     process.env.NODE_ENV !== 'production' ? LogLevel.DEBUG : LogLevel.INFO,
   socketMode: true,
   stateSecret: 'awesome',
-  scopes: ['users:read', 'channels:history', 'commands', 'chat:write'],
+  scopes,
+  installerOptions: {
+    stateVerification: false,
+    directInstall: true,
+  },
   installationStore: new Store(),
 });
-
 (async () => {
   const port = Number(process.env.PORT);
   await app.start({
@@ -97,10 +102,32 @@ app.use(async (args: any) => {
   if (args.body && args.body.user) {
     user = args.body.user.id;
   }
-  const userInfo = await args.client.users.info({
-    user,
-    include_locale: true,
-  });
-  gab.setLocale(userInfo.user.locale);
+  if (user) {
+    const userInfo = await args.client.users.info({
+      user,
+      include_locale: true,
+    });
+    gab.setLocale(userInfo.user.locale);
+  }
   args.next();
 });
+
+app.event('app_uninstalled', async (args) => {
+  Logger.info('app_uninstalled received');
+  Logger.info(args.context);
+  await new Store().deleteInstallation({
+    isEnterpriseInstall: args.context.enterpriseId ? true : false,
+    enterpriseId: args.context.enterpriseId,
+    teamId: args.context.teamId,
+  });
+});
+
+// app.event('tokens_revoked', async (args) => {
+//   Logger.info(`tokens_revoked received`);
+//   Logger.info(args.context);
+//   await new Store().deleteInstallation({
+//     isEnterpriseInstall: args.context.enterpriseId ? true : false,
+//     enterpriseId: args.context.enterpriseId,
+//     teamId: args.context.teamId,
+//   });
+// });

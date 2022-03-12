@@ -10,17 +10,15 @@ import {
   ApolloLink,
 } from '@apollo/client/core';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
-import { decode } from 'jsonwebtoken';
+import { decode, JwtPayload } from 'jsonwebtoken';
 import { Logger } from '../logger';
+import { getAccessToken, setAccessToken } from './accesstoken';
 
 export type ApolloRequesterOptions<V, R> =
   | Omit<QueryOptions<V>, 'variables' | 'query'>
   | Omit<MutationOptions<R, V>, 'variables' | 'mutation'>;
 
 const validDocDefOps = ['mutation', 'query', 'subscription'];
-
-let token = '';
-let expiresIn = 0;
 
 export function getSdkApollo<C>(client: ApolloClient<C>) {
   const requester: Requester = async <R, V>(
@@ -98,14 +96,20 @@ export function getSdkApollo<C>(client: ApolloClient<C>) {
 const refreshToken = new TokenRefreshLink({
   accessTokenField: 'token',
   isTokenValidOrUndefined: () => {
+    const token = getAccessToken();
     if (!token) {
       return false;
     }
-    if (expiresIn * 1000 > Date.now()) {
-      Logger.info('JWT Token expired.');
-      return true;
+    try {
+      const { exp } = decode(token) as JwtPayload;
+      if (Date.now() >= exp * 1000) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (err) {
+      return false;
     }
-    return false;
   },
   fetchAccessToken: async () => {
     Logger.info('Retrieve JWT Token');
@@ -127,18 +131,14 @@ const refreshToken = new TokenRefreshLink({
     return response;
   },
   handleFetch: (newToken) => {
-    const decodedToken = decode(newToken, {
-      json: true,
-    });
-    token = newToken;
-    expiresIn = decodedToken.exp;
+    setAccessToken(newToken);
   },
 });
 
 const authLink = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
-      authorization: token ? `Bearer ${token}` : '',
+      authorization: getAccessToken() ? `Bearer ${getAccessToken()}` : '',
     },
   });
   return forward(operation);

@@ -38,11 +38,7 @@ export class SlackInstallService {
   }
 
   public async deleteInstall(conditions: FindConditions<SlackInstallModel>) {
-    const reuslt = await this.slackRepo.delete(conditions);
-    if (reuslt.affected > 0) {
-      return reuslt.affected;
-    } else {
-      return null;
-    }
+    const result = await this.slackRepo.delete(conditions);
+    return result.affected;
   }
 }
