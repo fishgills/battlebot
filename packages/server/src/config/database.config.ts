@@ -17,7 +17,7 @@ export const database: MysqlConnectionOptions = {
   dropSchema: false,
   synchronize: false,
   migrationsRun: false,
-  logging: true,
+  logging: process.env.NODE_ENV !== 'production',
   cache: true,
   migrations: [`${__dirname}/migrations/*.{ts,js}`],
   cli: {
