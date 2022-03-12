@@ -2,15 +2,11 @@ import {
   Installation,
   InstallationQuery,
   InstallationStore,
-  Logger,
 } from '@slack/bolt';
 import { sdk } from './utils/gql';
 
 export class Store implements InstallationStore {
-  async storeInstallation<AuthVersion extends 'v1' | 'v2'>(
-    installation: Installation<AuthVersion, boolean>,
-    logger?: Logger,
-  ): Promise<void> {
+  async storeInstallation(installation: Installation): Promise<void> {
     if (
       installation.isEnterpriseInstall &&
       installation.enterprise !== undefined
@@ -32,41 +28,34 @@ export class Store implements InstallationStore {
       });
       return;
     }
-    logger.info('Failed saving installation data to installationStore');
+    throw new Error('Failed saving installation data to installationStore');
   }
   async fetchInstallation(
     query: InstallationQuery<boolean>,
-    logger?: Logger,
   ): Promise<Installation<'v1' | 'v2', boolean>> {
     if (query.isEnterpriseInstall && query.enterpriseId !== undefined) {
       try {
-        const install = (
-          await sdk.getInstall({
-            team_id: query.enterpriseId,
-          })
-        ).install.installObj;
-        return install;
+        const result = await sdk.getInstall({
+          team_id: query.enterpriseId,
+        });
+
+        return result.install.installObj;
       } catch (e) {
-        logger.info(e);
+        throw new Error(e);
       }
     }
     if (query.teamId !== undefined) {
       try {
-        const install = (
-          await sdk.getInstall({
-            team_id: query.teamId,
-          })
-        ).install.installObj;
-        return install;
+        const result = await sdk.getInstall({
+          team_id: query.teamId,
+        });
+        return result.install.installObj;
       } catch (e) {
-        logger.info(e);
+        throw new Error(e);
       }
     }
   }
-  async deleteInstallation(
-    query: InstallationQuery<boolean>,
-    logger?: Logger,
-  ): Promise<void> {
+  async deleteInstallation(query: InstallationQuery<boolean>): Promise<void> {
     if (query.isEnterpriseInstall && query.enterpriseId !== undefined) {
       await sdk.removeInstall({
         team_id: query.enterpriseId,
@@ -79,6 +68,6 @@ export class Store implements InstallationStore {
       });
       return;
     }
-    logger.info('Failed to delete installation');
+    throw new Error('Failed to delete installation');
   }
 }
