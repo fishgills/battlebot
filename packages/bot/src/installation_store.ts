@@ -32,7 +32,7 @@ export class Store implements InstallationStore {
       });
       return;
     }
-    logger.error('Failed saving installation data to installationStore');
+    logger.info('Failed saving installation data to installationStore');
   }
   async fetchInstallation(
     query: InstallationQuery<boolean>,
@@ -47,7 +47,7 @@ export class Store implements InstallationStore {
         ).install.installObj;
         return install;
       } catch (e) {
-        logger.error(e);
+        logger.info(e);
       }
     }
     if (query.teamId !== undefined) {
@@ -59,7 +59,7 @@ export class Store implements InstallationStore {
         ).install.installObj;
         return install;
       } catch (e) {
-        logger.error(e);
+        logger.info(e);
       }
     }
   }
@@ -79,6 +79,6 @@ export class Store implements InstallationStore {
       });
       return;
     }
-    logger.error('Failed to delete installation');
+    logger.info('Failed to delete installation');
   }
 }

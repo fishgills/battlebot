@@ -2,6 +2,7 @@ import { Logger, LogLevel } from '@slack/web-api';
 import tracer from 'dd-trace';
 import * as bLogger from 'bunyan';
 import bStream from 'bunyan-debug-stream';
+import { format } from 'date-fns';
 
 export class BotLogger implements Logger {
   private log: bLogger;
@@ -51,7 +52,7 @@ export class BotLogger implements Logger {
     this.injectDDTrace(record);
     return [
       {
-        time: new Date().toISOString(),
+        time: format(new Date(), 'dd/LLL/yyyy:H:m:s XX'),
       },
       record,
     ];

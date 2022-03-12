@@ -19,6 +19,9 @@ import { Shield$ } from './reward_handler';
 import { homePage } from './views/home';
 import { BotStore } from './convo-store';
 import { Logger } from './logger';
+import { readdirSync } from 'fs';
+
+console.log(readdirSync('/'));
 
 const app = new App({
   clientId: process.env.SLACK_CLIENT_ID,

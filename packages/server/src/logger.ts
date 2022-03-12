@@ -1,6 +1,7 @@
 import { Injectable, Scope, ConsoleLogger } from '@nestjs/common';
 import * as bLogger from 'bunyan';
 import bStream from 'bunyan-debug-stream';
+import { format } from 'date-fns';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class MyLogger extends ConsoleLogger {
@@ -34,11 +35,10 @@ export class MyLogger extends ConsoleLogger {
       });
     }
   }
-
   log(message: any) {
     this.logger.info(
       {
-        time: new Date().toISOString(),
+        time: format(new Date(), 'dd/LLL/yyyy:H:m:s XX'),
       },
       message,
     );
@@ -47,7 +47,7 @@ export class MyLogger extends ConsoleLogger {
   debug(message: any) {
     this.logger.debug(
       {
-        time: new Date().toISOString(),
+        time: format(new Date(), 'dd/LLL/yyyy:H:m:s XX'),
       },
       message,
     );
@@ -56,7 +56,7 @@ export class MyLogger extends ConsoleLogger {
   warn(message: any) {
     this.logger.warn(
       {
-        time: new Date().toISOString(),
+        time: format(new Date(), 'dd/LLL/yyyy:H:m:s XX'),
       },
       message,
     );
@@ -65,7 +65,7 @@ export class MyLogger extends ConsoleLogger {
   error(message: any) {
     this.logger.error(
       {
-        time: new Date().toISOString(),
+        time: format(new Date(), 'dd/LLL/yyyy:H:m:s XX'),
       },
       message,
     );
