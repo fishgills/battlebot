@@ -16,7 +16,6 @@ import {
   MemoryStore,
 } from '@slack/bolt';
 import { LogLevel } from '@slack/web-api';
-import { Store } from './installation_store';
 import { isGenericMessageEvent } from './utils/helpers';
 import { Command$ } from './mention_handler';
 import { Action$, ActionsRegex } from './actions';
