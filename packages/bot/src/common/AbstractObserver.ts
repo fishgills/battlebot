@@ -9,7 +9,7 @@ export abstract class Observer<T> {
   constructor(command?: string) {
     this.command = command;
     this.logger = Logger;
-    this.logger.info('created');
+    this.logger.info(`created ${command} observer`);
   }
 
   protected log(...msg: string[]) {

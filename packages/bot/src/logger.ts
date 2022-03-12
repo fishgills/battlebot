@@ -1,7 +1,6 @@
 import { Logger, LogLevel } from '@slack/web-api';
 import tracer from 'dd-trace';
 import * as bLogger from 'bunyan';
-import formats from 'dd-trace/ext/formats';
 import bStream from 'bunyan-debug-stream';
 
 export class BotLogger implements Logger {
@@ -43,11 +42,22 @@ export class BotLogger implements Logger {
     return this.level;
   }
 
-  private injectDDTrace(...entry: any[]) {
+  private injectDDTrace(record: any) {
     const span = tracer.scope().active();
     if (span) {
-      tracer.inject(span.context(), formats.LOG, entry);
+      tracer.inject(span.context(), 'log', record);
     }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  private record(record: any): [{ time: string }, any] {
+    this.injectDDTrace(record);
+    return [
+      {
+        time: new Date().toISOString(),
+      },
+      record,
+    ];
   }
 
   /**
@@ -68,32 +78,28 @@ export class BotLogger implements Logger {
    * Log a debug message
    */
   public debug(...msg: any[]): void {
-    this.injectDDTrace(msg);
-    msg.forEach((record) => this.log.debug(record));
+    msg.forEach((record) => this.log.debug(...this.record(record)));
   }
 
   /**
    * Log an info message
    */
   public info(...msg: any[]): void {
-    this.injectDDTrace(msg);
-    msg.forEach((record) => this.log.info(record));
+    msg.forEach((record) => this.log.info(...this.record(record)));
   }
 
   /**
    * Log a warning message
    */
   public warn(...msg: any[]): void {
-    this.injectDDTrace(msg);
-    msg.forEach((record) => this.log.warn(record));
+    msg.forEach((record) => this.log.warn(...this.record(record)));
   }
 
   /**
    * Log an error message
    */
   public error(...msg: any[]): void {
-    this.injectDDTrace(msg);
-    msg.forEach((record) => this.log.error(record));
+    msg.forEach((record) => this.log.error(...this.record(record)));
   }
 }
 const Logger = new BotLogger();

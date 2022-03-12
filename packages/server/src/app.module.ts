@@ -21,7 +21,6 @@ import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from 'auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
-import { LoggerModule } from 'logger/logger.module';
 
 @Module({
   imports: [
@@ -32,7 +31,6 @@ import { LoggerModule } from 'logger/logger.module';
     RewardModule,
     HttpModule,
     ConvoModule,
-    LoggerModule.forRoot({}),
     TypeOrmModule.forRoot(database.database),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       imports: [DataloaderModule],
@@ -66,7 +64,6 @@ import { LoggerModule } from 'logger/logger.module';
     SlackAuthModule,
     UsersModule,
     HealthModule,
-    LoggerModule,
   ],
   providers: [],
   // providers: [

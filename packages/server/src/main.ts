@@ -10,6 +10,7 @@ import { DBStore } from './slack-auth/session-store';
 import { getConnection } from 'typeorm';
 import { SessionModel } from './slack-auth/session-model';
 import { Logger } from '@nestjs/common';
+import { MyLogger } from 'logger';
 const whitelist = [
   'battlebot.ngrok.io',
   'slackbattlebot.com',
@@ -24,7 +25,9 @@ const sessionLengthInMs = sessionLengthInSeconds * 1000;
 async function bootstrap() {
   const ssl = process.env.SSL ? true : false;
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new MyLogger(),
+  });
   app.enableCors({
     origin: (origin, callback) => {
       if (!origin || whitelist.some((domain) => origin.includes(domain))) {
