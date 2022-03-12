@@ -9,7 +9,12 @@ gab.init({
   locale: 'en-us',
 });
 
-import { App, BlockButtonAction } from '@slack/bolt';
+import {
+  App,
+  BlockButtonAction,
+  FileInstallationStore,
+  MemoryStore,
+} from '@slack/bolt';
 import { LogLevel } from '@slack/web-api';
 import { Store } from './installation_store';
 import { isGenericMessageEvent } from './utils/helpers';
@@ -17,11 +22,10 @@ import { Command$ } from './mention_handler';
 import { Action$, ActionsRegex } from './actions';
 import { Shield$ } from './reward_handler';
 import { homePage } from './views/home';
-import { BotStore } from './convo-store';
 import { Logger } from './logger';
 import { readdirSync } from 'fs';
 
-console.log(readdirSync('/'));
+Logger.info(JSON.stringify(readdirSync('/')));
 
 const app = new App({
   clientId: process.env.SLACK_CLIENT_ID,
@@ -37,7 +41,7 @@ const app = new App({
       },
     },
   ],
-  convoStore: new BotStore(),
+  convoStore: new MemoryStore(),
   developerMode: process.env.NODE_ENV !== 'production',
   logger: Logger,
   logLevel:
@@ -45,7 +49,9 @@ const app = new App({
   socketMode: true,
   stateSecret: 'awesome',
   scopes: ['users:read', 'channels:history', 'commands', 'chat:write'],
-  installationStore: new Store(),
+  installationStore: new FileInstallationStore({
+    baseDir: process.env.NODE_ENV === 'production' ? '/store' : '/tmp',
+  }),
 });
 
 (async () => {
