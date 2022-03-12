@@ -36,5 +36,6 @@ COPY --from=ts-compiler /usr/src/app/package.json .
 COPY --from=ts-remove /usr/src/app/node_modules ./node_modules
 ENV PORT 3000
 EXPOSE $PORT
+EXPOSE 9229
 HEALTHCHECK CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health-check || exit 1
 CMD [ "node", "--inspect", "index.js" ]
