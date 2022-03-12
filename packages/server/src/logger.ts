@@ -43,4 +43,31 @@ export class MyLogger extends ConsoleLogger {
       message,
     );
   }
+
+  debug(message: any) {
+    this.logger.debug(
+      {
+        time: new Date().toISOString(),
+      },
+      message,
+    );
+  }
+
+  warn(message: any) {
+    this.logger.warn(
+      {
+        time: new Date().toISOString(),
+      },
+      message,
+    );
+  }
+
+  error(message: any) {
+    this.logger.error(
+      {
+        time: new Date().toISOString(),
+      },
+      message,
+    );
+  }
 }

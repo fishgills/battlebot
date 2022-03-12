@@ -21,10 +21,7 @@ export class BotLogger implements Logger {
           {
             level: 'debug',
             type: 'raw',
-            stream: bStream({
-              basepath: __dirname,
-              forceColor: true,
-            }),
+            stream: bStream({}),
           },
           {
             type: 'rotating-file',
