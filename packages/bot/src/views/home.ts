@@ -69,7 +69,7 @@ export const homePage = async (teamId: string, userId: string) => {
     },
   });
 
-  const result = (await client.query({
+  const { data } = (await client.query({
     variables: {
       owner: userId,
       teamId: teamId,
@@ -108,7 +108,9 @@ export const homePage = async (teamId: string, userId: string) => {
 
   home.callbackId('home-tab');
   home.externalId(`home-${teamId}`);
-  characterStats(result.data.findByOwner, home);
+  if (data) {
+    characterStats(data.findByOwner, home);
+  }
   rewardScores(toScoreBoard, fromScoreBoard, home);
 
   return home.buildToObject();

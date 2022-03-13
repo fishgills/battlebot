@@ -9,7 +9,7 @@ import { MentionObserver } from './observer';
 
 export class CombatObserver extends MentionObserver {
   constructor() {
-    super('fight');
+    super('with');
   }
   getHelpBlocks() {
     return [

@@ -33,8 +33,8 @@
   "reward_left": "You are trying to give away {0} rewards, but you only have {1} left today!",
   "reward_given": "You have given {0} rewards today. You have {1} left.",
   "reward_emoji": ":notebook:",
-  "combat_help_description": "To initiate a one on one meeting with someone:",
-  "combat_help_command": "`{0} fight <SlackUser>`",
+  "combat_help_description": "To resolve a conflict with someone:",
+  "combat_help_command": "`{0} with <SlackUser>`",
   "combat_update_no_character": "You have alter ego working here.",
   "combat_update_unfinished_character": "Your alter ego is still going through the interview process.",
   "combat_update_target_no_char": "<@{0}> does not have an alter ego working here. Please inform them to apply.",
@@ -45,7 +45,7 @@
   "character_level_up": "You have increased your communication level.",
   "delete_help_description": "To delete your alter ego:",
   "delete_help_command": "`{0} delete`",
-  "visit_web_site": "Head to https://www.google.com to delete.",
+  "visit_web_site": "This feature will be available on the website.",
   "leaderboard_attacks": "One on Ones Requested",
   "leaderboard_defends": "One on Ones Received"
 }
