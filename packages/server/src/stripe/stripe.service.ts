@@ -5,7 +5,7 @@ import Stripe from 'stripe';
 
 @Injectable()
 export class StripeService {
-  public static enabled = true;
+  public static enabled = false;
 
   constructor(
     private charService: CharacterService,

@@ -88,7 +88,9 @@ export class CharacterEntity extends BaseEntity {
   })
   teamId: string;
 
-  @Column()
+  @Column({
+    default: 0,
+  })
   extraPoints: number;
 
   @Column({

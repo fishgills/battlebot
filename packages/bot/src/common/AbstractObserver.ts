@@ -12,7 +12,7 @@ export abstract class Observer<T> {
     this.logger.info(`created ${command} observer`);
   }
 
-  protected log(...msg: string[]) {
+  protected log(msg: string) {
     this.logger.debug(msg);
   }
 

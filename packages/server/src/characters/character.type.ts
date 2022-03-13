@@ -66,7 +66,9 @@ export class CharacterType {
   @Field()
   teamId: string;
 
-  @Field()
+  @Field({
+    defaultValue: 0,
+  })
   extraPoints: number;
 
   @Field()

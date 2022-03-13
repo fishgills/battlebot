@@ -152,6 +152,16 @@ export const client = new ApolloClient({
   uri: process.env.GRAPHQL_ENDPOINT as string,
   cache: new InMemoryCache(),
   link: refreshToken.concat(authLink).concat(httpLink),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'ignore',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'all',
+    },
+  },
 });
 export const sdk = getSdkApollo(client);
 export type Sdk = ReturnType<typeof getSdkApollo>;

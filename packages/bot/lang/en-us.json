@@ -15,6 +15,7 @@
   "given_reward_score_board": "Given Compliments",
   "sheet_help_command": "`{0} sheet`",
   "sheet_help_description": "To retrieve your meeting's power:",
+  "sheet_no_character": "You have no employee alter ego.",
   "key_pair": "{0}: {1}",
   "battlelog_critical_roll": "{0} presents an incredibly valid point that can not be ignored!",
   "battlelog_hit": "{0} expresses their concern for {1} points of {2} understanding!",

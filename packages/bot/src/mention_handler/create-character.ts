@@ -40,7 +40,7 @@ export class CharacterCreateObserver extends MentionObserver {
         await this.msgUser(e, t('create_update_already_have_char'));
         return;
       }
-    } catch (e) {
+    } catch (err) {
       await sdk.addCharacter({
         input: {
           owner: e.payload.user_id,
