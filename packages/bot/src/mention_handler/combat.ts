@@ -1,6 +1,6 @@
 import { SlackCommandMiddlewareArgs, AllMiddlewareArgs } from '@slack/bolt';
 import { Blocks } from 'slack-block-builder';
-import { CharacterByOwnerQuery } from '../generated/graphql';
+import { CharacterByOwnerQuery, CharacterType } from '../generated/graphql';
 import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { getUsernames, to } from '../utils/helpers';
@@ -27,16 +27,15 @@ export class CombatObserver extends MentionObserver {
   ): Promise<void> {
     this.log(`starting combat`);
 
-    const char = (
-      await sdk.characterByOwner({
+    let char: CharacterType;
+    try {
+      const result = await sdk.characterByOwner({
         owner: e.payload.user_id,
         teamId: e.payload.team_id,
-      })
-    ).findByOwner;
-
-    if (!char.id) {
+      });
+      char = result.findByOwner;
+    } catch (err) {
       this.msgUser(e, t('combat_update_no_character'));
-      this.log('no character');
       return;
     }
 

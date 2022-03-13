@@ -7,7 +7,7 @@ import { MentionObserver } from './observer';
 
 export class SheetObserver extends MentionObserver {
   constructor() {
-    super('sheet');
+    super('resume');
   }
   getHelpBlocks() {
     return [

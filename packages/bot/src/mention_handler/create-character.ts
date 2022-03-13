@@ -6,7 +6,7 @@ import { MentionObserver } from './observer';
 
 export class CharacterCreateObserver extends MentionObserver {
   constructor() {
-    super('create');
+    super('apply');
   }
   getHelpBlocks() {
     return [
