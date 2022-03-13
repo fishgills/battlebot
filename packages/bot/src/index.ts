@@ -36,10 +36,8 @@ const app = new App({
     },
   ],
   convoStore: new MemoryStore(),
-  developerMode: process.env.NODE_ENV !== 'production',
+  developerMode: true,
   logger: Logger,
-  logLevel:
-    process.env.NODE_ENV !== 'production' ? LogLevel.DEBUG : LogLevel.INFO,
   socketMode: true,
   stateSecret: 'awesome',
   scopes,
@@ -54,6 +52,7 @@ const app = new App({
   await app.start({
     port,
   });
+  Logger.info(`Starting mode: ${process.env.NODE_ENV}`);
   Logger.info('Starting bolt', port);
 })();
 
