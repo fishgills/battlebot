@@ -10,7 +10,6 @@ gab.init({
 });
 
 import { App, BlockButtonAction, MemoryStore } from '@slack/bolt';
-import { LogLevel } from '@slack/web-api';
 import { isGenericMessageEvent } from './utils/helpers';
 import { Command$ } from './mention_handler';
 import { Action$, ActionsRegex } from './actions';

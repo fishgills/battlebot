@@ -18,7 +18,7 @@ const whitelist = [
   'postman.co',
   'electron://altair',
 ];
-const sessionLengthInMinutes = 10;
+const sessionLengthInMinutes = 5;
 const sessionLengthInSeconds = sessionLengthInMinutes * 60;
 const sessionLengthInMs = sessionLengthInSeconds * 1000;
 
