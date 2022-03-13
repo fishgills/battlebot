@@ -47,7 +47,12 @@ export class CombatObserver extends MentionObserver {
     const targets = getUsernames(e.payload.text);
 
     if (targets.length > 1) {
-      this.msgUser(e, t('combat_update_too_man_targets'));
+      this.msgUser(e, t('combat_update_too_many_targets'));
+      return;
+    }
+
+    if (targets.length === 0) {
+      this.msgUser(e, t('combat_no_target'));
       return;
     }
 
