@@ -8,6 +8,8 @@ import {
   ResolveField,
   Parent,
   Context,
+  Int,
+  ID,
 } from '@nestjs/graphql';
 import { CharacterType } from 'characters/character.type';
 import { FindManyOptions } from 'typeorm';
@@ -47,6 +49,13 @@ export class CombatResolver {
     input: CreateCombatInput,
   ) {
     return await this.combatService.create(input);
+  }
+
+  @Mutation(() => Number)
+  async deleteCombats(
+    @Args({ name: 'combatIds', type: () => [ID] }) combats: string[],
+  ) {
+    return await this.combatService.delete(combats);
   }
 
   @Mutation(() => CombatModel)

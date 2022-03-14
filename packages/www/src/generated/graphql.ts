@@ -140,6 +140,7 @@ export type Mutation = {
   createConvo: ConvoType;
   createInstall: SlackInstallModel;
   deleteCharacter: Scalars['Int'];
+  deleteCombats: Scalars['Float'];
   deleteConvo: Scalars['Int'];
   giveReward: Scalars['Boolean'];
   login: Scalars['String'];
@@ -182,6 +183,10 @@ export type MutationCreateInstallArgs = {
 
 export type MutationDeleteCharacterArgs = {
   input: DeleteCharacterInput;
+};
+
+export type MutationDeleteCombatsArgs = {
+  combatIds: Array<Scalars['ID']>;
 };
 
 export type MutationDeleteConvoArgs = {
@@ -626,6 +631,15 @@ export type CreateConvoMutation = {
   };
 };
 
+export type DeleteCharacterMutationVariables = Exact<{
+  input: DeleteCharacterInput;
+}>;
+
+export type DeleteCharacterMutation = {
+  __typename?: 'Mutation';
+  deleteCharacter: number;
+};
+
 export type InstallQueryVariables = Exact<{
   teamId: Scalars['String'];
 }>;
@@ -1057,6 +1071,25 @@ export class CreateConvoGQL extends Apollo.Mutation<
   CreateConvoMutationVariables
 > {
   document = CreateConvoDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
+export const DeleteCharacterDocument = gql`
+  mutation DeleteCharacter($input: DeleteCharacterInput!) {
+    deleteCharacter(input: $input)
+  }
+`;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class DeleteCharacterGQL extends Apollo.Mutation<
+  DeleteCharacterMutation,
+  DeleteCharacterMutationVariables
+> {
+  document = DeleteCharacterDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);

@@ -140,6 +140,7 @@ export type Mutation = {
   createConvo: ConvoType;
   createInstall: SlackInstallModel;
   deleteCharacter: Scalars['Int'];
+  deleteCombats: Scalars['Float'];
   deleteConvo: Scalars['Int'];
   giveReward: Scalars['Boolean'];
   login: Scalars['String'];
@@ -182,6 +183,10 @@ export type MutationCreateInstallArgs = {
 
 export type MutationDeleteCharacterArgs = {
   input: DeleteCharacterInput;
+};
+
+export type MutationDeleteCombatsArgs = {
+  combatIds: Array<Scalars['ID']>;
 };
 
 export type MutationDeleteConvoArgs = {
@@ -626,6 +631,15 @@ export type CreateConvoMutation = {
   };
 };
 
+export type DeleteCharacterMutationVariables = Exact<{
+  input: DeleteCharacterInput;
+}>;
+
+export type DeleteCharacterMutation = {
+  __typename?: 'Mutation';
+  deleteCharacter: number;
+};
+
 export type InstallQueryVariables = Exact<{
   teamId: Scalars['String'];
 }>;
@@ -841,6 +855,11 @@ export const CreateConvoDocument = gql`
     }
   }
 `;
+export const DeleteCharacterDocument = gql`
+  mutation DeleteCharacter($input: DeleteCharacterInput!) {
+    deleteCharacter(input: $input)
+  }
+`;
 export const InstallDocument = gql`
   query Install($teamId: String!) {
     install(team_id: $teamId) {
@@ -1025,6 +1044,15 @@ export function getSdk<C>(requester: Requester<C>) {
         variables,
         options,
       );
+    },
+    DeleteCharacter(
+      variables: DeleteCharacterMutationVariables,
+      options?: C,
+    ): Promise<DeleteCharacterMutation> {
+      return requester<
+        DeleteCharacterMutation,
+        DeleteCharacterMutationVariables
+      >(DeleteCharacterDocument, variables, options);
     },
     Install(
       variables: InstallQueryVariables,

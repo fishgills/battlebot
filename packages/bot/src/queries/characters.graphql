@@ -154,3 +154,7 @@ mutation CreateConvo($input: CreateConvoInput!) {
     id
   }
 }
+
+mutation DeleteCharacter($input: DeleteCharacterInput!) {
+  deleteCharacter(input: $input)
+}

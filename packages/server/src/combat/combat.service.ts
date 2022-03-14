@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CharacterEntity } from 'characters/character.entity';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import {
+  FindConditions,
+  FindManyOptions,
+  FindOneOptions,
+  Repository,
+} from 'typeorm';
 import { CombatLog } from '../gamerules';
 import { CombatModel } from './combat.model';
 import { CreateCombatInput } from './dto/create-combat.input';
@@ -16,6 +21,10 @@ export class CombatService {
 
   findAll(options?: FindManyOptions<CombatModel>) {
     return this.combatRepo.find(options);
+  }
+
+  delete(options?: FindConditions<CombatModel> | string[]) {
+    return this.combatRepo.delete(options);
   }
 
   findByIds(

@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { sleep } from 'k6';
 
 let accessToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvdCIsInN1YiI6IjBlMjZiODYzLTRlYzQtNGMyOC04MDhmLTVkOGVlMzYyYTc5ZCIsImlhdCI6MTY0NzI0MjIxMCwiZXhwIjoxNjQ3MjQ0MDEwfQ.9dc0u3dm759-tA5u1-eZpKVXCT6i120Lhx0pl-ot7pA';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJvdCIsInN1YiI6IjBlMjZiODYzLTRlYzQtNGMyOC04MDhmLTVkOGVlMzYyYTc5ZCIsImlhdCI6MTY0NzI0NzAyMSwiZXhwIjoxNjQ3MjQ4ODIxfQ.Qwy-VIiNMk8_2ACdiQYTpgNFXD0d5a0QVVwLod52wbA';
 
 export default function () {
   let query = `
