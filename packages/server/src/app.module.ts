@@ -10,6 +10,7 @@ import { SlackAuthModule } from './slack-auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
 import {
   ApolloServerPluginInlineTrace,
+  ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginLandingPageLocalDefault,
   ApolloServerPluginLandingPageProductionDefault,
 } from 'apollo-server-core';
@@ -41,11 +42,12 @@ import { HealthModule } from './health/health.module';
           playground: false,
           plugins: [
             ApolloServerPluginInlineTrace(),
-            process.env['NODE_ENV'] === 'production'
-              ? ApolloServerPluginLandingPageProductionDefault()
-              : ApolloServerPluginLandingPageLocalDefault({
-                  footer: false,
-                }),
+            ApolloServerPluginLandingPageLocalDefault(),
+            // process.env['NODE_ENV'] === 'production'
+            //   ? ApolloServerPluginLandingPageProductionDefault()
+            //   : ApolloServerPluginLandingPageLocalDefault({
+            //       footer: false,
+            //     }),
           ],
           autoSchemaFile: true,
           context: (obj) => {
