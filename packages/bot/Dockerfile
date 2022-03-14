@@ -30,6 +30,7 @@ COPY --from=ts-compiler /usr/src/app/package*.json ./
 RUN yarn install --production
 
 FROM node:16-alpine
+RUN apk add --update curl
 
 ARG SHA1
 
@@ -43,5 +44,5 @@ COPY --from=ts-compiler /usr/src/app/package.json .
 COPY --from=ts-remove /usr/src/app/node_modules ./node_modules
 ENV PORT 3000
 EXPOSE $PORT
-HEALTHCHECK CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health-check || exit 1
+HEALTHCHECK CMD curl -f http://localhost:3000/health-check || exit 1
 CMD [ "node", "index.js" ]

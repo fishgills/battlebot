@@ -32,12 +32,16 @@ LABEL com.datadoghq.tags.service=bot
 LABEL com.datadoghq.tags.version=$SHA1
 
 WORKDIR /tmp
+
+RUN apk add --update curl
+
 COPY --from=ts-compiler /tmp/dist/ .
 COPY --from=ts-compiler /tmp/package.json ./
 COPY --from=ts-remove /tmp/node_modules ./node_modules
 COPY --from=ts-compiler /tmp/docker-entrypoint.sh ./
 RUN ls -al
 RUN chmod +rwx /tmp/docker-entrypoint.sh
+HEALTHCHECK CMD curl -f http://localhost:4000/.well-known/apollo/server-health || exit 1
 
 EXPOSE $PORT
 ENTRYPOINT ["/tmp/docker-entrypoint.sh"]
