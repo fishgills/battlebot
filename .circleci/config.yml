@@ -97,7 +97,7 @@ jobs:
           repo: 'battlebot-<< parameters.package_name >>'
           remote-docker-layer-caching: true
           checkout: false
-          extra-build-args: SHA1=${CIRCLE_SHA1}
+          extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
           create-repo: true
           tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
 
