@@ -97,6 +97,7 @@ jobs:
           repo: 'battlebot-<< parameters.package_name >>'
           remote-docker-layer-caching: true
           checkout: false
+          extra-build-args: SHA1=${CIRCLE_SHA1}
           create-repo: true
           tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
 
@@ -114,7 +115,7 @@ jobs:
           family: '<< parameters.package_name >>-task'
           cluster-name: 'bot-cluster'
           service-name: '<< parameters.package_name >>-service-fargate-spot'
-          container-image-name-updates: 'container=<< parameters.package_name >>-container,tag=${CIRCLE_SHA1},com.datadoghq.tags.version=${CIRCLE_SHA1}'
+          container-image-name-updates: 'container=<< parameters.package_name >>-container,tag=${CIRCLE_SHA1}'
           container-env-var-updates: 'container=<< parameters.package_name >>-container,name=DD_VERSION,value=${CIRCLE_SHA1}'
 
 workflows:

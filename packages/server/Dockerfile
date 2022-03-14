@@ -24,6 +24,13 @@ COPY --from=ts-compiler /tmp/package*.json ./
 RUN yarn install --frozen-lockfile --production
 
 FROM node:16-alpine
+
+ARG SHA1
+
+LABEL com.datadoghq.tags.env=production
+LABEL com.datadoghq.tags.service=bot
+LABEL com.datadoghq.tags.version=$SHA1
+
 WORKDIR /tmp
 COPY --from=ts-compiler /tmp/dist/ .
 COPY --from=ts-compiler /tmp/package.json ./

@@ -30,6 +30,13 @@ COPY --from=ts-compiler /usr/src/app/package*.json ./
 RUN yarn install --production
 
 FROM node:16-alpine
+
+ARG SHA1
+
+LABEL com.datadoghq.tags.env=production
+LABEL com.datadoghq.tags.service=bot
+LABEL com.datadoghq.tags.version=$SHA1
+
 WORKDIR /usr/src/app
 COPY --from=ts-compiler /usr/src/app/dist/ .
 COPY --from=ts-compiler /usr/src/app/package.json .
