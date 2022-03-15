@@ -13,10 +13,10 @@ parameters:
   # A parameter per package
   server:
     type: boolean
-    default: false
+    default: true
   bot:
     type: boolean
-    default: false
+    default: true
   www:
     type: boolean
     default: false
@@ -79,7 +79,7 @@ jobs:
           command: chmod +x .circleci/monorepo.sh && .circleci/monorepo.sh
           environment:
             # (optional) print additional debug information
-            MONOREPO_DEBUG: 'true'
+            # MONOREPO_DEBUG: 'true'
             # (optional) additional CI parameters to include in the pipeline (must be a valid JSON)
             # CI_PARAMETERS: '{ "deploy": true }'
   build:
