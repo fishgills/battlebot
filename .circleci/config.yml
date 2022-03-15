@@ -11,7 +11,7 @@ parameters:
     default: true
 
   # A parameter per package
-  server:
+  backend:
     type: boolean
     default: true
   bot:
@@ -144,11 +144,11 @@ workflows:
           requires:
             - ng-build
 
-  server:
-    when: << pipeline.parameters.server >>
+  backend:
+    when: << pipeline.parameters.backend >>
     jobs:
       - build:
-          name: server-build
+          name: backend-build
           package_name: backend
           context: EnvVariables
       - deploy:
@@ -156,11 +156,11 @@ workflows:
             branches:
               only:
                 - master
-          name: server-deploy
+          name: backend-deploy
           context: EnvVariables
           package_name: backend
           requires:
-            - server-build
+            - backend-build
 
   bot:
     when: << pipeline.parameters.bot >>
