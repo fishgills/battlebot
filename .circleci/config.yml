@@ -94,7 +94,7 @@ jobs:
       - checkout:
           path: ~/project
       - aws-ecr/build-and-push-image:
-          repo: 'battlebot-<< parameters.package_name >>'
+          repo: '<< parameters.package_name >>'
           remote-docker-layer-caching: true
           checkout: false
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
@@ -113,11 +113,11 @@ jobs:
       - checkout:
           path: ~/project
       - aws-ecs/update-service:
-          family: '<< parameters.package_name >>-task'
-          cluster-name: 'bot-cluster'
-          service-name: '<< parameters.package_name >>-service-fargate-spot'
-          container-image-name-updates: 'container=<< parameters.package_name >>-container,tag=latest'
-          container-env-var-updates: 'container=<< parameters.package_name >>-container,name=DD_VERSION,value=${CIRCLE_SHA1}'
+          family: 'task-<< parameters.package_name >>'
+          cluster-name: 'cluster-mediator'
+          service-name: 'service-<< parameters.package_name >>'
+          container-image-name-updates: 'container=container-<< parameters.package_name >>,tag=latest'
+          container-env-var-updates: 'container=container-<< parameters.package_name >>,name=DD_VERSION,value=${CIRCLE_SHA1}'
 
 workflows:
   version: 2
@@ -149,7 +149,7 @@ workflows:
     jobs:
       - build:
           name: server-build
-          package_name: server
+          package_name: backend
           context: EnvVariables
       - deploy:
           filters:
@@ -158,7 +158,7 @@ workflows:
                 - master
           name: server-deploy
           context: EnvVariables
-          package_name: server
+          package_name: backend
           requires:
             - server-build
 
