@@ -2021,9 +2021,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@battlebot/server@workspace:packages/server":
+"@battlebot/server@workspace:packages/backend":
   version: 0.0.0-use.local
-  resolution: "@battlebot/server@workspace:packages/server"
+  resolution: "@battlebot/server@workspace:packages/backend"
   dependencies:
     "@dice-roller/rpg-dice-roller": ^5.1.0
     "@nestjs/apollo": ^10.0.2
