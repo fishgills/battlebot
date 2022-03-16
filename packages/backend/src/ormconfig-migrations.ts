@@ -2,6 +2,7 @@ import { database } from './config/database.config';
 import * as AWS from 'aws-sdk';
 
 const getConn = async () => {
+  console.log(`Running migration for ${process.env.NODE_ENV} environment`);
   if (process.env.NODE_ENV === 'production') {
     const ssm = new AWS.SecretsManager({
       region: 'us-east-1',
@@ -15,6 +16,8 @@ const getConn = async () => {
       .promise();
 
     const { host, username, password } = JSON.parse(result.SecretString);
+    console.log(`Got ${host} and ${username}`);
+
     const config = {
       ...database,
       host,
