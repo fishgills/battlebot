@@ -1,6 +1,6 @@
 FROM node:16-alpine as ts-compiler
 
-WORKDIR /tmp
+WORKDIR /home/node/app
 
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
@@ -14,13 +14,13 @@ ENV DB_HOST $DB_HOST
 ARG DB_PASSWORD
 ENV DB_PASSWORD $DB_PASSWORD
 
-COPY . /tmp/
+COPY . /home/node/app/
 RUN yarn install --frozen-lockfile
 RUN yarn build
 
 FROM node:16-alpine as ts-remove
-WORKDIR /tmp
-COPY --from=ts-compiler /tmp/package*.json ./
+WORKDIR /home/node/app
+COPY --from=ts-compiler /home/node/app/package*.json ./
 RUN yarn install --frozen-lockfile --production
 
 FROM node:16-alpine
@@ -31,17 +31,17 @@ LABEL com.datadoghq.tags.env=production
 LABEL com.datadoghq.tags.service=bot
 LABEL com.datadoghq.tags.version=$SHA1
 
-WORKDIR /tmp
+WORKDIR /home/node/app
 
 RUN apk add --update curl
 
-COPY --from=ts-compiler /tmp/dist/ .
-COPY --from=ts-compiler /tmp/package.json ./
-COPY --from=ts-remove /tmp/node_modules ./node_modules
-COPY --from=ts-compiler /tmp/docker-entrypoint.sh ./
+COPY --from=ts-compiler /home/node/app/dist/ .
+COPY --from=ts-compiler /home/node/app/package.json ./
+COPY --from=ts-remove /home/node/app/node_modules ./node_modules
+COPY --from=ts-compiler /home/node/app/docker-entrypoint.sh ./
 RUN ls -al
-RUN chmod +rwx /tmp/docker-entrypoint.sh
+RUN chmod +rwx /home/node/app/docker-entrypoint.sh
 HEALTHCHECK CMD curl -f http://localhost:4000/.well-known/apollo/server-health || exit 1
 
 EXPOSE $PORT
-ENTRYPOINT ["/tmp/docker-entrypoint.sh"]
+ENTRYPOINT ["/home/node/app/docker-entrypoint.sh"]
