@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "localRoot": "${workspaceFolder}/packages/server",
+      "localRoot": "${workspaceFolder}/packages/backend",
       "name": "Server",
       "port": 9230,
       "sourceMaps": true,

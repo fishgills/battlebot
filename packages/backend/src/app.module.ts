@@ -22,7 +22,7 @@ import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from 'auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
-
+import * as AWS from 'aws-sdk';
 @Module({
   imports: [
     forwardRef(() => StripeModule),
@@ -32,7 +32,34 @@ import { HealthModule } from './health/health.module';
     RewardModule,
     HttpModule,
     ConvoModule,
-    TypeOrmModule.forRoot(database.database),
+    TypeOrmModule.forRootAsync({
+      useFactory: async () => {
+        debugger;
+        if (process.env.NODE_ENV === 'production') {
+          const ssm = new AWS.SecretsManager({
+            region: 'us-east-1',
+          });
+
+          const result = await ssm
+            .getSecretValue({
+              SecretId:
+                'arn:aws:secretsmanager:us-east-1:946679114937:secret:rds-info-1-MwazwX',
+            })
+            .promise();
+
+          const { host, username, password } = JSON.parse(result.SecretString);
+          return {
+            ...database.database,
+            host,
+            username,
+            password,
+          };
+        } else {
+          debugger;
+          return database.database;
+        }
+      },
+    }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       imports: [DataloaderModule],
       inject: [DataloaderService],

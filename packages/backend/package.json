@@ -31,6 +31,7 @@
     "@nestjs/typeorm": "^8.0.3",
     "apollo-server-core": "^3.6.1",
     "apollo-server-express": "^3.6.1",
+    "aws-sdk": "^2.1095.0",
     "axios-debug-log": "^0.8.4",
     "bcrypt": "^5.0.1",
     "bunyan": "^1.8.15",

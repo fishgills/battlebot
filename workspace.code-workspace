@@ -5,8 +5,8 @@
       "path": "packages/www"
     },
     {
-      "name": "server",
-      "path": "packages/server"
+      "name": "backend",
+      "path": "packages/backend"
     },
     {
       "name": "bot",
