@@ -34,7 +34,6 @@ import * as AWS from 'aws-sdk';
     ConvoModule,
     TypeOrmModule.forRootAsync({
       useFactory: async () => {
-        debugger;
         if (process.env.NODE_ENV === 'production') {
           const ssm = new AWS.SecretsManager({
             region: 'us-east-1',
@@ -55,7 +54,6 @@ import * as AWS from 'aws-sdk';
             password,
           };
         } else {
-          debugger;
           return database.database;
         }
       },
