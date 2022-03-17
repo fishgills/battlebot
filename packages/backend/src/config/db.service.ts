@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { SecretsManager } from 'aws-sdk';
 import { GetSecretValueResponse } from 'aws-sdk/clients/secretsmanager';
-import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { database } from './database.config';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class SecretsService /* 👁🔫🩸 */ {
     });
   }
 
-  async createTypeOrmOptions(): Promise<MysqlConnectionOptions> {
+  async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
     let secret: any;
     if (process.env.NODE_ENV === 'production') {
       this.logger.debug('getting production secrets');
@@ -30,18 +30,14 @@ export class SecretsService /* 👁🔫🩸 */ {
       this.logger.debug('got secrets');
     }
 
-    const conf = {
+    const conf: TypeOrmModuleOptions = {
       ...database,
       ...(process.env.NODE_ENV === 'production' ? secret : {}),
+      verboseRetryLog: true,
     };
 
     this.logger.debug('Connection info');
-    this.logger.debug({
-      host: conf.host,
-      port: conf.port,
-      username: conf.username,
-      database: conf.database,
-    });
+    this.logger.debug(conf);
     return conf;
   }
 }

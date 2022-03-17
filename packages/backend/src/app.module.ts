@@ -33,8 +33,6 @@ import { SecretsService } from 'config/db.service';
     ConvoModule,
     TypeOrmModule.forRootAsync({
       useClass: SecretsService,
-      inject: [],
-      imports: [],
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       imports: [DataloaderModule],
