@@ -34,6 +34,9 @@ export class SecretsService /* 👁🔫🩸 */ {
       ...database,
       ...(process.env.NODE_ENV === 'production' ? secret : {}),
       verboseRetryLog: true,
+      loggerLevel: 'debug',
+      logging: true,
+      debug: true,
     };
 
     this.logger.debug('Connection info');
