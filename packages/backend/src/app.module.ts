@@ -21,7 +21,7 @@ import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from 'auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
-import { SecretsService } from 'config/db.service';
+import { dbFactory } from 'config/db.service';
 @Module({
   imports: [
     forwardRef(() => StripeModule),
@@ -32,7 +32,7 @@ import { SecretsService } from 'config/db.service';
     HttpModule,
     ConvoModule,
     TypeOrmModule.forRootAsync({
-      useClass: SecretsService,
+      useFactory: dbFactory,
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       imports: [DataloaderModule],
