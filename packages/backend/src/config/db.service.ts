@@ -27,9 +27,11 @@ export class SecretsService /* 👁🔫🩸 */ {
       secret = JSON.parse(SecretString);
       console.log('after getting a secret', SecretString);
     }
-    return {
+    const conf = {
       ...database,
       ...(process.env.NODE_ENV === 'production' ? secret : {}),
     };
+    console.log('config', conf);
+    return conf;
   }
 }
