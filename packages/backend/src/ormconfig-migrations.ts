@@ -1,7 +1,8 @@
 import { database } from './config/database.config';
 import * as AWS from 'aws-sdk';
+import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
-const getConn = async () => {
+const getConn = async (): Promise<MysqlConnectionOptions> => {
   console.log(`Running migration for ${process.env.NODE_ENV} environment`);
   if (process.env.NODE_ENV === 'production') {
     const ssm = new AWS.SecretsManager({
@@ -32,4 +33,4 @@ const getConn = async () => {
   }
 };
 
-export = getConn();
+export const result = getConn();
