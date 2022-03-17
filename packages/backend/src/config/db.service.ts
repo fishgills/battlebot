@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { SecretsManager } from 'aws-sdk';
 import { GetSecretValueResponse } from 'aws-sdk/clients/secretsmanager';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
@@ -6,6 +6,8 @@ import { database } from './database.config';
 
 @Injectable()
 export class SecretsService /* 👁🔫🩸 */ {
+  private readonly logger = new Logger(SecretsService.name);
+
   private secretsManager: SecretsManager;
 
   constructor() {
@@ -17,7 +19,7 @@ export class SecretsService /* 👁🔫🩸 */ {
   async createTypeOrmOptions(): Promise<MysqlConnectionOptions> {
     let secret: any;
     if (process.env.NODE_ENV === 'production') {
-      console.log('before getting secret');
+      this.logger.debug('getting production secrets');
       const { SecretString }: GetSecretValueResponse = await this.secretsManager
         .getSecretValue({
           SecretId:
@@ -25,13 +27,21 @@ export class SecretsService /* 👁🔫🩸 */ {
         })
         .promise();
       secret = JSON.parse(SecretString);
-      console.log('after getting a secret', SecretString);
+      this.logger.debug('got secrets');
     }
+
     const conf = {
       ...database,
       ...(process.env.NODE_ENV === 'production' ? secret : {}),
     };
-    console.log('config', conf);
+
+    this.logger.debug('Connection info');
+    this.logger.debug({
+      host: conf.host,
+      port: conf.port,
+      username: conf.username,
+      database: conf.database,
+    });
     return conf;
   }
 }

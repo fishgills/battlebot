@@ -43,13 +43,10 @@ async function buildConnectionOptions() {
     const sm = JSON.parse(result.SecretString);
 
     if (sm) {
-      console.log(sm); // here it is loading all keys from aws successfully.
-
       const config: MysqlConnectionOptions = {
         ...database,
         ...sm,
       };
-      console.log(config);
       return config;
     }
   } else {
