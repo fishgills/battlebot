@@ -3,7 +3,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CharacterModule } from './characters/character.module';
 import { CombatModule } from './combat/combat.module';
-import * as database from './config/database.config';
 import { RewardModule } from './rewards/reward.module';
 import { SlackInstallModule } from './installs/install.module';
 import { SlackAuthModule } from './slack-auth/auth.module';
@@ -22,7 +21,7 @@ import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from 'auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
-import { result } from './ormconfig-migrations';
+import { SecretsService } from 'config/db.service';
 @Module({
   imports: [
     forwardRef(() => StripeModule),
@@ -33,9 +32,9 @@ import { result } from './ormconfig-migrations';
     HttpModule,
     ConvoModule,
     TypeOrmModule.forRootAsync({
-      useFactory: async () => {
-        return result;
-      },
+      useClass: SecretsService,
+      inject: [],
+      imports: [],
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       imports: [DataloaderModule],

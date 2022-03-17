@@ -1,36 +1,62 @@
+import { SecretsManager } from 'aws-sdk';
+import { ConnectionOptionsReader } from 'typeorm/connection/ConnectionOptionsReader';
 import { database } from './config/database.config';
-import * as AWS from 'aws-sdk';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
-const getConn = async (): Promise<MysqlConnectionOptions> => {
-  console.log(`Running migration for ${process.env.NODE_ENV} environment`);
+function patchAsyncConnectionSetup() {
+  const prototype = ConnectionOptionsReader.prototype as any;
+
+  const original = prototype.normalizeConnectionOptions;
+
+  prototype.normalizeConnectionOptions = function (
+    options: Promise<any> | object,
+  ) {
+    if ('then' in options) {
+      return options.then((arg) => original.call(this, arg));
+    }
+
+    return original.call(this, options);
+  };
+}
+patchAsyncConnectionSetup();
+
+/**
+ * @Type - @config- For typeOrm with Database
+ * @name ConnectionOptions
+ * @description This ConnectionOptions used to access the database cred for app.
+ * @return { export } export the database configurations to use on time migrations,seeds with cli.
+ */
+
+async function buildConnectionOptions() {
   if (process.env.NODE_ENV === 'production') {
-    const ssm = new AWS.SecretsManager({
+    const client = await new SecretsManager({
       region: 'us-east-1',
     });
 
-    const result = await ssm
+    const result = await client
       .getSecretValue({
         SecretId:
           'arn:aws:secretsmanager:us-east-1:946679114937:secret:rds-info-1-MwazwX',
       })
       .promise();
 
-    const { host, username, password } = JSON.parse(result.SecretString);
-    console.log(`Got ${host} and ${username}`);
+    const sm = JSON.parse(result.SecretString);
 
-    const config = {
-      ...database,
-      host,
-      username,
-      password,
-    };
-    console.log(config);
-    return config;
+    if (sm) {
+      console.log(sm); // here it is loading all keys from aws successfully.
+
+      const config: MysqlConnectionOptions = {
+        ...database,
+        ...sm,
+      };
+      console.log(config);
+      return config;
+    }
   } else {
-    console.log(database);
     return database;
   }
-};
+}
 
-export const result = getConn();
+const config = buildConnectionOptions();
+
+export default config;
