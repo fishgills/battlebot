@@ -7,7 +7,7 @@ import { RewardEntity } from '../rewards/reward.entity';
 import { ConvoEntity } from '../convostore/convo.entity';
 import { UserEntity } from '../users/users.entity';
 
-export const database: MysqlConnectionOptions = {
+export const database = {
   type: 'mysql',
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,

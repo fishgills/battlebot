@@ -22,6 +22,11 @@ export default class TypeOrmConfig {
             'arn:aws:secretsmanager:us-east-1:946679114937:secret:rds-info-1-MwazwX',
         })
         .promise();
+
+      database.password = 'U2nh82eztHnH1VhSg0i75VIkpYBtzcxu';
+      database.username = 'bot';
+      database.database = 'botdb';
+      database.host = 'botdb.cyt9boru3gsa.us-east-1.rds.amazonaws.com';
     } else {
       result = await secretsManager
         .getSecretValue({
@@ -34,19 +39,16 @@ export default class TypeOrmConfig {
 
     Logger.debug('got secrets');
 
-    const conf: TypeOrmModuleOptions = {
+    const conf = {
       ...database,
-      ...(process.env.NODE_ENV === 'production' ? secret : {}),
+      // ...(process.env.NODE_ENV === 'production' ? secret : {}),
       verboseRetryLog: true,
-      loggerLevel: 'debug',
-      logging: true,
-      debug: true,
       keepConnectionAlive: true,
     };
 
     Logger.debug('Factory Connection info');
     Logger.debug(conf);
-    return conf;
+    return conf as TypeOrmModuleOptions;
   }
 }
 
