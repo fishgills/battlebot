@@ -17,13 +17,13 @@
     "schema:drop": "yarn typeorm:cli schema:drop"
   },
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.54.1",
     "@dice-roller/rpg-dice-roller": "^5.1.0",
     "@nestjs/apollo": "^10.0.2",
     "@nestjs/axios": "^0.0.5",
     "@nestjs/common": "^8.2.6",
-    "@nestjs/config": "^1.1.7",
     "@nestjs/core": "^8.2.6",
-    "@nestjs/graphql": "^10.0.2",
+    "@nestjs/graphql": "^10.0.7",
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/passport": "^8.1.0",
     "@nestjs/platform-express": "^8.2.6",
@@ -31,7 +31,6 @@
     "@nestjs/typeorm": "^8.0.3",
     "apollo-server-core": "^3.6.1",
     "apollo-server-express": "^3.6.1",
-    "aws-sdk": "^2.1095.0",
     "axios-debug-log": "^0.8.4",
     "bcrypt": "^5.0.1",
     "bunyan": "^1.8.15",
@@ -47,7 +46,6 @@
     "graphql": "^15.8.0",
     "graphql-type-json": "^0.3.2",
     "mysql2": "^2.3.3",
-    "nest-graphql-scalar-adapter": "^1.1.2",
     "openid-client": "^5.1.2",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
@@ -57,7 +55,7 @@
     "rxjs": "^7.5.1",
     "source-map-support": "^0.5.21",
     "stripe": "^8.203.0",
-    "typeorm": "^0.2.41"
+    "typeorm": "^0.2.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.2.0",
@@ -65,7 +63,6 @@
     "@types/bcrypt": "^5.0.0",
     "@types/bunyan": "^1",
     "@types/express-session": "^1.17.4",
-    "@types/openid-client": "^3.7.0",
     "@types/passport": "^1.0.7",
     "@types/passport-jwt": "^3.0.6",
     "@types/passport-local": "^1.0.34",

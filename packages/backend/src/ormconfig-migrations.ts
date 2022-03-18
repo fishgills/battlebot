@@ -1,7 +1,7 @@
-import { SecretsManager } from 'aws-sdk';
 import { ConnectionOptionsReader } from 'typeorm/connection/ConnectionOptionsReader';
 import { database } from './typeorm/database.config';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+import { SecretsManager } from '@aws-sdk/client-secrets-manager';
 
 function patchAsyncConnectionSetup() {
   const prototype = ConnectionOptionsReader.prototype as any;
@@ -33,12 +33,10 @@ async function buildConnectionOptions() {
       region: 'us-east-1',
     });
 
-    const result = await client
-      .getSecretValue({
-        SecretId:
-          'arn:aws:secretsmanager:us-east-1:946679114937:secret:rds-info-1-MwazwX',
-      })
-      .promise();
+    const result = await client.getSecretValue({
+      SecretId:
+        'arn:aws:secretsmanager:us-east-1:946679114937:secret:rds-info-1-MwazwX',
+    });
 
     const sm = JSON.parse(result.SecretString);
 

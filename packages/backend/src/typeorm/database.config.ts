@@ -5,16 +5,16 @@ import { CharacterEntity } from '../characters/character.entity';
 import { RewardEntity } from '../rewards/reward.entity';
 import { ConvoEntity } from '../convostore/convo.entity';
 import { UserEntity } from '../users/users.entity';
+import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
-export const database = {
+export const database: MysqlConnectionOptions = {
   type: 'mysql',
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  username: 'bot',
+  password: 'botpassword',
   database: 'botdb',
-  host: process.env.DB_HOST,
+  host: 'localhost',
   port: 3306,
   dropSchema: false,
-
   synchronize: false,
   migrationsRun: false,
   logging: process.env.NODE_ENV !== 'production',

@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { CharacterModule } from './characters/character.module';
 import { CombatModule } from './combat/combat.module';
 import { RewardModule } from './rewards/reward.module';
@@ -21,8 +21,8 @@ import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from 'auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
-import { ConfigModule } from '@nestjs/config';
-import { typeOrmConfigAsync } from 'typeorm/typeorm.config.';
+import { TypeOrmConfigService } from 'typeorm/typeorm.service';
+
 @Module({
   imports: [
     forwardRef(() => StripeModule),
@@ -32,10 +32,9 @@ import { typeOrmConfigAsync } from 'typeorm/typeorm.config.';
     RewardModule,
     HttpModule,
     ConvoModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
+    TypeOrmModule.forRootAsync({
+      useClass: TypeOrmConfigService,
     }),
-    TypeOrmModule.forRootAsync(typeOrmConfigAsync),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       imports: [DataloaderModule],
       inject: [DataloaderService],
@@ -46,11 +45,6 @@ import { typeOrmConfigAsync } from 'typeorm/typeorm.config.';
           plugins: [
             ApolloServerPluginInlineTrace(),
             ApolloServerPluginLandingPageLocalDefault(),
-            // process.env['NODE_ENV'] === 'production'
-            //   ? ApolloServerPluginLandingPageProductionDefault()
-            //   : ApolloServerPluginLandingPageLocalDefault({
-            //       footer: false,
-            //     }),
           ],
           autoSchemaFile: true,
           context: (obj) => {
@@ -59,9 +53,6 @@ import { typeOrmConfigAsync } from 'typeorm/typeorm.config.';
               loaders: dlService.createLoaders(),
             };
           },
-          // context: (obj) => ({
-          //   loaders: dlService.createLoaders(),
-          // }),
         };
       },
     }),
@@ -71,12 +62,7 @@ import { typeOrmConfigAsync } from 'typeorm/typeorm.config.';
     HealthModule,
   ],
   providers: [],
-  // providers: [
-  //   {
-  //     provide: APP_GUARD,
-  //     useClass: JwtAuthGuard,
-  //   },
-  // ],
+
   controllers: [],
 })
 export class AppModule {}
