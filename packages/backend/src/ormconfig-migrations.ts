@@ -1,6 +1,6 @@
 import { SecretsManager } from 'aws-sdk';
 import { ConnectionOptionsReader } from 'typeorm/connection/ConnectionOptionsReader';
-import { database } from './config/database.config';
+import { database } from './typeorm/database.config';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
 function patchAsyncConnectionSetup() {
