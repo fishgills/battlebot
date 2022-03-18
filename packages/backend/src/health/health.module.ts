@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as database from '../typeorm/database.config';
 
 @Module({
-  imports: [TerminusModule, TypeOrmModule.forRoot(database.database)],
+  imports: [TerminusModule, TypeOrmModule.forRoot(database.database as any)],
   controllers: [HealthController],
 })
 export class HealthModule {}
