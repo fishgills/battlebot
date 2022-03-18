@@ -10,21 +10,20 @@ import { ConvoEntity } from 'convostore/convo.entity';
 import { SlackInstallModel } from 'installs/install.model';
 import { RewardEntity } from 'rewards/reward.entity';
 import { SessionModel } from 'slack-auth/session-model';
-import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { UserEntity } from 'users/users.entity';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
-    const databaseCredential = await this.getDatabaseCredential();
-    const { host, port, username, password, database } = databaseCredential;
+    // const databaseCredential = await this.getDatabaseCredential();
+    // const { host, port, username, password, database } = databaseCredential;
     const conf: TypeOrmModuleOptions = {
       type: 'mysql' as const,
-      host,
-      port,
-      username,
-      database,
-      password,
+      host: process.env.DB_HOST,
+      port: 3306,
+      username: process.env.DB_USER,
+      database: process.env.DB_DATABASE,
+      password: process.env.DB_PASSWORD,
       dropSchema: false,
       synchronize: false,
       migrationsRun: false,
