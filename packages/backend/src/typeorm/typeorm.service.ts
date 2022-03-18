@@ -17,7 +17,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
     const databaseCredential = await this.getDatabaseCredential();
     const { host, port, username, password, database } = databaseCredential;
-    return {
+    const conf = {
       type: 'mysql' as const,
       host,
       port,
@@ -44,6 +44,8 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         UserEntity,
       ],
     };
+    console.log(JSON.stringify(conf));
+    return conf;
   }
 
   getDatabaseCredential(): Promise<any> {
