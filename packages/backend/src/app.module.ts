@@ -21,7 +21,8 @@ import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from 'auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
-import { dbFactory } from 'config/db.service';
+import { ConfigModule } from '@nestjs/config';
+import { typeOrmConfigAsync } from 'config/typeorm.config.';
 @Module({
   imports: [
     forwardRef(() => StripeModule),
@@ -31,9 +32,10 @@ import { dbFactory } from 'config/db.service';
     RewardModule,
     HttpModule,
     ConvoModule,
-    TypeOrmModule.forRootAsync({
-      useFactory: dbFactory,
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
+    TypeOrmModule.forRootAsync(typeOrmConfigAsync),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       imports: [DataloaderModule],
       inject: [DataloaderService],

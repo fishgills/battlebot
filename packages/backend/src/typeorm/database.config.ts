@@ -15,6 +15,7 @@ export const database: MysqlConnectionOptions = {
   host: process.env.DB_HOST,
   port: 3306,
   dropSchema: false,
+
   synchronize: false,
   migrationsRun: false,
   logging: process.env.NODE_ENV !== 'production',
