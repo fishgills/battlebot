@@ -44,7 +44,7 @@ export class StripeController {
     @Res() res: Response,
   ) {
     if (!req.user) {
-      return res.redirect(`https://api.${process.env.DOMAIN}/home`);
+      return res.redirect(`https://backend.${process.env.DOMAIN}/home`);
     }
     // await this.service.updateByTeamId({
     //   team_id: req.user.userinfo['https://slack.com/team_id'],
@@ -57,7 +57,7 @@ export class StripeController {
   @Get('cancel')
   async cancel(@Request() req, @Res() res: Response) {
     if (!req.user) {
-      return res.redirect(`https://api.${process.env.DOMAIN}/home`);
+      return res.redirect(`https://backend.${process.env.DOMAIN}/home`);
     }
     await this.service.update(
       {
@@ -67,7 +67,7 @@ export class StripeController {
         stripeSubId: null,
       },
     );
-    return res.redirect(`https://api.${process.env.DOMAIN}/tavern`);
+    return res.redirect(`https://backend.${process.env.DOMAIN}/tavern`);
   }
 
   @Post('webhook')
