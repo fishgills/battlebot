@@ -17,6 +17,7 @@ import { Shield$ } from './reward_handler';
 import { homePage } from './views/home';
 import { Logger } from './logger';
 import { Store } from './installation_store';
+import tracer from 'dd-trace';
 
 const scopes = ['users:read', 'channels:history', 'commands', 'chat:write'];
 
@@ -35,7 +36,7 @@ const app = new App({
     },
   ],
   convoStore: new MemoryStore(),
-  developerMode: true,
+  developerMode: false,
   logger: Logger,
   socketMode: true,
   stateSecret: 'awesome',
@@ -120,12 +121,14 @@ app.event('app_uninstalled', async (args) => {
   });
 });
 
-// app.event('tokens_revoked', async (args) => {
-//   Logger.info(`tokens_revoked received`);
-//   Logger.info(args.context);
-//   await new Store().deleteInstallation({
-//     isEnterpriseInstall: args.context.enterpriseId ? true : false,
-//     enterpriseId: args.context.enterpriseId,
-//     teamId: args.context.teamId,
-//   });
-// });
+app.use(async ({ payload, next }) => {
+  const test = await tracer.trace(
+    `bolt.${(payload as any).text}`,
+    {
+      measured: false,
+    },
+    async () => {
+      await next();
+    },
+  );
+});

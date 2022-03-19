@@ -8,5 +8,5 @@ mytracer.use('bunyan', {
   enabled: true,
   service: 'bot',
 });
-
+mytracer.use('graphql');
 export default mytracer;
