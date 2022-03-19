@@ -1,10 +1,11 @@
 import { SecretsManager } from '@aws-sdk/client-secrets-manager';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { CharacterEntity } from 'characters/character.entity';
 import { CombatModel } from 'combat/combat.model';
 import { ConvoEntity } from 'convostore/convo.entity';
 import { SlackInstallModel } from 'installs/install.model';
+import { MyLogger } from 'logger';
 import { RewardEntity } from 'rewards/reward.entity';
 import { SessionModel } from 'slack-auth/session-model';
 import { UserEntity } from 'users/users.entity';
@@ -17,7 +18,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
     const conf: TypeOrmModuleOptions = {
       type: 'postgres',
-      name: 'app',
       host,
       port,
       username,
@@ -32,6 +32,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       cli: {
         migrationsDir: `${__dirname}/migrations`,
       },
+      logger: 'debug',
       entities: [
         CombatModel,
         CharacterEntity,
@@ -50,6 +51,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   async getDatabaseCredential(): Promise<any> {
     const client = new SecretsManager({
       region: 'us-east-1',
+      logger: console,
     });
 
     const result = await client.getSecretValue({
