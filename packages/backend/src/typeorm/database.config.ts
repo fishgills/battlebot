@@ -5,15 +5,10 @@ import { CharacterEntity } from '../characters/character.entity';
 import { RewardEntity } from '../rewards/reward.entity';
 import { ConvoEntity } from '../convostore/convo.entity';
 import { UserEntity } from '../users/users.entity';
-import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-export const database: MysqlConnectionOptions = {
-  type: 'mysql',
-  username: 'bot',
-  password: 'botpassword',
-  database: 'botdb',
-  host: 'localhost',
-  port: 3306,
+export const database: PostgresConnectionOptions = {
+  type: 'postgres',
   dropSchema: false,
   synchronize: false,
   migrationsRun: false,

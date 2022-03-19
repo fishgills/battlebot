@@ -1,7 +1,7 @@
 import { ConnectionOptionsReader } from 'typeorm/connection/ConnectionOptionsReader';
 import { database } from './typeorm/database.config';
-import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { SecretsManager } from '@aws-sdk/client-secrets-manager';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 function patchAsyncConnectionSetup() {
   const prototype = ConnectionOptionsReader.prototype as any;
@@ -28,27 +28,30 @@ patchAsyncConnectionSetup();
  */
 
 async function buildConnectionOptions() {
+  let arn =
+    'arn:aws:secretsmanager:us-east-1:946679114937:secret:local-db-DWw80v';
+
   if (process.env.NODE_ENV === 'production') {
-    const client = await new SecretsManager({
-      region: 'us-east-1',
-    });
+    arn =
+      'arn:aws:secretsmanager:us-east-1:946679114937:secret:rds-info-1-MwazwX';
+  }
 
-    const result = await client.getSecretValue({
-      SecretId:
-        'arn:aws:secretsmanager:us-east-1:946679114937:secret:rds-info-1-MwazwX',
-    });
+  const client = await new SecretsManager({
+    region: 'us-east-1',
+  });
 
-    const sm = JSON.parse(result.SecretString);
+  const result = await client.getSecretValue({
+    SecretId: arn,
+  });
 
-    if (sm) {
-      const config: MysqlConnectionOptions = {
-        ...database,
-        ...sm,
-      };
-      return config;
-    }
-  } else {
-    return database;
+  const sm = JSON.parse(result.SecretString);
+
+  if (sm) {
+    const config: PostgresConnectionOptions = {
+      ...database,
+      ...sm,
+    };
+    return config;
   }
 }
 
