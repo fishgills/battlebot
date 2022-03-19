@@ -9,7 +9,10 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 
 export const database: PostgresConnectionOptions = {
   type: 'postgres',
-  name: 'migration',
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
   dropSchema: false,
   synchronize: false,
   migrationsRun: false,

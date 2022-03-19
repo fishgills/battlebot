@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { CharacterModule } from './characters/character.module';
 import { CombatModule } from './combat/combat.module';
 import { RewardModule } from './rewards/reward.module';
@@ -21,7 +21,7 @@ import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from 'auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
-import { TypeOrmConfigService } from 'typeorm/typeorm.service';
+import { database } from 'typeorm/database.config';
 
 @Module({
   imports: [
@@ -32,9 +32,7 @@ import { TypeOrmConfigService } from 'typeorm/typeorm.service';
     RewardModule,
     HttpModule,
     ConvoModule,
-    TypeOrmModule.forRootAsync({
-      useClass: TypeOrmConfigService,
-    }),
+    TypeOrmModule.forRoot(database),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       imports: [DataloaderModule],
       inject: [DataloaderService],
