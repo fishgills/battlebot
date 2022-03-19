@@ -9,6 +9,7 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 
 export const database: PostgresConnectionOptions = {
   type: 'postgres',
+  name: 'migration',
   dropSchema: false,
   synchronize: false,
   migrationsRun: false,
@@ -18,6 +19,7 @@ export const database: PostgresConnectionOptions = {
   cli: {
     migrationsDir: `${__dirname}/migrations`,
   },
+
   entities: [
     CombatModel,
     CharacterEntity,

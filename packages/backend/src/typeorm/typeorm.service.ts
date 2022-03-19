@@ -1,7 +1,4 @@
-import {
-  GetSecretValueCommand,
-  SecretsManager,
-} from '@aws-sdk/client-secrets-manager';
+import { SecretsManager } from '@aws-sdk/client-secrets-manager';
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { CharacterEntity } from 'characters/character.entity';
@@ -15,10 +12,12 @@ import { UserEntity } from 'users/users.entity';
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
-    const databaseCredential = await this.getDatabaseCredential();
-    const { host, port, username, password, database } = databaseCredential;
+    const { host, port, username, password, database } =
+      await this.getDatabaseCredential();
+
     const conf: TypeOrmModuleOptions = {
       type: 'postgres',
+      name: 'app',
       host,
       port,
       username,
@@ -33,7 +32,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       cli: {
         migrationsDir: `${__dirname}/migrations`,
       },
-      keepConnectionAlive: true,
       entities: [
         CombatModel,
         CharacterEntity,
@@ -45,22 +43,18 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       ],
       verboseRetryLog: true,
     };
-    console.log(JSON.stringify(conf));
+    console.log(conf);
     return conf;
   }
 
-  getDatabaseCredential(): Promise<any> {
+  async getDatabaseCredential(): Promise<any> {
     const client = new SecretsManager({
       region: 'us-east-1',
     });
-    return client
-      .send(
-        new GetSecretValueCommand({
-          SecretId: process.env.AWS_SECRET_ARN,
-        }),
-      )
-      .then((result) => {
-        return JSON.parse(result.SecretString);
-      });
+
+    const result = await client.getSecretValue({
+      SecretId: process.env.AWS_SECRET_ARN,
+    });
+    return JSON.parse(result.SecretString);
   }
 }

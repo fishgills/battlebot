@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import { ConnectionOptionsReader } from 'typeorm/connection/ConnectionOptionsReader';
 import { database } from './typeorm/database.config';
 import { SecretsManager } from '@aws-sdk/client-secrets-manager';
@@ -28,20 +30,12 @@ patchAsyncConnectionSetup();
  */
 
 async function buildConnectionOptions() {
-  let arn =
-    'arn:aws:secretsmanager:us-east-1:946679114937:secret:local-db-DWw80v';
-
-  if (process.env.NODE_ENV === 'production') {
-    arn =
-      'arn:aws:secretsmanager:us-east-1:946679114937:secret:rds-info-1-MwazwX';
-  }
-
   const client = await new SecretsManager({
     region: 'us-east-1',
   });
 
   const result = await client.getSecretValue({
-    SecretId: arn,
+    SecretId: process.env.AWS_SECRET_ARN,
   });
 
   const sm = JSON.parse(result.SecretString);
