@@ -18,7 +18,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     // const databaseCredential = await this.getDatabaseCredential();
     // const { host, port, username, password, database } = databaseCredential;
     const conf: TypeOrmModuleOptions = {
-      type: 'mysql' as const,
+      type: 'mysql',
       host: process.env.DB_HOST,
       port: 3306,
       username: process.env.DB_USER,
