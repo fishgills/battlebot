@@ -7,7 +7,7 @@ import { ConvoEntity } from '../convostore/convo.entity';
 import { UserEntity } from '../users/users.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { TypeOrmLoggerAdapter } from '@eropple/typeorm-bunyan-logger';
-import { MyLogger } from 'logger';
+import { MyLogger } from '../logger';
 
 export const database: PostgresConnectionOptions = {
   type: 'postgres',

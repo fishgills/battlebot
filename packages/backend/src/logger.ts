@@ -30,7 +30,7 @@ export class MyLogger extends ConsoleLogger {
             period: '1d',
             count: 3,
             path: '/tmp/server.log',
-            level: 'info',
+            level: 'debug',
           },
         ],
       });
