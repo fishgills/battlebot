@@ -2,22 +2,22 @@ import { Injectable, Scope, ConsoleLogger } from '@nestjs/common';
 import * as bLogger from 'bunyan';
 import bStream from 'bunyan-debug-stream';
 import { format } from 'date-fns';
+import { cache } from 'decorator-cache-getter';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class MyLogger extends ConsoleLogger {
   private logger: bLogger;
 
-  /** Setting for level */
-
-  public constructor() {
-    super();
+  @cache
+  static get Logger() {
+    let logger: bLogger;
     if (process.env.NODE_ENV === 'production') {
-      this.logger = bLogger.createLogger({
+      logger = bLogger.createLogger({
         name: 'server',
         level: 'debug',
       });
     } else {
-      this.logger = bLogger.createLogger({
+      logger = bLogger.createLogger({
         name: 'server-dev',
         streams: [
           {
@@ -35,6 +35,12 @@ export class MyLogger extends ConsoleLogger {
         ],
       });
     }
+    return logger;
+  }
+
+  public constructor() {
+    super();
+    this.logger = MyLogger.Logger;
   }
   log(message: any) {
     this.logger.info(

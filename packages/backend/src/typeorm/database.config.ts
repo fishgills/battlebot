@@ -6,6 +6,8 @@ import { RewardEntity } from '../rewards/reward.entity';
 import { ConvoEntity } from '../convostore/convo.entity';
 import { UserEntity } from '../users/users.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { TypeOrmLoggerAdapter } from '@eropple/typeorm-bunyan-logger';
+import { MyLogger } from 'logger';
 
 export const database: PostgresConnectionOptions = {
   type: 'postgres',
@@ -16,7 +18,7 @@ export const database: PostgresConnectionOptions = {
   dropSchema: false,
   synchronize: false,
   migrationsRun: false,
-  logging: process.env.NODE_ENV !== 'production',
+  logger: new TypeOrmLoggerAdapter(MyLogger.Logger),
   cache: false,
   migrations: [`${__dirname}/migrations/*.{ts,js}`],
   cli: {

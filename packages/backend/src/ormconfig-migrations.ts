@@ -2,7 +2,6 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import { ConnectionOptionsReader } from 'typeorm/connection/ConnectionOptionsReader';
 import { database } from './typeorm/database.config';
-import { SecretsManager } from '@aws-sdk/client-secrets-manager';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 function patchAsyncConnectionSetup() {
@@ -30,23 +29,10 @@ patchAsyncConnectionSetup();
  */
 
 async function buildConnectionOptions() {
-  const client = await new SecretsManager({
-    region: 'us-east-1',
-  });
-
-  const result = await client.getSecretValue({
-    SecretId: process.env.AWS_SECRET_ARN,
-  });
-
-  const sm = JSON.parse(result.SecretString);
-
-  if (sm) {
-    const config: PostgresConnectionOptions = {
-      ...database,
-      ...sm,
-    };
-    return config;
-  }
+  const config: PostgresConnectionOptions = {
+    ...database,
+  };
+  return config;
 }
 
 const config = buildConnectionOptions();

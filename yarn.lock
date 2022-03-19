@@ -2691,6 +2691,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-secrets-manager": ^3.54.1
     "@dice-roller/rpg-dice-roller": ^5.1.0
+    "@eropple/typeorm-bunyan-logger": ^0.1.0
     "@nestjs/apollo": ^10.0.2
     "@nestjs/axios": ^0.0.5
     "@nestjs/cli": ^8.2.0
@@ -2723,6 +2724,7 @@ __metadata:
     dataloader: ^2.0.0
     date-fns: ^2.28.0
     dd-trace: ^1.6.0
+    decorator-cache-getter: ^1.0.0
     dotenv: ^10.0.0
     express: ^4.17.1
     express-session: ^1.17.2
@@ -2857,6 +2859,17 @@ __metadata:
   peerDependencies:
     cosmiconfig: ">=6"
   checksum: 7fe0198622b1063c40572034df7e8ba867865a1b4815afe230795929abcf785758b34d7806a8e2100ba8ab4e92c5a1c3e11a980c466c4406df6e7ec6e50df8b6
+  languageName: node
+  linkType: hard
+
+"@eropple/typeorm-bunyan-logger@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@eropple/typeorm-bunyan-logger@npm:0.1.0"
+  dependencies:
+    "@types/bunyan": ^1.8.6
+  peerDependencies:
+    typeorm: ">=0.2.0 <1.0.0"
+  checksum: 084caeb1decdc53d8601ac77df1037e432b56ef9a6eae136b77e51de8a1e032e82602c62991068c39f10615466b79e4e1ae3e59b9a236af3a0e0bccfa920e513
   languageName: node
   linkType: hard
 
@@ -4264,7 +4277,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bunyan@npm:^1":
+"@types/bunyan@npm:^1, @types/bunyan@npm:^1.8.6":
   version: 1.8.8
   resolution: "@types/bunyan@npm:1.8.8"
   dependencies:
@@ -7949,6 +7962,13 @@ __metadata:
   dependencies:
     mimic-response: ^1.0.0
   checksum: 952552ac3bd7de2fc18015086b09468645c9638d98a551305e485230ada278c039c91116e946d07894b39ee53c0f0d5b6473f25a224029344354513b412d7380
+  languageName: node
+  linkType: hard
+
+"decorator-cache-getter@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "decorator-cache-getter@npm:1.0.0"
+  checksum: 78f9278e975bce54d186f8484f589b8993fdc10217b45d1cebda0c016a667ee269d8aaedf6bcdee770441194ad19c52dd4e80cb987d62198ee8491440f28394d
   languageName: node
   linkType: hard
 
