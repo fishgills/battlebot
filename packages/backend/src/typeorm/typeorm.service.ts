@@ -15,15 +15,15 @@ import { UserEntity } from 'users/users.entity';
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
-    // const databaseCredential = await this.getDatabaseCredential();
-    // const { host, port, username, password, database } = databaseCredential;
+    const databaseCredential = await this.getDatabaseCredential();
+    const { host, port, username, password, database } = databaseCredential;
     const conf: TypeOrmModuleOptions = {
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: 3306,
-      username: process.env.DB_USER,
-      database: process.env.DB_DATABASE,
-      password: process.env.DB_PASSWORD,
+      type: 'postgres',
+      host,
+      port,
+      username,
+      database,
+      password,
       dropSchema: false,
       synchronize: false,
       migrationsRun: false,
