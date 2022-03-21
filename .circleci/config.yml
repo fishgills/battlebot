@@ -60,9 +60,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          command: aws s3 sync www s3://battlebot-www/www
+          command: aws s3 sync www s3://mediating-mediator-cdn/www/prod
       - run:
-          command: aws cloudfront create-invalidation --distribution-id E3PRHB9KRJWJWA --paths "/*"
+          command: aws cloudfront create-invalidation --distribution-id E2V7GV7V2WT5R6 --paths "/*"
 
   trigger-workflows:
     docker:
