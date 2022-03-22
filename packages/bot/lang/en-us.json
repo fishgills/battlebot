@@ -50,5 +50,7 @@
   "character_delete_no_character": "You have no clone to fire!",
   "visit_web_site": "This feature will be available on the website.",
   "leaderboard_attacks": "One on Ones Requested",
-  "leaderboard_defends": "One on Ones Received"
+  "leaderboard_defends": "One on Ones Received",
+  "reward_help_description": "Also, you can give out rewards to other players/clones. To give a reward:",
+  "reward_help_example": "@Bob and @Joe, great job making progress! Have a {0}!"
 }

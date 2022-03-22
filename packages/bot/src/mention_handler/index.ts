@@ -1,5 +1,6 @@
 import { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from '@slack/bolt';
 import { Subject } from 'rxjs';
+import { RewardObserver } from '../reward_handler/reward-observer';
 import { SheetObserver } from './character-sheet';
 import { CombatObserver } from './combat';
 import { CharacterCreateObserver } from './create-character';
@@ -16,6 +17,7 @@ const helpObserver = new HelpObserver();
   CombatObserver,
   CharacterCreateObserver,
   CharacterDeleteObserver,
+  RewardObserver,
 ].forEach((t) => {
   const obs = new t();
   helpObserver.addBlocks(obs.getHelpBlocks());

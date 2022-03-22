@@ -9,6 +9,7 @@ export class HelpObserver extends MentionObserver {
   public addBlocks(blocks: SectionBuilder[]) {
     this.blocks.push(...blocks);
   }
+
   async update(
     e: SlackCommandMiddlewareArgs & AllMiddlewareArgs,
   ): Promise<void> {

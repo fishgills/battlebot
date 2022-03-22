@@ -1,5 +1,6 @@
 import { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { ChatPostMessageResponse } from '@slack/web-api';
+import { Blocks } from 'slack-block-builder';
 import { Observer } from '../common/AbstractObserver';
 import { t } from '../locale';
 import { sdk } from '../utils/gql';
@@ -8,6 +9,16 @@ import { getUsernames, isGenericMessageEvent } from '../utils/helpers';
 export class RewardObserver extends Observer<
   SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs
 > {
+  getHelpBlocks() {
+    return [
+      Blocks.Section({
+        text: t('reward_help_description'),
+      }),
+      Blocks.Section({
+        text: t('reward_help_example', t('reward_emoji')),
+      }),
+    ];
+  }
   msgUser(
     e: SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs,
     content: string,
