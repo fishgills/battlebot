@@ -4,6 +4,9 @@ import { t } from '../locale';
 import { MentionObserver } from './observer';
 
 export class HelpObserver extends MentionObserver {
+  getHelpBlocks(): SectionBuilder[] {
+    throw new Error('Method not implemented.');
+  }
   private blocks: SectionBuilder[] = [];
 
   public addBlocks(blocks: SectionBuilder[]) {

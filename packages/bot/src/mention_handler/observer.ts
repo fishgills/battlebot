@@ -1,4 +1,5 @@
 import { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from '@slack/bolt';
+import { SectionBuilder } from 'slack-block-builder';
 import { BaseObserver } from '../common/BaseObserver';
 
 type ObserveType = SlackCommandMiddlewareArgs & AllMiddlewareArgs;
@@ -17,5 +18,12 @@ export abstract class MentionObserver extends BaseObserver<ObserveType> {
     const text = normalizeQuotes(event.payload.text);
     const match = text.match(/^(\w+) *(.*)$/);
     return match ? match[1] : undefined;
+  }
+  public static getHelpBlocks<T extends MentionObserver>(
+    this: new (blah: any) => T,
+    blah: any,
+  ): T {
+    const self = new this(blah);
+    return self;
   }
 }

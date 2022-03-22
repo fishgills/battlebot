@@ -1,3 +1,4 @@
+import { SectionBuilder } from 'slack-block-builder';
 import { ObserveType } from '.';
 import { t } from '../locale';
 import { sdk } from '../utils/gql';
@@ -5,6 +6,9 @@ import { editCharacterModal } from '../views/character';
 import { ActionObserver } from './action-observer';
 
 export class StatsObserver extends ActionObserver {
+  getHelpBlocks(): SectionBuilder[] {
+    throw new Error('Method not implemented.');
+  }
   constructor() {
     super();
     this.command = 'stat-incr';

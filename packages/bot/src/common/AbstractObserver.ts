@@ -1,5 +1,5 @@
 import { ChatPostMessageResponse } from '@slack/web-api';
-import { SlackBlockDto } from 'slack-block-builder';
+import { SectionBuilder, SlackBlockDto } from 'slack-block-builder';
 import { Logger } from '../logger';
 
 export abstract class Observer<T> {
@@ -24,4 +24,5 @@ export abstract class Observer<T> {
   abstract listener(e: T): Promise<void>;
 
   abstract update(e: T): Promise<void>;
+  abstract getHelpBlocks(): SectionBuilder[];
 }

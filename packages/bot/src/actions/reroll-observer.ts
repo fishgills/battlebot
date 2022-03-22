@@ -1,9 +1,13 @@
+import { SectionBuilder } from 'slack-block-builder';
 import { ObserveType } from '.';
 import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
 import { ActionObserver } from './action-observer';
 
 export class RerollObserver extends ActionObserver {
+  getHelpBlocks(): SectionBuilder[] {
+    throw new Error('Method not implemented.');
+  }
   constructor() {
     super();
     this.command = 'reroll';

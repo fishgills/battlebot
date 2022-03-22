@@ -11,6 +11,7 @@ export class CombatObserver extends MentionObserver {
   constructor() {
     super('with');
   }
+
   getHelpBlocks() {
     return [
       Blocks.Section({
