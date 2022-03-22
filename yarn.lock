@@ -2658,7 +2658,6 @@ __metadata:
   resolution: "@battlebot/bot@workspace:packages/bot"
   dependencies:
     "@apollo/client": ^3.5.10
-    "@nestjs/config": ^2.0.0
     "@slack/bolt": ^3.10.0
     "@slack/web-api": ^6.7.0
     "@types/bunyan": ^1
@@ -3660,22 +3659,6 @@ __metadata:
     class-validator:
       optional: true
   checksum: 8fad73974b5a6a69e6a0de138f369cd80fd216048b6b0cbbfe63599af001971711aa0b70ae994f19ec7c1856071844c649fe1701fa2421a0ef035e91411a4699
-  languageName: node
-  linkType: hard
-
-"@nestjs/config@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@nestjs/config@npm:2.0.0"
-  dependencies:
-    dotenv: 16.0.0
-    dotenv-expand: 8.0.2
-    lodash: 4.17.21
-    uuid: 8.3.2
-  peerDependencies:
-    "@nestjs/common": ^7.0.0 || ^8.0.0
-    reflect-metadata: ^0.1.13
-    rxjs: ^6.0.0 || ^7.2.0
-  checksum: f0aedec1b6a6fd44f686121c05d38b7ff32f3e70c5df1ded91fae788ee73e1371f6f1a6a9223c82f41c5e15a38ccf09aaf6650fc71714c0813452595fb5f3917
   languageName: node
   linkType: hard
 
@@ -8326,24 +8309,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-expand@npm:8.0.2":
-  version: 8.0.2
-  resolution: "dotenv-expand@npm:8.0.2"
-  checksum: 4b42b2602478bccf1bfde25c97ecc0fee4059e74df4f8fda7f076b2ef428315e00b301bda43eec3707bfa083837abb284d6fec91571f164449243001ed8eef81
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:16.0.0, dotenv@npm:^16.0.0":
-  version: 16.0.0
-  resolution: "dotenv@npm:16.0.0"
-  checksum: 664cebb51f0a9a1d1b930f51f0271e72e26d62feaecc9dc03df39453dd494b4e724809ca480fb3ec3213382b1ed3f791aaeb83569a137f9329ce58efd4853dbf
-  languageName: node
-  linkType: hard
-
 "dotenv@npm:^10.0.0":
   version: 10.0.0
   resolution: "dotenv@npm:10.0.0"
   checksum: f412c5fe8c24fbe313d302d2500e247ba8a1946492db405a4de4d30dd0eb186a88a43f13c958c5a7de303938949c4231c56994f97d05c4bc1f22478d631b4005
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.0.0":
+  version: 16.0.0
+  resolution: "dotenv@npm:16.0.0"
+  checksum: 664cebb51f0a9a1d1b930f51f0271e72e26d62feaecc9dc03df39453dd494b4e724809ca480fb3ec3213382b1ed3f791aaeb83569a137f9329ce58efd4853dbf
   languageName: node
   linkType: hard
 
