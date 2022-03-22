@@ -44,9 +44,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-            - packages/bot/node_modules
             - packages/www/node_modules
-            - packages/backend/node_modules
           key: v1-deps-{{ checksum "yarn.lock"}}
       - run:
           working_directory: ~/project/packages/www

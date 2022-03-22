@@ -3445,7 +3445,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-typed-document-node/core@npm:^3.0.0, @graphql-typed-document-node/core@npm:^3.1.0":
+"@graphql-typed-document-node/core@npm:^3.0.0":
   version: 3.1.1
   resolution: "@graphql-typed-document-node/core@npm:3.1.1"
   peerDependencies:
@@ -5395,21 +5395,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-angular@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "apollo-angular@npm:2.6.0"
+"apollo-angular@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "apollo-angular@npm:3.0.0"
   dependencies:
-    "@graphql-typed-document-node/core": ^3.1.0
-    extract-files: ^9.0.0
-    semver: ^7.0.0
     tslib: ^2.0.0
   peerDependencies:
-    "@angular/core": ^6.1.0 || ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
-    "@apollo/client": ^3.2.0
-    graphql: ">=0.11.0 <0.14.0 || ^14.0.0 || ^15.0.0"
-    rxjs: ^6.0.0
-    zone.js: ">=0.8.0 <0.12.0"
-  checksum: 8565b5eedc4ea0c8e5212acf79bffcb6c929dd1c52b01ee2a567f06c935524c13430395f329bf19cca9b750360af9409138a3e0c1dbb9939368503ba03970aa0
+    "@angular/core": ^12.0.0 || ^13.0.0
+    "@apollo/client": ^3.0.0
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+    rxjs: ^6.0.0 || ^7.0.0
+    zone.js: ">=0.10.0 <0.12.0"
+  checksum: f80bb6e7df3c293396f7c79833d0b438269331a0edb8d012a2ba658928536a6a7e507ba36f76a642d618c54e701dcbc4e6831cd317f14eaee2395e95cc8fe6fb
   languageName: node
   linkType: hard
 
@@ -19205,7 +19202,7 @@ __metadata:
     "@stripe/stripe-js": ^1.23.0
     "@types/jasmine": ~3.8.0
     "@types/node": ^12.11.1
-    apollo-angular: ^2.6.0
+    apollo-angular: ^3.0.0
     colors: 1.4.0
     graphql: ^15.0.0
     jasmine-core: ~3.8.0
