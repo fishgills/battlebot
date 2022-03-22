@@ -13,7 +13,7 @@ import { Logger } from '@nestjs/common';
 import { MyLogger } from 'logger';
 const whitelist = [
   'battlebot.ngrok.io',
-  'slackbattlebot.com',
+  'mediatingmediator.com',
   'studio.apollographql.com',
   'postman.co',
   'electron://altair',
