@@ -9,7 +9,7 @@ gab.init({
   locale: 'en-us',
 });
 
-import { App, BlockButtonAction, MemoryStore } from '@slack/bolt';
+import { App, AppOptions, BlockButtonAction, MemoryStore } from '@slack/bolt';
 import { isGenericMessageEvent } from './utils/helpers';
 import { Command$ } from './mention_handler';
 import { Action$, ActionsRegex } from './actions';
@@ -21,10 +21,28 @@ import tracer from 'dd-trace';
 
 const scopes = ['users:read', 'channels:history', 'commands', 'chat:write'];
 
+let slackConf: Partial<AppOptions>;
+if (process.env['NODE_ENV'] === 'production') {
+  slackConf = {
+    signingSecret: process.env['SLACK_SIGNING_SECRET'],
+    clientId: process.env['SLACK_CLIENT_ID'],
+    clientSecret: process.env['SLACK_CLIENT_SECRET'],
+    socketMode: false,
+    developerMode: false,
+  };
+} else {
+  slackConf = {
+    clientId: process.env.SLACK_CLIENT_ID,
+    clientSecret: process.env.SLACK_CLIENT_SECRET,
+    appToken: process.env.SLACK_APP_TOKEN,
+
+    socketMode: true,
+    developerMode: true,
+  };
+}
+
 const app = new App({
-  clientId: process.env.SLACK_CLIENT_ID,
-  clientSecret: process.env.SLACK_CLIENT_SECRET,
-  appToken: process.env.SLACK_APP_TOKEN,
+  ...slackConf,
 
   customRoutes: [
     {
@@ -36,10 +54,8 @@ const app = new App({
     },
   ],
   convoStore: new MemoryStore(),
-  developerMode: false,
   logger: Logger,
-  socketMode: true,
-  stateSecret: 'awesome',
+  stateSecret: process.env['SLACK_STATE_SECRET'],
   scopes,
   installerOptions: {
     stateVerification: false,
