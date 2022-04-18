@@ -19,6 +19,7 @@ import { homePage } from './views/home';
 import { Logger } from './logger';
 import { Store } from './installation_store';
 import tracer from 'dd-trace';
+import { MyStateStore } from './state_store';
 
 const scopes = ['users:read', 'channels:history', 'commands', 'chat:write'];
 
@@ -28,7 +29,6 @@ const app = new App({
   clientSecret: process.env['SLACK_CLIENT_SECRET'],
   socketMode: false,
   developerMode: false,
-
   customRoutes: [
     {
       path: '/health-check',
@@ -40,11 +40,11 @@ const app = new App({
   ],
   convoStore: new MemoryStore(),
   logger: Logger,
-  stateSecret: process.env['SLACK_STATE_SECRET'],
   scopes,
   logLevel: LogLevel.DEBUG,
   installerOptions: {
-    stateVerification: false,
+    stateStore: new MyStateStore(),
+    stateVerification: true,
     directInstall: true,
   },
   installationStore: new Store(),
