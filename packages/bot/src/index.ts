@@ -28,7 +28,7 @@ if (process.env['NODE_ENV'] === 'production') {
     clientId: process.env['SLACK_CLIENT_ID'],
     clientSecret: process.env['SLACK_CLIENT_SECRET'],
     socketMode: false,
-    developerMode: false,
+    developerMode: true,
   };
 } else {
   slackConf = {
