@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { PrivacyComponent } from './privacy/privacy.component';
 
 const routes: Routes = [
   {
@@ -9,6 +10,10 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
+  },
+  {
+    path: 'privacy',
+    component: PrivacyComponent,
   },
   {
     path: 'tavern',
