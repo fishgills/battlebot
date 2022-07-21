@@ -1,8 +1,8 @@
 {
   "folders": [
     {
-      "name": "www",
-      "path": "packages/www"
+      "name": "web",
+      "path": "packages/web"
     },
     {
       "name": "backend",

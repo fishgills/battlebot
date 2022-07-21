@@ -17,7 +17,7 @@ parameters:
   bot:
     type: boolean
     default: false
-  www:
+  web:
     type: boolean
     default: false
 
@@ -28,45 +28,6 @@ executors:
       - image: circleci/node
 
 jobs:
-  ng-build:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - checkout:
-          path: ~/project
-      - run:
-          command: ls -al
-      - restore_cache:
-          key: v1-deps-{{ checksum "yarn.lock" }}
-      - run:
-          command: yarn install
-          name: install deps
-      - save_cache:
-          paths:
-            - node_modules
-            - packages/www/node_modules
-            - packages/bot/node_modules
-            - packages/backend/node_modules
-          key: v1-deps-{{ checksum "yarn.lock"}}
-      - run:
-          working_directory: ~/project/packages/www
-          command: yarn build
-          name: build
-      - persist_to_workspace:
-          root: ~/project/packages/www/dist
-          paths:
-            - 'www'
-  copy-to-s3:
-    executor: aws-cli/default
-    steps:
-      - aws-cli/setup
-      - attach_workspace:
-          at: .
-      - run:
-          command: aws s3 sync www s3://mediating-mediator-cdn/www/prod
-      - run:
-          command: aws cloudfront create-invalidation --distribution-id E2V7GV7V2WT5R6 --paths "/*"
-
   trigger-workflows:
     docker:
       - image: cimg/base:stable
@@ -97,11 +58,11 @@ jobs:
       - checkout:
           path: ~/project
       - aws-ecr/build-and-push-image:
-          repo: '<< parameters.package_name >>'
+          repo: 'mediator-<< parameters.package_name >>'
           remote-docker-layer-caching: true
           checkout: false
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
-          create-repo: true
+          create-repo: false
           tag: 'latest'
           # tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
 
@@ -116,11 +77,11 @@ jobs:
       - checkout:
           path: ~/project
       - aws-ecs/update-service:
-          family: 'task-<< parameters.package_name >>'
-          cluster-name: 'cluster-mediator'
-          service-name: 'service-<< parameters.package_name >>'
-          container-image-name-updates: 'container=container-<< parameters.package_name >>,tag=latest'
-          container-env-var-updates: 'container=container-<< parameters.package_name >>,name=DD_VERSION,value=${CIRCLE_SHA1}'
+          family: 'mediator-<< parameters.package_name >>'
+          cluster-name: 'mediator-cluster'
+          service-name: '<< parameters.package_name >>-Server'
+          container-image-name-updates: 'mediator-<< parameters.package_name >>,tag=latest'
+          container-env-var-updates: 'container=mediator-<< parameters.package_name >>,name=DD_VERSION,value=${CIRCLE_SHA1}'
 
 workflows:
   version: 2
@@ -135,35 +96,40 @@ workflows:
   # Workflows defined for each package.
 
   www:
-    when: << pipeline.parameters.www >>
-    jobs:
-      - ng-build
-      - copy-to-s3:
-          filters:
-            branches:
-              only:
-                - master
-          context: EnvVariables
-          requires:
-            - ng-build
-
-  backend:
-    when: << pipeline.parameters.backend >>
+    when: << pipeline.parameters.web >>
     jobs:
       - build:
-          name: backend-build
-          package_name: backend
+          name: web-build
+          package_name: web
           context: EnvVariables
       - deploy:
           filters:
             branches:
               only:
                 - master
-          name: backend-deploy
+          name: web-deploy
           context: EnvVariables
-          package_name: backend
+          package_name: Web
           requires:
-            - backend-build
+            - web-build
+
+  backend:
+    when: << pipeline.parameters.backend >>
+    jobs:
+      - build:
+          name: graphql-build
+          package_name: graphql
+          context: EnvVariables
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+          name: graphql-deploy
+          context: EnvVariables
+          package_name: Graphql
+          requires:
+            - graphql-build
 
   bot:
     when: << pipeline.parameters.bot >>
@@ -179,6 +145,6 @@ workflows:
                 - master
           name: bot-deploy
           context: EnvVariables
-          package_name: bot
+          package_name: Bot
           requires:
             - bot-build
