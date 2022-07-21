@@ -12,13 +12,13 @@ parameters:
   # A parameter per package
   backend:
     type: boolean
-    default: true
+    default: false
   bot:
     type: boolean
-    default: true
+    default: false
   web:
     type: boolean
-    default: true
+    default: false
 
 executors:
   node:
@@ -39,6 +39,7 @@ jobs:
         type: string
     machine:
       image: ubuntu-2204:2022.04.2 # recommended linux image
+    resource_class: medium
     working_directory: ~/project/
 
     steps:
@@ -51,8 +52,7 @@ jobs:
           checkout: false
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
           create-repo: false
-
-          tag: 'latest'
+          tag: '${CIRCLE_SHA1}'
           # tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
 
   deploy:
@@ -61,6 +61,7 @@ jobs:
         type: string
     machine:
       image: ubuntu-2204:2022.04.2 # recommended linux image
+    resource_class: medium
     working_directory: ~/project/packages/<< parameters.package_name >>
     steps:
       - checkout:
@@ -69,7 +70,7 @@ jobs:
           family: 'mediator-<< parameters.package_name >>'
           cluster: 'mediator-cluster'
           service-name: '<< parameters.package_name >>-Service'
-          container-image-name-updates: '<< parameters.package_name >>,tag=latest'
+          container-image-name-updates: '<< parameters.package_name >>,tag=${CIRCLE_SHA1}'
           container-env-var-updates: 'container=<< parameters.package_name >>,name=DD_VERSION,value=${CIRCLE_SHA1}'
 
 workflows:
