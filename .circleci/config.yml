@@ -12,13 +12,13 @@ parameters:
   # A parameter per package
   backend:
     type: boolean
-    default: false
+    default: true
   bot:
     type: boolean
-    default: false
+    default: true
   web:
     type: boolean
-    default: false
+    default: true
 
 executors:
   node:
@@ -46,7 +46,7 @@ jobs:
           path: ~/project
       - aws-ecr/build-and-push-image:
           repo: 'mediator-<< parameters.package_name >>'
-          remote-docker-layer-caching: true
+          remote-docker-layer-caching: false
           checkout: false
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
           create-repo: false
