@@ -84,7 +84,7 @@ workflows:
 
   # Workflows defined for each package.
 
-  www:
+  web:
     when: << pipeline.parameters.web >>
     jobs:
       - build:
@@ -98,7 +98,7 @@ workflows:
                 - master
           name: web-deploy
           context: EnvVariables
-          package_name: Web
+          package_name: web
           requires:
             - web-build
   backend:
@@ -115,7 +115,7 @@ workflows:
                 - master
           name: graphql-deploy
           context: EnvVariables
-          package_name: Graphql
+          package_name: graphql
           requires:
             - graphql-build
   bot:
@@ -132,6 +132,6 @@ workflows:
                 - master
           name: bot-deploy
           context: EnvVariables
-          package_name: Bot
+          package_name: bot
           requires:
             - bot-build
