@@ -71,7 +71,7 @@ jobs:
           cluster: 'mediator-cluster'
           service-name: '<< parameters.package_name >>-Service'
           container-image-name-updates: '<< parameters.package_name >>,tag=${CIRCLE_SHA1}'
-          container-env-var-updates: 'container=<< parameters.package_name >>,name=DD_VERSION,value=${CIRCLE_SHA1}'
+          # container-env-var-updates: 'container=<< parameters.package_name >>,name=DD_VERSION,value=${CIRCLE_SHA1}'
 
 workflows:
   version: 2
