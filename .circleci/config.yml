@@ -99,7 +99,7 @@ workflows:
           package_name: Web
           requires:
             - web-build
-
+          aws-region: $AWS_DEFAULT_REGION
   backend:
     when: << pipeline.parameters.backend >>
     jobs:
@@ -117,7 +117,7 @@ workflows:
           package_name: Graphql
           requires:
             - graphql-build
-
+          aws-region: $AWS_DEFAULT_REGION
   bot:
     when: << pipeline.parameters.bot >>
     jobs:
@@ -133,5 +133,6 @@ workflows:
           name: bot-deploy
           context: EnvVariables
           package_name: Bot
+          aws-region: $AWS_DEFAULT_REGION
           requires:
             - bot-build
