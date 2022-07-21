@@ -1,8 +1,7 @@
 version: 2.1
 orbs:
-  aws-ecr: circleci/aws-ecr@7.3.0
-  aws-ecs: circleci/aws-ecs@2.2.1
-  aws-cli: circleci/aws-cli@2.0.6
+  aws-ecr: circleci/aws-ecr@8.1.2
+  aws-ecs: circleci/aws-ecs@3.0.0
 
 parameters:
   # This parameter is used to trigger the main workflow
@@ -23,9 +22,8 @@ parameters:
 
 executors:
   node:
-    resource_class: small
     docker:
-      - image: circleci/node
+      - image: cimg/node:lts
 
 jobs:
   trigger-workflows:
@@ -51,7 +49,7 @@ jobs:
       package_name:
         type: string
     machine:
-      image: ubuntu-2004:202010-01 # recommended linux image
+      image: ubuntu-2204:2022.04.2 # recommended linux image
     working_directory: ~/project/packages/<< parameters.package_name >>
 
     steps:
@@ -71,7 +69,7 @@ jobs:
       package_name:
         type: string
     machine:
-      image: ubuntu-2004:202010-01 # recommended linux image
+      image: ubuntu-2204:2022.04.2 # recommended linux image
     working_directory: ~/project/packages/<< parameters.package_name >>
     steps:
       - checkout:
