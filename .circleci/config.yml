@@ -39,17 +39,19 @@ jobs:
         type: string
     machine:
       image: ubuntu-2204:2022.04.2 # recommended linux image
-    working_directory: ~/project/packages/<< parameters.package_name >>
+    working_directory: ~/project/
 
     steps:
       - checkout:
           path: ~/project
       - aws-ecr/build-and-push-image:
           repo: 'mediator-<< parameters.package_name >>'
+          dockerfile: packages/<< parameters.package_name >>/Dockerfile
           remote-docker-layer-caching: false
           checkout: false
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
           create-repo: false
+
           tag: 'latest'
           # tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
 
