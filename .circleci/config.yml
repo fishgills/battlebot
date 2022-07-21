@@ -76,7 +76,7 @@ jobs:
           path: ~/project
       - aws-ecs/update-service:
           family: 'mediator-<< parameters.package_name >>'
-          cluster-name: 'mediator-cluster'
+          cluster: 'mediator-cluster'
           service-name: '<< parameters.package_name >>-Server'
           container-image-name-updates: 'mediator-<< parameters.package_name >>,tag=latest'
           container-env-var-updates: 'container=mediator-<< parameters.package_name >>,name=DD_VERSION,value=${CIRCLE_SHA1}'
