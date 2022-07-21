@@ -106,19 +106,19 @@ workflows:
     when: << pipeline.parameters.backend >>
     jobs:
       - build:
-          name: graphql-build
-          package_name: graphql
+          name: backend-build
+          package_name: backend
           context: EnvVariables
       - deploy:
           filters:
             branches:
               only:
                 - master
-          name: graphql-deploy
+          name: backend-deploy
           context: EnvVariables
-          package_name: graphql
+          package_name: backend
           requires:
-            - graphql-build
+            - backend-build
   bot:
     when: << pipeline.parameters.bot >>
     jobs:

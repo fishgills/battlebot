@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import { join } from 'path';
 
 export interface StringToStringMap {
   [key: string]: string;
@@ -133,8 +134,9 @@ function loadAndSet(locale: string): void {
   return;
 }
 function load(locale: string) {
-  const url = `lang/${locale}.json`;
+  const url = join(__dirname, 'lang', locale + '.json');
 
+  console.log(url);
   const json = JSON.parse(readFileSync(url, 'utf-8'));
   return json;
 }
