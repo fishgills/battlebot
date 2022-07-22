@@ -20,14 +20,14 @@ parameters:
     type: boolean
     default: true
 
-executors:
-  node:
-    docker:
-      - image: cimg/node:lts
+# executors:
+#   node:
+#     docker:
+#       - image: cimg/node:lts
 
 jobs:
   trigger-workflows:
-    executor: node
+    # executor: node
     steps:
       - checkout
       - run:
@@ -37,9 +37,9 @@ jobs:
     parameters:
       package_name:
         type: string
-    machine:
-      image: ubuntu-2204:2022.04.2 # recommended linux image
-    resource_class: medium
+    # machine:
+    #   image: ubuntu-2204:2022.04.2 # recommended linux image
+    # resource_class: medium
     working_directory: ~/project/
 
     steps:

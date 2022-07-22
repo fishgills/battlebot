@@ -20,7 +20,8 @@ COPY ./packages/web/ ./packages/web/
 
 WORKDIR /app/packages/web/
 RUN yarn build
-
+RUN ls -al /app/packages/web/
+RUN ls -al /app/packages/web/.next/standalone/
 
 FROM public.ecr.aws/docker/library/node:lts-alpine AS runner
 ARG PACKAGE
