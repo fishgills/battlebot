@@ -36,16 +36,14 @@ WORKDIR /app/
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
+COPY --from=builder /app/packages/web/next.config.js /app/packages/web/next.config.js
+COPY --from=builder /app/packages/web/docker-entrypoint.sh /app/packages/web/docker-entrypoint.sh
 
-COPY --from=builder /app/packages/web/next.config.js /app/packages/web/
 COPY --from=builder /app/packages/web/public /app/packages/web/public
 COPY --from=builder /app/packages/web/package.json /app/packages/web/package.json
 
-COPY --from=builder /app/packages/web/.next/standalone /app/packages/web/
-COPY --from=builder /app/packages/web/.next/static /app/packages/web/.next/static
-COPY --from=builder /app/packages/web/docker-entrypoint.sh /app/packages/web/docker-entrypoint.sh
-
-
+COPY --from=builder /app/packages/web/.next/standalone/ /app/packages/web/
+COPY --from=builder /app/packages/web/.next/static/ /app/packages/web/.next/static
 
 EXPOSE $PORT
 ENV PORT=$PORT
