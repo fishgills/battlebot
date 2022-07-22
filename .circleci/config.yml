@@ -50,6 +50,7 @@ jobs:
           dockerfile: packages/<< parameters.package_name >>/Dockerfile
           remote-docker-layer-caching: false
           checkout: false
+          platform: linux/amd64
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
           create-repo: false
           tag: '${CIRCLE_SHA1},latest'
