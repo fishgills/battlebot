@@ -50,7 +50,7 @@ jobs:
           dockerfile: packages/<< parameters.package_name >>/Dockerfile
           remote-docker-layer-caching: true
           checkout: false
-          remote-docker-layer-caching: true
+          setup-remote-docker: true
           platform: linux/arm64
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
           create-repo: false
