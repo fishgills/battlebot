@@ -15,7 +15,7 @@ WORKDIR /app/
 
 COPY --from=deps /app/node_modules /app/node_modules
 COPY --from=deps /app/packages/web/node_modules /app/packages/web/node_modules
-COPY ./packages/web/ ./packages/web/
+COPY ./packages/web/ /app/packages/web/
 
 
 WORKDIR /app/packages/web/
