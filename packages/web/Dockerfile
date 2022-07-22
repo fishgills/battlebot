@@ -26,6 +26,12 @@ RUN ls -al /app/packages/web/.next/standalone
 FROM node:16-alpine AS runner
 ARG PACKAGE
 ARG PORT
+ARG SHA1
+
+LABEL com.datadoghq.tags.env=production
+LABEL com.datadoghq.tags.service=web
+LABEL com.datadoghq.tags.version=$SHA1
+
 WORKDIR /app/
 
 ENV NODE_ENV production

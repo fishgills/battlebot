@@ -72,7 +72,9 @@
     "@types/passport-jwt": "^3.0.6",
     "@types/passport-local": "^1.0.34",
     "@types/pg": "^8",
+    "@types/rimraf": "^3",
     "@types/source-map-support": "^0",
+    "rimraf": "^3.0.2",
     "ts-node": "^10.4.0",
     "typescript": "~4.3.0"
   }
