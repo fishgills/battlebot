@@ -13,14 +13,13 @@ ARG PACKAGE
 
 WORKDIR /app/
 
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages/web/node_modules ./packages/web/node_modules
+COPY --from=deps /app/node_modules /app/node_modules
+COPY --from=deps /app/packages/web/node_modules /app/packages/web/node_modules
 COPY ./packages/web/ ./packages/web/
 
 
 WORKDIR /app/packages/web/
 RUN yarn build
-RUN ls -al /app/packages/web/.next/standalone 
 
 
 FROM public.ecr.aws/docker/library/node:lts-alpine AS runner
