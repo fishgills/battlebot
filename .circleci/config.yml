@@ -52,7 +52,7 @@ jobs:
           checkout: false
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
           create-repo: false
-          tag: '${CIRCLE_SHA1}, latest'
+          tag: '${CIRCLE_SHA1},latest'
           # tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
 
   deploy:
