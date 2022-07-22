@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/public.ecr.aws/docker/library/node:16-alpine AS deps
+FROM public.ecr.aws/docker/library/node:lts-alpine AS deps
 ARG PACKAGE
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -8,7 +8,7 @@ COPY ./packages/web/package.json /app/packages/web/
 RUN yarn
 
 
-FROM public.ecr.aws/docker/library/public.ecr.aws/docker/library/node:16-alpine AS builder
+FROM public.ecr.aws/docker/library/node:lts-alpine AS builder
 ARG PACKAGE
 
 WORKDIR /app/
@@ -23,7 +23,7 @@ RUN yarn build
 RUN ls -al /app/packages/web/.next/standalone 
 
 
-FROM public.ecr.aws/docker/library/node:16-alpine AS runner
+FROM public.ecr.aws/docker/library/node:lts-alpine AS runner
 ARG PACKAGE
 ARG PORT
 ARG SHA1
