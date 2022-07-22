@@ -48,7 +48,7 @@ jobs:
       - aws-ecr/build-and-push-image:
           repo: 'mediator-<< parameters.package_name >>'
           dockerfile: packages/<< parameters.package_name >>/Dockerfile
-          remote-docker-layer-caching: false
+          remote-docker-layer-caching: true
           checkout: false
           platform: linux/arm64
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
