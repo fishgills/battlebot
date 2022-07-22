@@ -44,11 +44,13 @@ COPY --from=builder /app/packages/web/package.json /app/packages/web/package.jso
 
 COPY --from=builder /app/packages/web/.next/standalone /app/packages/web/
 COPY --from=builder /app/packages/web/.next/static /app/packages/web/.next/static
+COPY --from=builder /app/packages/web/docker-entrypoint.sh /app/packages/web/docker-entrypoint.sh
+
 
 
 EXPOSE $PORT
 ENV PORT=$PORT
 
 WORKDIR /app/packages/web/
+ENTRYPOINT ["/app/packages/web/docker-entrypoint.sh"]
 
-CMD ["node", "server.js"]
