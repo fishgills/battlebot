@@ -20,14 +20,14 @@ parameters:
     type: boolean
     default: true
 
-# executors:
-#   node:
-#     docker:
-#       - image: cimg/node:lts
+executors:
+  node:
+    docker:
+      - image: cimg/node:lts
 
 jobs:
   trigger-workflows:
-    # executor: node
+    executor: node
     steps:
       - checkout
       - run:
