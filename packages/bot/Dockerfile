@@ -1,4 +1,4 @@
-FROM node:16-alpine AS deps
+FROM public.ecr.aws/docker/library/node:16-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY ./packages/bot/package.json /app/packages/bot/
 RUN yarn
 
 
-FROM node:16-alpine AS builder
+FROM public.ecr.aws/docker/library/node:16-alpine AS builder
 
 WORKDIR /app/
 
@@ -19,7 +19,7 @@ COPY ./packages/bot/ ./packages/bot/
 WORKDIR /app/packages/bot/
 RUN yarn build
 
-FROM node:16-alpine AS runner
+FROM public.ecr.aws/docker/library/node:16-alpine AS runner
 
 ARG SHA1
 

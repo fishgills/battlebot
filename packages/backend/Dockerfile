@@ -1,4 +1,4 @@
-FROM node:16-alpine AS deps
+FROM public.ecr.aws/docker/library/node:16-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
@@ -7,7 +7,7 @@ COPY ./packages/backend/package.json /app/packages/backend/
 RUN yarn
 
 
-FROM node:16-alpine AS builder
+FROM public.ecr.aws/docker/library/node:16-alpine AS builder
 
 WORKDIR /app/
 
@@ -19,7 +19,7 @@ COPY ./packages/backend/ ./packages/backend/
 WORKDIR /app/packages/backend/
 RUN yarn build
 
-FROM node:16-alpine AS runner
+FROM public.ecr.aws/docker/library/node:16-alpine AS runner
 
 ARG SHA1
 
@@ -40,7 +40,7 @@ EXPOSE $PORT
 ENV PORT=$PORT
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
-# FROM node:16-alpine as ts-compiler
+# FROM public.ecr.aws/docker/library/node:16-alpine as ts-compiler
 
 # WORKDIR /home/node/app
 
@@ -60,12 +60,12 @@ ENTRYPOINT ["/app/docker-entrypoint.sh"]
 # RUN yarn install --frozen-lockfile
 # RUN yarn build
 
-# FROM node:16-alpine as ts-remove
+# FROM public.ecr.aws/docker/library/node:16-alpine as ts-remove
 # WORKDIR /home/node/app
 # COPY --from=ts-compiler /home/node/app/package*.json ./
 # RUN yarn install --frozen-lockfile --production
 
-# FROM node:16-alpine
+# FROM public.ecr.aws/docker/library/node:16-alpine
 
 # ARG SHA1
 
