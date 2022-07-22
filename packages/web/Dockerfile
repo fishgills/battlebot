@@ -1,54 +1,32 @@
-FROM public.ecr.aws/docker/library/node:lts-alpine AS deps
-ARG PACKAGE
-RUN apk add --no-cache libc6-compat
+FROM public.ecr.aws/docker/library/node:lts-alpine as builder
+
 WORKDIR /app
-
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-COPY ./packages/web/package.json /app/packages/web/
-RUN yarn
-
-
-FROM public.ecr.aws/docker/library/node:lts-alpine AS builder
-ARG PACKAGE
-
-WORKDIR /app/
-
-COPY --from=deps /app/node_modules /app/node_modules
-COPY --from=deps /app/packages/web/node_modules /app/packages/web/node_modules
-COPY ./packages/web/ /app/packages/web/
-
-
-WORKDIR /app/packages/web/
+COPY ./packages/web/ /app/
+RUN yarn install
 RUN yarn build
-RUN ls -al /app/packages/web/
-RUN ls -al /app/packages/web/.next/standalone/
 
-FROM public.ecr.aws/docker/library/node:lts-alpine AS runner
-ARG PACKAGE
+FROM public.ecr.aws/docker/library/node:lts-alpine as runner
 ARG PORT
 ARG SHA1
 
-LABEL com.datadoghq.tags.env=production
+ENV NODE_ENV production
+ENV PORT=$PORT
+
+LABEL com.datadoghq.tags.env=$NODE_ENV
 LABEL com.datadoghq.tags.service=web
 LABEL com.datadoghq.tags.version=$SHA1
 
-WORKDIR /app/
+WORKDIR /app
 
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
 
-COPY --from=builder /app/packages/web/next.config.js /app/packages/web/next.config.js
-COPY --from=builder /app/packages/web/docker-entrypoint.sh /app/packages/web/docker-entrypoint.sh
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-COPY --from=builder /app/packages/web/public /app/packages/web/public
-COPY --from=builder /app/packages/web/package.json /app/packages/web/package.json
-
-COPY --from=builder /app/packages/web/.next/standalone/ /app/packages/web/
-COPY --from=builder /app/packages/web/.next/static/ /app/packages/web/.next/static
+RUN ls -al /app
 
 EXPOSE $PORT
-ENV PORT=$PORT
 
-WORKDIR /app/packages/web/
-ENTRYPOINT ["/app/packages/web/docker-entrypoint.sh"]
+CMD ["node", "server.js"]
 
