@@ -49,4 +49,6 @@ COPY --from=builder /app/packages/web/.next/static /app/packages/web/.next/stati
 EXPOSE $PORT
 ENV PORT=$PORT
 
-CMD ["node", "packages/web/server.js"]
+WORKDIR /app/packages/web/
+
+CMD ["node", "server.js"]
