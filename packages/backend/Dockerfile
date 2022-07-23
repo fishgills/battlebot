@@ -1,45 +1,3 @@
-FROM public.ecr.aws/docker/library/node:16-alpine AS deps
-RUN apk add --no-cache libc6-compat
-WORKDIR /app
-
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-COPY ./packages/backend/package.json /app/packages/backend/
-RUN yarn
-
-
-FROM public.ecr.aws/docker/library/node:16-alpine AS builder
-
-WORKDIR /app/
-
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages/backend/node_modules ./packages/backend/node_modules
-COPY ./packages/backend/ ./packages/backend/
-
-
-WORKDIR /app/packages/backend/
-RUN yarn build
-
-FROM public.ecr.aws/docker/library/node:16-alpine AS runner
-
-ARG SHA1
-
-LABEL com.datadoghq.tags.env=production
-LABEL com.datadoghq.tags.service=backend
-LABEL com.datadoghq.tags.version=$SHA1
-
-ARG PORT
-WORKDIR /app/
-
-ENV NODE_ENV production
-
-COPY --from=builder /app/packages/backend/dist/ /app/packages/backend/
-COPY --from=builder /app/packages/backend/package.json /app/packages/backend/package.json
-COPY --from=deps /app/packages/backend/node_modules/ /app/packages/backend/node_modules
-COPY --from=deps /app/node_modules /app/node_modules
-EXPOSE $PORT
-ENV PORT=$PORT
-ENTRYPOINT ["/app/docker-entrypoint.sh"]
-
 # FROM public.ecr.aws/docker/library/node:16-alpine as ts-compiler
 
 # WORKDIR /home/node/app
@@ -87,3 +45,34 @@ ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
 # EXPOSE $PORT
 # ENTRYPOINT ["/home/node/app/docker-entrypoint.sh"]
+
+FROM public.ecr.aws/docker/library/node:16-alpine as builder
+
+WORKDIR /app
+
+
+
+COPY ./packages/backend/ /app
+RUN yarn install
+RUN yarn build
+
+FROM public.ecr.aws/docker/library/node:16-alpine as runner
+ARG NODE_ENV
+ENV NODE_ENV $NODE_ENV
+
+ARG PORT
+ENV PORT $PORT
+
+ARG DB_HOST
+ENV DB_HOST $DB_HOST
+
+ARG DB_PASSWORD
+ENV DB_PASSWORD $DB_PASSWORD
+
+WORKDIR /app
+
+COPY --from=builder /app/dist/ .
+COPY --from=builder /app/docker-entrypoint.sh ./
+RUN yarn install --prod
+HEALTHCHECK CMD curl -f http://localhost:$PORT/.well-known/apollo/server-health || exit 1
+ENTRYPOINT ["./docker-entrypoint.sh"]
