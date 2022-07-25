@@ -7,18 +7,18 @@ parameters:
   # This parameter is used to trigger the main workflow
   trigger:
     type: boolean
-    default: false
+    default: true
 
   # A parameter per package
   backend:
     type: boolean
-    default: true
+    default: false
   bot:
     type: boolean
-    default: true
+    default: false
   web:
     type: boolean
-    default: true
+    default: false
 
 executors:
   node:
