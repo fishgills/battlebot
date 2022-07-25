@@ -75,6 +75,7 @@ WORKDIR /app
 
 COPY --from=builder /app/dist/ .
 COPY --from=builder /app/yarn.lock /app/yarn.lock
+COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/docker-entrypoint.sh ./
 RUN chmod +x /app/docker-entrypoint.sh
 RUN yarn install --prod
