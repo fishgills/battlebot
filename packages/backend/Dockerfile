@@ -50,6 +50,9 @@ FROM public.ecr.aws/docker/library/node:16-alpine as builder
 
 WORKDIR /app
 
+ENV PYTHONUNBUFFERED=1
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+
 COPY ./packages/backend/ /app
 RUN yarn install
 RUN yarn build
