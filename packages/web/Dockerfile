@@ -27,6 +27,6 @@ COPY --from=builder /app/.next/static ./.next/static
 RUN ls -al /app
 
 EXPOSE $PORT
-HEALTHCHECK CMD curl --fail http://localhost:$PORT/api/healthcheck || exit 1
+# HEALTHCHECK CMD curl --fail http://localhost:$PORT/api/healthcheck || exit 1
 CMD ["node", "server.js"]
 

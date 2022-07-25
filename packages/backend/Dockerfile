@@ -50,8 +50,6 @@ FROM public.ecr.aws/docker/library/node:16-alpine as builder
 
 WORKDIR /app
 
-
-
 COPY ./packages/backend/ /app
 RUN yarn install
 RUN yarn build
@@ -72,7 +70,9 @@ ENV DB_PASSWORD $DB_PASSWORD
 WORKDIR /app
 
 COPY --from=builder /app/dist/ .
+COPY --from=builder /app/yarn.lock /app/yarn.lock
 COPY --from=builder /app/docker-entrypoint.sh ./
+RUN chmod +x /app/docker-entrypoint.sh
 RUN yarn install --prod
 HEALTHCHECK CMD curl -f http://localhost:$PORT/.well-known/apollo/server-health || exit 1
 ENTRYPOINT ["./docker-entrypoint.sh"]
