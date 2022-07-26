@@ -46,14 +46,9 @@
 # EXPOSE $PORT
 # ENTRYPOINT ["/home/node/app/docker-entrypoint.sh"]
 
-FROM public.ecr.aws/docker/library/node:lts as builder
+FROM public.ecr.aws/docker/library/node:alpine as builder
 
 WORKDIR /app
-
-ENV PYTHONUNBUFFERED=1
-RUN apt-get update -y
-
-RUN apt-get install -y python
 
 COPY ./packages/backend/ /app
 RUN yarn install
