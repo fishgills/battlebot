@@ -46,7 +46,7 @@
 # EXPOSE $PORT
 # ENTRYPOINT ["/home/node/app/docker-entrypoint.sh"]
 
-FROM public.ecr.aws/docker/library/node:alpine as builder
+FROM public.ecr.aws/docker/library/node:lts-alpine as builder
 
 WORKDIR /app
 
@@ -54,7 +54,7 @@ COPY ./packages/backend/ /app
 RUN yarn install
 RUN yarn build
 
-FROM public.ecr.aws/docker/library/node:16-alpine as runner
+FROM public.ecr.aws/docker/library/node:lts-alpine as runner
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
