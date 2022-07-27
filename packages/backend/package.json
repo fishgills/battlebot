@@ -59,6 +59,7 @@
     "rxjs": "^7.5.1",
     "source-map-support": "^0.5.21",
     "stripe": "^8.203.0",
+    "ts-morph": "^15.1.0",
     "typeorm": "^0.2.0"
   },
   "devDependencies": {
