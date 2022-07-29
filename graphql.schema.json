@@ -940,7 +940,23 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "from",
+            "name": "destination",
+            "description": null,
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "source",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -957,22 +973,6 @@
           },
           {
             "name": "teamId",
-            "description": null,
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "to",
             "description": null,
             "type": {
               "kind": "NON_NULL",
@@ -2205,7 +2205,7 @@
             "deprecationReason": null
           },
           {
-            "name": "from",
+            "name": "destination",
             "description": null,
             "args": [],
             "type": {
@@ -2237,7 +2237,7 @@
             "deprecationReason": null
           },
           {
-            "name": "teamId",
+            "name": "source",
             "description": null,
             "args": [],
             "type": {
@@ -2253,7 +2253,7 @@
             "deprecationReason": null
           },
           {
-            "name": "to",
+            "name": "teamId",
             "description": null,
             "args": [],
             "type": {

@@ -116,11 +116,16 @@ app.use(async (args: any) => {
 app.event('app_uninstalled', async (args) => {
   Logger.info('app_uninstalled received');
   Logger.info(args.context);
-  await new Store().deleteInstallation({
-    isEnterpriseInstall: args.context.enterpriseId ? true : false,
-    enterpriseId: args.context.enterpriseId,
-    teamId: args.context.teamId,
-  });
+  try {
+    await new Store().deleteInstallation({
+      isEnterpriseInstall: args.context.enterpriseId ? true : false,
+      enterpriseId: args.context.enterpriseId,
+      teamId: args.context.teamId,
+    });
+  } catch (e) {
+    Logger.error('Delete install error:');
+    Logger.error(e);
+  }
 });
 
 app.use(async ({ payload, next }) => {

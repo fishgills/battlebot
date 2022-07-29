@@ -18,7 +18,7 @@ export class RewardResolver {
 
   @Mutation(() => Boolean)
   giveReward(@Args('input') input: CreateRewardInput) {
-    return this.service.give(input.to, input.from, input.teamId);
+    return this.service.give(input.destination, input.source, input.teamId);
   }
 
   @Query(() => Int)

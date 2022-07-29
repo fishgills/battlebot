@@ -40,6 +40,10 @@ export class PostGresCreate1647661030699 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "combat_model" ADD CONSTRAINT "FK_21ece03624ee914704daf3a3afa" FOREIGN KEY ("loser_id") REFERENCES "character_model"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
+
+    await queryRunner.query(
+      `insert into user_entity (username, password, role) values ('bot', 'bot', 'bot')`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

@@ -1,6 +1,6 @@
-/* eslint-disable */
-import { DocumentNode } from 'graphql';
-import gql from 'graphql-tag';
+import { gql } from 'apollo-angular';
+import { Injectable } from '@angular/core';
+import * as Apollo from 'apollo-angular';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -19,7 +19,9 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: any;
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: any;
 };
 
@@ -673,6 +675,20 @@ export const AddCharacterDocument = gql`
   }
   ${CharacterPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AddCharacterGQL extends Apollo.Mutation<
+  AddCharacterMutation,
+  AddCharacterMutationVariables
+> {
+  document = AddCharacterDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const StartCombatDocument = gql`
   mutation startCombat($input: CreateCombatInput!) {
     start(input: $input) {
@@ -716,6 +732,20 @@ export const StartCombatDocument = gql`
     }
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class StartCombatGQL extends Apollo.Mutation<
+  StartCombatMutation,
+  StartCombatMutationVariables
+> {
+  document = StartCombatDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const CharacterByOwnerDocument = gql`
   query characterByOwner($owner: String!, $teamId: String!) {
     findByOwner(owner: $owner, teamId: $teamId) {
@@ -724,6 +754,20 @@ export const CharacterByOwnerDocument = gql`
   }
   ${CharacterPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CharacterByOwnerGQL extends Apollo.Query<
+  CharacterByOwnerQuery,
+  CharacterByOwnerQueryVariables
+> {
+  document = CharacterByOwnerDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const RollCharacterDocument = gql`
   mutation rollCharacter($id: String!) {
     reroll(id: $id) {
@@ -732,6 +776,20 @@ export const RollCharacterDocument = gql`
   }
   ${CharacterPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class RollCharacterGQL extends Apollo.Mutation<
+  RollCharacterMutation,
+  RollCharacterMutationVariables
+> {
+  document = RollCharacterDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const GetInstallDocument = gql`
   query getInstall($team_id: String!) {
     install(team_id: $team_id) {
@@ -740,6 +798,20 @@ export const GetInstallDocument = gql`
   }
   ${SlackInstallPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class GetInstallGQL extends Apollo.Query<
+  GetInstallQuery,
+  GetInstallQueryVariables
+> {
+  document = GetInstallDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const UpdateInstallDocument = gql`
   mutation updateInstall($input: UpdateSlackInstallInput!) {
     updateInstall(input: $input) {
@@ -748,6 +820,20 @@ export const UpdateInstallDocument = gql`
   }
   ${SlackInstallPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class UpdateInstallGQL extends Apollo.Mutation<
+  UpdateInstallMutation,
+  UpdateInstallMutationVariables
+> {
+  document = UpdateInstallDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const CreateInstallDocument = gql`
   mutation createInstall($input: CreateSlackInstallInput!) {
     createInstall(input: $input) {
@@ -756,21 +842,77 @@ export const CreateInstallDocument = gql`
   }
   ${SlackInstallPartsFragmentDoc}
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CreateInstallGQL extends Apollo.Mutation<
+  CreateInstallMutation,
+  CreateInstallMutationVariables
+> {
+  document = CreateInstallDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const RemoveInstallDocument = gql`
   mutation removeInstall($team_id: String!) {
     removeInstall(team_id: $team_id)
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class RemoveInstallGQL extends Apollo.Mutation<
+  RemoveInstallMutation,
+  RemoveInstallMutationVariables
+> {
+  document = RemoveInstallDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const GiveRewardDocument = gql`
   mutation giveReward($from: String!, $to: String!, $tid: String!) {
     giveReward(input: { source: $from, destination: $to, teamId: $tid })
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class GiveRewardGQL extends Apollo.Mutation<
+  GiveRewardMutation,
+  GiveRewardMutationVariables
+> {
+  document = GiveRewardDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const RewardsGivenTodayDocument = gql`
   query rewardsGivenToday($user: String!, $teamId: String!) {
     rewardsGivenToday(user: $user, teamId: $teamId)
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class RewardsGivenTodayGQL extends Apollo.Query<
+  RewardsGivenTodayQuery,
+  RewardsGivenTodayQueryVariables
+> {
+  document = RewardsGivenTodayDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const CharacterUpdateDocument = gql`
   mutation CharacterUpdate(
     $characterUpdateId: String!
@@ -779,6 +921,20 @@ export const CharacterUpdateDocument = gql`
     CharacterUpdate(id: $characterUpdateId, input: $input)
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CharacterUpdateGQL extends Apollo.Mutation<
+  CharacterUpdateMutation,
+  CharacterUpdateMutationVariables
+> {
+  document = CharacterUpdateDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const ScoreBoardDocument = gql`
   query ScoreBoard($input: RewardsScoreBoardInput!) {
     ScoreBoard(input: $input) {
@@ -788,6 +944,20 @@ export const ScoreBoardDocument = gql`
     }
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ScoreBoardGQL extends Apollo.Query<
+  ScoreBoardQuery,
+  ScoreBoardQueryVariables
+> {
+  document = ScoreBoardDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const CombatTotalsDocument = gql`
   query CombatTotals($attacker: String) {
     combats(attacker: $attacker) {
@@ -796,11 +966,39 @@ export const CombatTotalsDocument = gql`
     }
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CombatTotalsGQL extends Apollo.Query<
+  CombatTotalsQuery,
+  CombatTotalsQueryVariables
+> {
+  document = CombatTotalsDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const DeleteConvoDocument = gql`
   mutation DeleteConvo($convoId: String!) {
     deleteConvo(convoId: $convoId)
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class DeleteConvoGQL extends Apollo.Mutation<
+  DeleteConvoMutation,
+  DeleteConvoMutationVariables
+> {
+  document = DeleteConvoDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const ConvoDocument = gql`
   query Convo($convoId: String!) {
     convo(convoId: $convoId) {
@@ -810,6 +1008,17 @@ export const ConvoDocument = gql`
     }
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ConvoGQL extends Apollo.Query<ConvoQuery, ConvoQueryVariables> {
+  document = ConvoDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const CreateConvoDocument = gql`
   mutation CreateConvo($input: CreateConvoInput!) {
     createConvo(input: $input) {
@@ -820,183 +1029,36 @@ export const CreateConvoDocument = gql`
     }
   }
 `;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CreateConvoGQL extends Apollo.Mutation<
+  CreateConvoMutation,
+  CreateConvoMutationVariables
+> {
+  document = CreateConvoDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
+}
 export const DeleteCharacterDocument = gql`
   mutation DeleteCharacter($input: DeleteCharacterInput!) {
     deleteCharacter(input: $input)
   }
 `;
-export type Requester<C = {}> = <R, V>(
-  doc: DocumentNode,
-  vars?: V,
-  options?: C,
-) => Promise<R>;
-export function getSdk<C>(requester: Requester<C>) {
-  return {
-    addCharacter(
-      variables: AddCharacterMutationVariables,
-      options?: C,
-    ): Promise<AddCharacterMutation> {
-      return requester<AddCharacterMutation, AddCharacterMutationVariables>(
-        AddCharacterDocument,
-        variables,
-        options,
-      );
-    },
-    startCombat(
-      variables: StartCombatMutationVariables,
-      options?: C,
-    ): Promise<StartCombatMutation> {
-      return requester<StartCombatMutation, StartCombatMutationVariables>(
-        StartCombatDocument,
-        variables,
-        options,
-      );
-    },
-    characterByOwner(
-      variables: CharacterByOwnerQueryVariables,
-      options?: C,
-    ): Promise<CharacterByOwnerQuery> {
-      return requester<CharacterByOwnerQuery, CharacterByOwnerQueryVariables>(
-        CharacterByOwnerDocument,
-        variables,
-        options,
-      );
-    },
-    rollCharacter(
-      variables: RollCharacterMutationVariables,
-      options?: C,
-    ): Promise<RollCharacterMutation> {
-      return requester<RollCharacterMutation, RollCharacterMutationVariables>(
-        RollCharacterDocument,
-        variables,
-        options,
-      );
-    },
-    getInstall(
-      variables: GetInstallQueryVariables,
-      options?: C,
-    ): Promise<GetInstallQuery> {
-      return requester<GetInstallQuery, GetInstallQueryVariables>(
-        GetInstallDocument,
-        variables,
-        options,
-      );
-    },
-    updateInstall(
-      variables: UpdateInstallMutationVariables,
-      options?: C,
-    ): Promise<UpdateInstallMutation> {
-      return requester<UpdateInstallMutation, UpdateInstallMutationVariables>(
-        UpdateInstallDocument,
-        variables,
-        options,
-      );
-    },
-    createInstall(
-      variables: CreateInstallMutationVariables,
-      options?: C,
-    ): Promise<CreateInstallMutation> {
-      return requester<CreateInstallMutation, CreateInstallMutationVariables>(
-        CreateInstallDocument,
-        variables,
-        options,
-      );
-    },
-    removeInstall(
-      variables: RemoveInstallMutationVariables,
-      options?: C,
-    ): Promise<RemoveInstallMutation> {
-      return requester<RemoveInstallMutation, RemoveInstallMutationVariables>(
-        RemoveInstallDocument,
-        variables,
-        options,
-      );
-    },
-    giveReward(
-      variables: GiveRewardMutationVariables,
-      options?: C,
-    ): Promise<GiveRewardMutation> {
-      return requester<GiveRewardMutation, GiveRewardMutationVariables>(
-        GiveRewardDocument,
-        variables,
-        options,
-      );
-    },
-    rewardsGivenToday(
-      variables: RewardsGivenTodayQueryVariables,
-      options?: C,
-    ): Promise<RewardsGivenTodayQuery> {
-      return requester<RewardsGivenTodayQuery, RewardsGivenTodayQueryVariables>(
-        RewardsGivenTodayDocument,
-        variables,
-        options,
-      );
-    },
-    CharacterUpdate(
-      variables: CharacterUpdateMutationVariables,
-      options?: C,
-    ): Promise<CharacterUpdateMutation> {
-      return requester<
-        CharacterUpdateMutation,
-        CharacterUpdateMutationVariables
-      >(CharacterUpdateDocument, variables, options);
-    },
-    ScoreBoard(
-      variables: ScoreBoardQueryVariables,
-      options?: C,
-    ): Promise<ScoreBoardQuery> {
-      return requester<ScoreBoardQuery, ScoreBoardQueryVariables>(
-        ScoreBoardDocument,
-        variables,
-        options,
-      );
-    },
-    CombatTotals(
-      variables?: CombatTotalsQueryVariables,
-      options?: C,
-    ): Promise<CombatTotalsQuery> {
-      return requester<CombatTotalsQuery, CombatTotalsQueryVariables>(
-        CombatTotalsDocument,
-        variables,
-        options,
-      );
-    },
-    DeleteConvo(
-      variables: DeleteConvoMutationVariables,
-      options?: C,
-    ): Promise<DeleteConvoMutation> {
-      return requester<DeleteConvoMutation, DeleteConvoMutationVariables>(
-        DeleteConvoDocument,
-        variables,
-        options,
-      );
-    },
-    Convo(variables: ConvoQueryVariables, options?: C): Promise<ConvoQuery> {
-      return requester<ConvoQuery, ConvoQueryVariables>(
-        ConvoDocument,
-        variables,
-        options,
-      );
-    },
-    CreateConvo(
-      variables: CreateConvoMutationVariables,
-      options?: C,
-    ): Promise<CreateConvoMutation> {
-      return requester<CreateConvoMutation, CreateConvoMutationVariables>(
-        CreateConvoDocument,
-        variables,
-        options,
-      );
-    },
-    DeleteCharacter(
-      variables: DeleteCharacterMutationVariables,
-      options?: C,
-    ): Promise<DeleteCharacterMutation> {
-      return requester<
-        DeleteCharacterMutation,
-        DeleteCharacterMutationVariables
-      >(DeleteCharacterDocument, variables, options);
-    },
-  };
+
+@Injectable({
+  providedIn: 'root',
+})
+export class DeleteCharacterGQL extends Apollo.Mutation<
+  DeleteCharacterMutation,
+  DeleteCharacterMutationVariables
+> {
+  document = DeleteCharacterDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
+  }
 }
-export type Sdk = ReturnType<typeof getSdk>;

@@ -18,8 +18,8 @@ export class RewardService {
 
   async give(to: string, from: string, teamId: string): Promise<boolean> {
     await this.repo.insert({
-      from,
-      to,
+      source: from,
+      destination: to,
       teamId,
     });
     return true;
@@ -28,7 +28,7 @@ export class RewardService {
   findFromToday(teamId: string, user: string) {
     return this.repo.count({
       where: {
-        from: user,
+        source: user,
         teamId,
         created_at: MoreThan(subHours(Date.now(), 24).toISOString()),
       },

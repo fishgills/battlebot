@@ -105,7 +105,7 @@ mutation removeInstall($team_id: String!) {
 }
 
 mutation giveReward($from: String!, $to: String!, $tid: String!) {
-  giveReward(input: { from: $from, to: $to, teamId: $tid })
+  giveReward(input: { source: $from, destination: $to, teamId: $tid })
 }
 
 query rewardsGivenToday($user: String!, $teamId: String!) {

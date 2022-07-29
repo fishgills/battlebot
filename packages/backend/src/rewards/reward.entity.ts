@@ -13,10 +13,10 @@ export class RewardEntity extends BaseEntity {
   id: string;
 
   @Column()
-  to: string;
+  destination: string;
 
   @Column()
-  from: string;
+  source: string;
 
   @Column()
   teamId: string;

@@ -6,10 +6,10 @@ export class RewardType {
   id: string;
 
   @Field()
-  to: string;
+  destination: string;
 
   @Field()
-  from: string;
+  source: string;
 
   @Field({ defaultValue: 1 })
   value: number;

@@ -3,10 +3,10 @@ import { Field, InputType } from '@nestjs/graphql';
 @InputType()
 export class CreateRewardInput {
   @Field()
-  from: string;
+  source: string;
 
   @Field()
-  to: string;
+  destination: string;
 
   @Field({
     nullable: true,

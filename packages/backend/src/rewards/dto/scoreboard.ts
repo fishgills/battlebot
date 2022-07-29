@@ -1,8 +1,8 @@
 import { Field, InputType, registerEnumType } from '@nestjs/graphql';
 
 export enum AllowedDirections {
-  FROM = 'from',
-  TO = 'to',
+  FROM = 'source',
+  TO = 'destination',
 }
 
 registerEnumType(AllowedDirections, {
