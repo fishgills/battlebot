@@ -1,0 +1,118 @@
+version: 2.1
+orbs:
+  aws-ecr: circleci/aws-ecr@8.2.1
+  aws-ecs: circleci/aws-ecs@3.2.0
+
+parameters:
+  # A parameter per package
+  backend:
+    type: boolean
+    default: false
+  bot:
+    type: boolean
+    default: false
+  web:
+    type: boolean
+    default: false
+
+executors:
+  node:
+    docker:
+      - image: cimg/node:lts
+
+jobs:
+  build:
+    parameters:
+      package_name:
+        type: string
+    machine:
+      image: ubuntu-2204:2022.04.2 # recommended linux image
+    # resource_class: medium
+    working_directory: ~/project/
+
+    steps:
+      - checkout:
+          path: ~/project
+      - aws-ecr/build-and-push-image:
+          repo: 'mediator-<< parameters.package_name >>'
+          dockerfile: packages/<< parameters.package_name >>/Dockerfile
+          platform: linux/arm64
+          extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
+          create-repo: false
+          tag: '${CIRCLE_SHA1},latest'
+          # tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
+
+  deploy:
+    parameters:
+      package_name:
+        type: string
+    machine:
+      image: ubuntu-2204:2022.04.2 # recommended linux image
+    resource_class: medium
+    working_directory: ~/project/packages/<< parameters.package_name >>
+    steps:
+      - checkout:
+          path: ~/project
+      - aws-ecs/update-service:
+          family: 'mediator-<< parameters.package_name >>'
+          cluster: 'mediator-cluster'
+          service-name: '<< parameters.package_name >>-Service'
+          container-image-name-updates: 'container=<< parameters.package_name >>,tag=${CIRCLE_SHA1}'
+          # container-env-var-updates: 'container=<< parameters.package_name >>,name=DD_VERSION,value=${CIRCLE_SHA1}'
+
+workflows:
+  version: 2
+
+  # Workflows defined for each package.
+
+  web:
+    when: << pipeline.parameters.web >>
+    jobs:
+      - build:
+          name: web-build
+          package_name: web
+          context: EnvVariables
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+          name: web-deploy
+          context: EnvVariables
+          package_name: web
+          requires:
+            - web-build
+  backend:
+    when: << pipeline.parameters.backend >>
+    jobs:
+      - build:
+          name: backend-build
+          package_name: backend
+          context: EnvVariables
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+          name: backend-deploy
+          context: EnvVariables
+          package_name: backend
+          requires:
+            - backend-build
+  bot:
+    when: << pipeline.parameters.bot >>
+    jobs:
+      - build:
+          name: bot-build
+          package_name: bot
+          context: EnvVariables
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+          name: bot-deploy
+          context: EnvVariables
+          package_name: bot
+          requires:
+            - bot-build
