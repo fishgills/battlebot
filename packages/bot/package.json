@@ -1,7 +1,7 @@
 {
   "name": "@battlebot/bot",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "prebuild": "rimraf dist",
     "start": "DEBUG=* ts-node-dev --respawn --inspect -- src/index.ts",
