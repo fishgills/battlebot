@@ -7,7 +7,7 @@
     "start": "DEBUG=* ts-node-dev --respawn --inspect -- src/index.ts",
     "startt": "concurrently --kill-others --names \"TS,NM\" -c \"bgBlue.bold,bgMagenta.bold\" \"tsc -w --preserveWatchOutput\" \"DEBUG=* nodemon --respawn --no-colors --inspect -q -w dist dist/index.js\"",
     "start:prod": "node index.js",
-    "build": "tsc && cp -r lang dist/",
+    "build": "tsc && cp -r src/lang dist/",
     "lint": "eslint . --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
   },
