@@ -61,10 +61,6 @@ jobs:
           # container-env-var-updates: 'container=<< parameters.package_name >>,name=DD_VERSION,value=${CIRCLE_SHA1}'
 
 workflows:
-  version: 2
-
-  # Workflows defined for each package.
-
   web:
     when: << pipeline.parameters.web >>
     jobs:
