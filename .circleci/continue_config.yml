@@ -26,7 +26,7 @@ jobs:
       package_name:
         type: string
     machine:
-      image: ubuntu-2204:2022.04.2 # recommended linux image
+      image: ubuntu-2004:current
     resource_class: arm.medium
     working_directory: ~/project/
 
