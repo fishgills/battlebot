@@ -27,7 +27,7 @@ jobs:
         type: string
     machine:
       image: ubuntu-2204:2022.04.2 # recommended linux image
-    # resource_class: medium
+    resource_class: arm.medium
     working_directory: ~/project/
 
     steps:
