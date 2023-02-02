@@ -131,7 +131,6 @@ export type DeleteCharacterInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   CharacterUpdate: Scalars['Int'];
-  CreateStripeCheckoutSession: StripeSession;
   create: UserType;
   createCharacter: CharacterType;
   createCombat: CombatModel;
@@ -151,11 +150,6 @@ export type Mutation = {
 export type MutationCharacterUpdateArgs = {
   id: Scalars['String'];
   input: UpdateCharacterInput;
-};
-
-export type MutationCreateStripeCheckoutSessionArgs = {
-  priceId: Scalars['String'];
-  teamId: Scalars['String'];
 };
 
 export type MutationCreateArgs = {
@@ -243,7 +237,7 @@ export type QueryFindByOwnerArgs = {
 };
 
 export type QueryGetUserScoreArgs = {
-  listType?: InputMaybe<Scalars['String']>;
+  listType?: Scalars['String'];
   teamId: Scalars['String'];
   userId: Scalars['String'];
 };
@@ -278,7 +272,7 @@ export type RewardType = {
 export type RewardsScoreBoardInput = {
   direction: AllowedDirections;
   teamId: Scalars['String'];
-  today?: InputMaybe<Scalars['Boolean']>;
+  today?: Scalars['Boolean'];
 };
 
 export type SlackInstallModel = {
@@ -290,13 +284,6 @@ export type SlackInstallModel = {
   stripeCusId?: Maybe<Scalars['String']>;
   stripeSubId?: Maybe<Scalars['String']>;
   team_id: Scalars['String'];
-};
-
-export type StripeSession = {
-  __typename?: 'StripeSession';
-  cancel_url: Scalars['String'];
-  id: Scalars['String'];
-  success_url: Scalars['String'];
 };
 
 /** Update a character's properties */
@@ -825,12 +812,12 @@ export const DeleteCharacterDocument = gql`
     deleteCharacter(input: $input)
   }
 `;
-export type Requester<C = {}> = <R, V>(
+export type Requester<C = {}, E = unknown> = <R, V>(
   doc: DocumentNode,
   vars?: V,
   options?: C,
-) => Promise<R>;
-export function getSdk<C>(requester: Requester<C>) {
+) => Promise<R> | AsyncIterable<R>;
+export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     addCharacter(
       variables: AddCharacterMutationVariables,
@@ -840,7 +827,7 @@ export function getSdk<C>(requester: Requester<C>) {
         AddCharacterDocument,
         variables,
         options,
-      );
+      ) as Promise<AddCharacterMutation>;
     },
     startCombat(
       variables: StartCombatMutationVariables,
@@ -850,7 +837,7 @@ export function getSdk<C>(requester: Requester<C>) {
         StartCombatDocument,
         variables,
         options,
-      );
+      ) as Promise<StartCombatMutation>;
     },
     characterByOwner(
       variables: CharacterByOwnerQueryVariables,
@@ -860,7 +847,7 @@ export function getSdk<C>(requester: Requester<C>) {
         CharacterByOwnerDocument,
         variables,
         options,
-      );
+      ) as Promise<CharacterByOwnerQuery>;
     },
     rollCharacter(
       variables: RollCharacterMutationVariables,
@@ -870,7 +857,7 @@ export function getSdk<C>(requester: Requester<C>) {
         RollCharacterDocument,
         variables,
         options,
-      );
+      ) as Promise<RollCharacterMutation>;
     },
     getInstall(
       variables: GetInstallQueryVariables,
@@ -880,7 +867,7 @@ export function getSdk<C>(requester: Requester<C>) {
         GetInstallDocument,
         variables,
         options,
-      );
+      ) as Promise<GetInstallQuery>;
     },
     updateInstall(
       variables: UpdateInstallMutationVariables,
@@ -890,7 +877,7 @@ export function getSdk<C>(requester: Requester<C>) {
         UpdateInstallDocument,
         variables,
         options,
-      );
+      ) as Promise<UpdateInstallMutation>;
     },
     createInstall(
       variables: CreateInstallMutationVariables,
@@ -900,7 +887,7 @@ export function getSdk<C>(requester: Requester<C>) {
         CreateInstallDocument,
         variables,
         options,
-      );
+      ) as Promise<CreateInstallMutation>;
     },
     removeInstall(
       variables: RemoveInstallMutationVariables,
@@ -910,7 +897,7 @@ export function getSdk<C>(requester: Requester<C>) {
         RemoveInstallDocument,
         variables,
         options,
-      );
+      ) as Promise<RemoveInstallMutation>;
     },
     giveReward(
       variables: GiveRewardMutationVariables,
@@ -920,7 +907,7 @@ export function getSdk<C>(requester: Requester<C>) {
         GiveRewardDocument,
         variables,
         options,
-      );
+      ) as Promise<GiveRewardMutation>;
     },
     rewardsGivenToday(
       variables: RewardsGivenTodayQueryVariables,
@@ -930,7 +917,7 @@ export function getSdk<C>(requester: Requester<C>) {
         RewardsGivenTodayDocument,
         variables,
         options,
-      );
+      ) as Promise<RewardsGivenTodayQuery>;
     },
     CharacterUpdate(
       variables: CharacterUpdateMutationVariables,
@@ -939,7 +926,11 @@ export function getSdk<C>(requester: Requester<C>) {
       return requester<
         CharacterUpdateMutation,
         CharacterUpdateMutationVariables
-      >(CharacterUpdateDocument, variables, options);
+      >(
+        CharacterUpdateDocument,
+        variables,
+        options,
+      ) as Promise<CharacterUpdateMutation>;
     },
     ScoreBoard(
       variables: ScoreBoardQueryVariables,
@@ -949,7 +940,7 @@ export function getSdk<C>(requester: Requester<C>) {
         ScoreBoardDocument,
         variables,
         options,
-      );
+      ) as Promise<ScoreBoardQuery>;
     },
     CombatTotals(
       variables?: CombatTotalsQueryVariables,
@@ -959,7 +950,7 @@ export function getSdk<C>(requester: Requester<C>) {
         CombatTotalsDocument,
         variables,
         options,
-      );
+      ) as Promise<CombatTotalsQuery>;
     },
     DeleteConvo(
       variables: DeleteConvoMutationVariables,
@@ -969,14 +960,14 @@ export function getSdk<C>(requester: Requester<C>) {
         DeleteConvoDocument,
         variables,
         options,
-      );
+      ) as Promise<DeleteConvoMutation>;
     },
     Convo(variables: ConvoQueryVariables, options?: C): Promise<ConvoQuery> {
       return requester<ConvoQuery, ConvoQueryVariables>(
         ConvoDocument,
         variables,
         options,
-      );
+      ) as Promise<ConvoQuery>;
     },
     CreateConvo(
       variables: CreateConvoMutationVariables,
@@ -986,7 +977,7 @@ export function getSdk<C>(requester: Requester<C>) {
         CreateConvoDocument,
         variables,
         options,
-      );
+      ) as Promise<CreateConvoMutation>;
     },
     DeleteCharacter(
       variables: DeleteCharacterMutationVariables,
@@ -995,7 +986,11 @@ export function getSdk<C>(requester: Requester<C>) {
       return requester<
         DeleteCharacterMutation,
         DeleteCharacterMutationVariables
-      >(DeleteCharacterDocument, variables, options);
+      >(
+        DeleteCharacterDocument,
+        variables,
+        options,
+      ) as Promise<DeleteCharacterMutation>;
     },
   };
 }

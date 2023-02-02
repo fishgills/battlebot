@@ -2,7 +2,7 @@ import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { modifier } from 'gamerules';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, In, Repository } from 'typeorm';
 import { CharacterEntity } from './character.entity';
 import { CharacterType } from './character.type';
 import { CreateCharacterInput } from './dto/create-character.dto';
@@ -43,9 +43,12 @@ export class CharacterService {
   }
   findByIds(
     ids: string[],
-    options?: FindManyOptions<CharacterEntity>,
+    // options?: FindManyOptions<CharacterEntity>,
   ): Promise<CharacterType[]> {
-    return this.charRepo.findByIds(ids, options);
+    return this.charRepo.findBy({
+      id: In(ids),
+    });
+    // return this.charRepo.findBy(ids, options);
   }
 
   findByOwner(

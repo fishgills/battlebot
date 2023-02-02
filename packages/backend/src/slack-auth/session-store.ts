@@ -112,7 +112,11 @@ export class DBStore extends Store {
     this.logger.log(`Get`);
 
     this.repository
-      .findOne(id)
+      .findOne({
+        where: {
+          id: id,
+        },
+      })
       .then((session: SessionModel | undefined) => {
         if (!session) {
           return callback(null);

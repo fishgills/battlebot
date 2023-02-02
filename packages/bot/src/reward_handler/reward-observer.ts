@@ -1,14 +1,13 @@
 import { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
-import { ChatPostMessageResponse } from '@slack/web-api';
 import { Blocks } from 'slack-block-builder';
 import { Observer } from '../common/AbstractObserver';
 import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { getUsernames, isGenericMessageEvent } from '../utils/helpers';
 
-export class RewardObserver extends Observer<
-  SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs
-> {
+export class RewardObserver<
+  T extends SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs,
+> extends Observer<T> {
   getHelpBlocks() {
     return [
       Blocks.Section({
@@ -19,10 +18,7 @@ export class RewardObserver extends Observer<
       }),
     ];
   }
-  msgUser(
-    e: SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs,
-    content: string,
-  ): Promise<ChatPostMessageResponse> {
+  msgUser(e, content: string): Promise<any> {
     if (!isGenericMessageEvent(e.message)) return;
 
     return e.client.chat.postEphemeral({
@@ -34,17 +30,13 @@ export class RewardObserver extends Observer<
       // icon_emoji: ':loudspeaker:',
     });
   }
-  msgThread(): Promise<ChatPostMessageResponse> {
+  msgThread() {
     throw new Error('Method not implemented.');
   }
-  listener(
-    e: SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs,
-  ): Promise<void> {
+  listener(e: T): Promise<void> {
     return this.update(e);
   }
-  async update(
-    e: SlackEventMiddlewareArgs<'message'> & AllMiddlewareArgs,
-  ): Promise<void> {
+  async update(e: T): Promise<void> {
     if (!isGenericMessageEvent(e.message)) return;
 
     const users = getUsernames(e.message.text);

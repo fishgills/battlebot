@@ -3,25 +3,20 @@ import {
   SlackActionMiddlewareArgs,
   SlackCommandMiddlewareArgs,
 } from '@slack/bolt';
-import { ChatPostMessageResponse } from '@slack/web-api';
-import { SlackBlockDto } from 'slack-block-builder';
+import { SlackMessageDto, SlackBlockDto } from 'slack-block-builder';
 import { Observer } from './AbstractObserver';
 
-type base = (SlackActionMiddlewareArgs | SlackCommandMiddlewareArgs) &
-  AllMiddlewareArgs;
+type base = AllMiddlewareArgs &
+  (SlackActionMiddlewareArgs | SlackCommandMiddlewareArgs);
 
 export abstract class BaseObserver<R extends base> extends Observer<R> {
   abstract getHandleText(event: base): string;
 
-  async msgUser(
-    event: R,
-    content: string | SlackBlockDto[],
-  ): Promise<ChatPostMessageResponse> {
+  async msgUser(event: R, content: SlackMessageDto | string) {
     return await event.respond({
       response_type: 'ephemeral',
-
-      ...(Array.isArray(content) && { blocks: content }),
-      ...(!Array.isArray(content) && { text: content }),
+      text: typeof content === 'string' ? content : content.text,
+      ...(typeof content !== 'string' && { blocks: content.blocks }),
     });
   }
   listener(e: R): Promise<void> {

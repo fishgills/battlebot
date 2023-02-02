@@ -133,7 +133,6 @@ export type DeleteCharacterInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   CharacterUpdate: Scalars['Int'];
-  CreateStripeCheckoutSession: StripeSession;
   create: UserType;
   createCharacter: CharacterType;
   createCombat: CombatModel;
@@ -153,11 +152,6 @@ export type Mutation = {
 export type MutationCharacterUpdateArgs = {
   id: Scalars['String'];
   input: UpdateCharacterInput;
-};
-
-export type MutationCreateStripeCheckoutSessionArgs = {
-  priceId: Scalars['String'];
-  teamId: Scalars['String'];
 };
 
 export type MutationCreateArgs = {
@@ -245,7 +239,7 @@ export type QueryFindByOwnerArgs = {
 };
 
 export type QueryGetUserScoreArgs = {
-  listType?: InputMaybe<Scalars['String']>;
+  listType?: Scalars['String'];
   teamId: Scalars['String'];
   userId: Scalars['String'];
 };
@@ -280,7 +274,7 @@ export type RewardType = {
 export type RewardsScoreBoardInput = {
   direction: AllowedDirections;
   teamId: Scalars['String'];
-  today?: InputMaybe<Scalars['Boolean']>;
+  today?: Scalars['Boolean'];
 };
 
 export type SlackInstallModel = {
@@ -292,13 +286,6 @@ export type SlackInstallModel = {
   stripeCusId?: Maybe<Scalars['String']>;
   stripeSubId?: Maybe<Scalars['String']>;
   team_id: Scalars['String'];
-};
-
-export type StripeSession = {
-  __typename?: 'StripeSession';
-  cancel_url: Scalars['String'];
-  id: Scalars['String'];
-  success_url: Scalars['String'];
 };
 
 /** Update a character's properties */

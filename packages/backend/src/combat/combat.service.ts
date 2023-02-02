@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CharacterEntity } from 'characters/character.entity';
 import {
-  FindConditions,
   FindManyOptions,
   FindOneOptions,
+  FindOptionsWhere,
+  In,
   Repository,
 } from 'typeorm';
 import { CombatLog } from '../gamerules';
@@ -23,19 +24,23 @@ export class CombatService {
     return this.combatRepo.find(options);
   }
 
-  delete(options?: FindConditions<CombatModel> | string[]) {
+  delete(options?: FindOptionsWhere<CombatModel> | string[]) {
     return this.combatRepo.delete(options);
   }
 
-  findByIds(
-    ids: string[],
-    options?: FindManyOptions<CombatModel>,
-  ): Promise<CombatModel[]> {
-    return this.combatRepo.findByIds(ids, options);
+  findByIds(ids: string[]): Promise<CombatModel[]> {
+    return this.combatRepo.findBy({
+      id: In(ids),
+    });
   }
 
   findOne(id: string, options?: FindOneOptions<CombatModel>) {
-    return this.combatRepo.findOneOrFail(id, options);
+    const conditions = {
+      where: {
+        id: id,
+      },
+    };
+    return this.combatRepo.findOneOrFail({ ...options, ...conditions });
   }
 
   update(id: string, combat: CombatModel) {

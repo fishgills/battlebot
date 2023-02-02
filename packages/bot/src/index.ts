@@ -9,8 +9,7 @@ gab.init({
   locale: 'en-us',
 });
 
-import { App, BlockButtonAction, MemoryStore } from '@slack/bolt';
-import { LogLevel } from '@slack/web-api';
+import { App, BlockButtonAction, LogLevel, MemoryStore } from '@slack/bolt';
 import { isGenericMessageEvent } from './utils/helpers';
 import { Command$ } from './mention_handler';
 import { Action$, ActionsRegex } from './actions';
@@ -27,20 +26,21 @@ const app = new App({
   signingSecret: process.env['SLACK_SIGNING_SECRET'],
   clientId: process.env['SLACK_CLIENT_ID'],
   clientSecret: process.env['SLACK_CLIENT_SECRET'],
-  socketMode: false,
-  developerMode: false,
-  customRoutes: [
-    {
-      path: '/health-check',
-      method: 'GET',
-      handler: (req, res) => {
-        res.writeHead(200), res.end('UP');
-      },
-    },
-  ],
+  // socketMode: false,
+  // developerMode: false,
+  // customRoutes: [
+  //   {
+  //     path: '/health-check',
+  //     method: 'GET',
+  //     handler: (req, res) => {
+  //       res.writeHead(200), res.end('UP');
+  //     },
+  //   },
+  // ],
   convoStore: new MemoryStore(),
   logger: Logger,
   scopes,
+  stateSecret: 'test',
   logLevel: LogLevel.DEBUG,
   installerOptions: {
     stateStore: new MyStateStore(),
@@ -129,7 +129,7 @@ app.event('app_uninstalled', async (args) => {
 });
 
 app.use(async ({ payload, next }) => {
-  const test = await tracer.trace(
+  await tracer.trace(
     `bolt.${(payload as any).text}`,
     {
       measured: false,

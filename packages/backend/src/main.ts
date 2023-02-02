@@ -7,7 +7,6 @@ import session from 'express-session';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DBStore } from './slack-auth/session-store';
-import { getConnection } from 'typeorm';
 import { SessionModel } from './slack-auth/session-model';
 import { Logger } from '@nestjs/common';
 import { MyLogger } from 'logger';
@@ -41,29 +40,35 @@ async function bootstrap() {
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
-  const repo = getConnection().getRepository(SessionModel);
   app.use(
     session({
-      store: new DBStore({
-        repository: repo,
-        logger: new Logger('session-store'),
-        clearExpired: true,
-        expirationInterval: sessionLengthInMs,
-        ttl: sessionLengthInMinutes,
-      }),
-      rolling: true,
-      cookie: {
-        maxAge: sessionLengthInMs,
-        httpOnly: true,
-        // secure: process.env.NODE_ENV === 'production',
-        domain: process.env.DOMAIN,
-        sameSite: 'lax',
-      },
+      secret: process.env.OAUTH2_CLIENT_SECRET || 'boof',
       resave: false,
       saveUninitialized: false,
-      secret: process.env.OAUTH2_CLIENT_SECRET || 'boof',
     }),
   );
+  // app.use(
+  //   session({
+  //     store: new DBStore({
+  //       repository: repo,
+  //       logger: new Logger('session-store'),
+  //       clearExpired: true,
+  //       expirationInterval: sessionLengthInMs,
+  //       ttl: sessionLengthInMinutes,
+  //     }),
+  //     rolling: true,
+  //     cookie: {
+  //       maxAge: sessionLengthInMs,
+  //       httpOnly: true,
+  //       // secure: process.env.NODE_ENV === 'production',
+  //       domain: process.env.DOMAIN,
+  //       sameSite: 'lax',
+  //     },
+  //     resave: false,
+  //     saveUninitialized: false,
+  //     secret: process.env.OAUTH2_CLIENT_SECRET || 'boof',
+  //   }),
+  // );
   app.use(passport.initialize());
   app.use(passport.session());
   const port = Number(process.env.PORT) || 4000;

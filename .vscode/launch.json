@@ -24,6 +24,15 @@
       "request": "attach",
       "skipFiles": ["<node_internals>/**"],
       "type": "pwa-node"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Bot Serverless",
+      "program": "${workspaceFolder}/packages/bot/node_modules/serverless/bin/serverless",
+      "args": ["offline", "start", "--lambdaPort", "3000", "--noTimeout"],
+      "cwd": "${workspaceFolder}/packages/bot",
+      "runtimeExecutable": "node"
     }
   ]
 }

@@ -12,7 +12,11 @@ export class UsersService {
   ) {}
 
   findOne(username: string) {
-    return this.repo.findOne({ username });
+    return this.repo.findOne({
+      where: {
+        username: username,
+      },
+    });
   }
 
   async create(username: string, password: string, role: Role) {

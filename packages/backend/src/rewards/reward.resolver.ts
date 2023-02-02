@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { CreateRewardInput } from './dto/reward.create';
 
@@ -43,6 +43,7 @@ export class RewardResolver {
 
   @Query(() => [RewardScore])
   async ScoreBoard(@Args('input') input: RewardsScoreBoardInput) {
+    Logger.debug(input);
     const result = await this.service.getScoreBoard(
       input.teamId,
       input.direction,

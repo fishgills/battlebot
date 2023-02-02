@@ -15,7 +15,6 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DataloaderModule } from 'dataloader/dataloader.module';
 import { DataloaderService } from 'dataloader/dataloader.service';
 import { ConvoModule } from 'convostore/convo.module';
-import { StripeModule } from './stripe/stripe.module';
 import { AuthModule } from 'auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { HealthModule } from './health/health.module';
@@ -23,7 +22,6 @@ import { database } from 'typeorm/database.config';
 
 @Module({
   imports: [
-    forwardRef(() => StripeModule),
     forwardRef(() => CharacterModule),
     CombatModule,
     SlackInstallModule,

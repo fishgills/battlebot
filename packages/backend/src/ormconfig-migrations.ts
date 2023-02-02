@@ -1,40 +1,43 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
-import { ConnectionOptionsReader } from 'typeorm/connection/ConnectionOptionsReader';
 import { database } from './typeorm/database.config';
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { DataSource } from 'typeorm';
 
-function patchAsyncConnectionSetup() {
-  const prototype = ConnectionOptionsReader.prototype as any;
+// function patchAsyncConnectionSetup() {
+//   const prototype = ConnectionOptionsReader.prototype as any;
 
-  const original = prototype.normalizeConnectionOptions;
+//   const original = prototype.normalizeConnectionOptions;
 
-  prototype.normalizeConnectionOptions = function (
-    options: Promise<any> | object,
-  ) {
-    if ('then' in options) {
-      return options.then((arg) => original.call(this, arg));
-    }
+//   prototype.normalizeConnectionOptions = function (
+//     options: Promise<any> | object,
+//   ) {
+//     if ('then' in options) {
+//       return options.then((arg) => original.call(this, arg));
+//     }
 
-    return original.call(this, options);
-  };
-}
-patchAsyncConnectionSetup();
+//     return original.call(this, options);
+//   };
+// }
+// patchAsyncConnectionSetup();
 
-/**
- * @Type - @config- For typeOrm with Database
- * @name ConnectionOptions
- * @description This ConnectionOptions used to access the database cred for app.
- * @return { export } export the database configurations to use on time migrations,seeds with cli.
- */
+// /**
+//  * @Type - @config- For typeOrm with Database
+//  * @name ConnectionOptions
+//  * @description This ConnectionOptions used to access the database cred for app.
+//  * @return { export } export the database configurations to use on time migrations,seeds with cli.
+//  */
 
-async function buildConnectionOptions() {
-  const config: PostgresConnectionOptions = {
-    ...database,
-  };
-  return config;
-}
+// async function buildConnectionOptions() {
+//   const config: PostgresConnectionOptions = {
+//     ...database,
+//   };
+//   return config;
+// }
 
-const config = buildConnectionOptions();
+// const config = buildConnectionOptions();
 
-export default config;
+// export default config;
+
+const db = new DataSource(database);
+
+export default db;

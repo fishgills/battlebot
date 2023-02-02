@@ -28,7 +28,7 @@
   "create_help_command": "`{0} apply <CloneName>`",
   "create_update_invalid": "Invalid command. Should be `apply <CloneName>`.",
   "create_update_already_have_char": "You already have a clone working here.",
-  "create_update_char_created": "Your clone has been created. Next, you need to finish its application.",
+  "create_update_char_created": "Your clone has been created. Next, you need to finish its application with `/mediator resume`.",
   "help_no_command": "No command received... maybe you need help? Don't forget to click on my name to see leaderboards.",
   "reward_left": "You are trying to give away {0} rewards, but you only have {1} left today!",
   "reward_given": "You have given {0} rewards today. You have {1} left.",

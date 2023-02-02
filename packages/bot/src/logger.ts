@@ -1,8 +1,8 @@
-import { Logger, LogLevel } from '@slack/web-api';
 import tracer from 'dd-trace';
 import * as bLogger from 'bunyan';
 import bStream from 'bunyan-debug-stream';
 import { format } from 'date-fns';
+import { Logger, LogLevel } from '@slack/bolt';
 
 export class BotLogger implements Logger {
   private log: bLogger;

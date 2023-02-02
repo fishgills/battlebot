@@ -23,7 +23,9 @@ export class SlackInstallResolver {
   @Query(() => SlackInstallModel)
   install(@Args('team_id', { type: () => String }) team_id: string) {
     return this.service.findOne({
-      team_id: team_id,
+      where: {
+        team_id,
+      },
     });
   }
 
@@ -34,7 +36,9 @@ export class SlackInstallResolver {
   ) {
     await this.service.createInstall(input);
     return this.service.findOne({
-      team_id: input.team_id,
+      where: {
+        team_id: input.team_id,
+      },
     });
   }
 

@@ -5,12 +5,12 @@ import { CharacterEntity } from '../characters/character.entity';
 import { RewardEntity } from '../rewards/reward.entity';
 import { ConvoEntity } from '../convostore/convo.entity';
 import { UserEntity } from '../users/users.entity';
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { TypeOrmLoggerAdapter } from '@eropple/typeorm-bunyan-logger';
 import { MyLogger } from '../logger';
+import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
-export const database: PostgresConnectionOptions = {
-  type: 'postgres',
+export const database: MysqlConnectionOptions = {
+  type: 'mysql',
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   host: process.env.DB_HOST,
@@ -21,9 +21,10 @@ export const database: PostgresConnectionOptions = {
   logger: new TypeOrmLoggerAdapter(MyLogger.Logger),
   cache: false,
   migrations: [`${__dirname}/migrations/*.{ts,js}`],
-  cli: {
-    migrationsDir: `${__dirname}/migrations`,
-  },
+  migrationsTableName: 'history',
+  // cli: {
+  //   migrationsDir: `${__dirname}/migrations`,
+  // },
 
   entities: [
     CombatModel,

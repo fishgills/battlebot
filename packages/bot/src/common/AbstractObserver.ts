@@ -1,5 +1,4 @@
-import { ChatPostMessageResponse } from '@slack/web-api';
-import { SectionBuilder, SlackBlockDto } from 'slack-block-builder';
+import { SectionBuilder, SlackMessageDto } from 'slack-block-builder';
 import { Logger } from '../logger';
 
 export abstract class Observer<T> {
@@ -16,10 +15,7 @@ export abstract class Observer<T> {
     this.logger.debug(msg);
   }
 
-  abstract msgUser(
-    event: T,
-    content: SlackBlockDto[] | string,
-  ): Promise<ChatPostMessageResponse>;
+  abstract msgUser(event: T, content: SlackMessageDto | string): Promise<any>;
 
   abstract listener(e: T): Promise<void>;
 

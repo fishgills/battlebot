@@ -1,7 +1,6 @@
-import { ResultGroup } from '@dice-roller/rpg-dice-roller/types/results';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindConditions, Repository } from 'typeorm';
+import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { CreateSlackInstallInput } from './create-install.dto';
 import { SlackInstallModel } from './install.model';
 import { UpdateSlackInstallInput } from './update-install.dto';
@@ -17,7 +16,7 @@ export class SlackInstallService {
     return this.slackRepo.find();
   }
 
-  public findOne(options: FindConditions<SlackInstallModel>) {
+  public findOne(options: FindOneOptions<SlackInstallModel>) {
     return this.slackRepo.findOneOrFail(options);
   }
 
@@ -30,14 +29,18 @@ export class SlackInstallService {
   }
 
   async update(
-    conditions: FindConditions<SlackInstallModel>,
+    conditions: FindOptionsWhere<SlackInstallModel>,
     entity: Partial<SlackInstallModel>,
   ): Promise<SlackInstallModel> {
     await this.slackRepo.update(conditions, entity);
-    return this.slackRepo.findOne(entity.id);
+    return this.slackRepo.findOne({
+      where: {
+        id: entity.id,
+      },
+    });
   }
 
-  public async deleteInstall(conditions: FindConditions<SlackInstallModel>) {
+  public async deleteInstall(conditions: FindOptionsWhere<SlackInstallModel>) {
     const result = await this.slackRepo.delete(conditions);
     return result.affected;
   }

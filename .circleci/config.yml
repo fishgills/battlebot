@@ -9,7 +9,6 @@ workflows:
       - path-filtering/filter:
           mapping: |
             packages/backend/.* backend true
-            packages/bot/.* bot true
             packages/web/.* web true
           base-revision: master
 # parameters:

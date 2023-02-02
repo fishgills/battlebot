@@ -12,18 +12,22 @@
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
   },
   "devDependencies": {
+    "@serverless/typescript": "^3.25.0",
     "@types/bunyan": "^1.8.8",
     "@types/jsonwebtoken": "^9.0.0",
+    "@types/serverless": "^3",
     "concurrently": "^7.6.0",
+    "esbuild": "^0.16.17",
     "nodemon": "^2.0.20",
     "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "~4.9.4"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
     "@slack/bolt": "^3.12.2",
-    "@slack/web-api": "^6.8.0",
+    "@slack/oauth": "^2.6.0",
     "@types/node": "^18.11.18",
     "apollo-link-token-refresh": "^0.4.0",
     "bunyan": "^1.8.15",

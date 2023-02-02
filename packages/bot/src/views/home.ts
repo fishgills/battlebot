@@ -26,7 +26,7 @@ const rewardScores = (
   fromScoreBoard: RewardScore[],
   home: HomeTabBuilder,
 ) => {
-  const rewardScoreReduce = (prev, curr, index, arr) => {
+  const rewardScoreReduce = (prev, curr, index) => {
     prev.push(`${index + 1}) <@${curr.userId}>`, curr.count + '');
     return prev;
   };

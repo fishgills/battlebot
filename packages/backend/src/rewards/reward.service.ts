@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { startOfToday, startOfWeek, subHours } from 'date-fns';
 
@@ -30,7 +30,7 @@ export class RewardService {
       where: {
         source: user,
         teamId,
-        created_at: MoreThan(subHours(Date.now(), 24).toISOString()),
+        created_at: MoreThan(subHours(Date.now(), 24)),
       },
     });
   }
@@ -46,14 +46,14 @@ export class RewardService {
 
   getScoreBoard(teamId: string, direction: AllowedDirections, today?: boolean) {
     const query = this.repo
-      .createQueryBuilder()
-      .select(`\`${direction}\``, 'userId')
+      .createQueryBuilder('scores')
+      .select(`"scores.${direction}"`, 'userId')
       .addSelect('teamId')
       .addSelect('count(*)', 'count')
       .andWhere('teamId = :id', {
         id: teamId,
       })
-      .groupBy(`\`${direction}\``)
+      .groupBy(`"${direction}"`)
       .orderBy('count', 'DESC');
     if (today) {
       const today = startOfToday().toISOString();
@@ -61,7 +61,7 @@ export class RewardService {
         date: today,
       });
     }
-
+    Logger.debug(query.getQueryAndParameters());
     return query.getRawMany();
   }
 }

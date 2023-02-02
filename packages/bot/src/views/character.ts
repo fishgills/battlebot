@@ -1,6 +1,11 @@
 import { RespondFn } from '@slack/bolt';
-import { WebClient } from '@slack/web-api';
-import { Blocks, Elements, Message, setIfTruthy } from 'slack-block-builder';
+import {
+  Blocks,
+  Elements,
+  Message,
+  setIfTruthy,
+  SlackMessageDto,
+} from 'slack-block-builder';
 import { CharacterType, StartCombatMutation } from '../generated/graphql';
 import { t } from '../locale';
 import { nextLevel, numToEmoji } from '../utils/helpers';
@@ -11,7 +16,7 @@ export const notifyLevelUp = (
   org_defender: CharacterType,
   attacker_resp: RespondFn,
   org_def_slack_id: string,
-  event: WebClient,
+  event: any,
 ) => {
   if (winner.id === org_attacker.id && winner.level > org_attacker.level) {
     return attacker_resp({
@@ -130,8 +135,9 @@ export const characterSheetBlocks = (character: Partial<CharacterType>) => {
 };
 export const editCharacterModal = (character: Partial<CharacterType>) => {
   return Message()
+    .asUser()
     .blocks(...characterSheetBlocks(character))
-    .getBlocks();
+    .buildToObject();
 };
 
 export const battleLog = (options: {
@@ -217,6 +223,9 @@ export const battleLog = (options: {
 
   return Message()
     .channel(options.channel)
+    .text(
+      `${options.combat.start.attacker.name} has defeated ${options.combat.start.defender.name}`,
+    )
     .blocks(...blocks)
     .buildToObject();
 };

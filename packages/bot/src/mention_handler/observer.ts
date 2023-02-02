@@ -1,5 +1,4 @@
 import { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from '@slack/bolt';
-import { SectionBuilder } from 'slack-block-builder';
 import { BaseObserver } from '../common/BaseObserver';
 
 type ObserveType = SlackCommandMiddlewareArgs & AllMiddlewareArgs;
