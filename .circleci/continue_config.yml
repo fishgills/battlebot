@@ -37,7 +37,7 @@ jobs:
           repo: 'mediator-<< parameters.package_name >>'
           dockerfile: packages/<< parameters.package_name >>/Dockerfile
           platform: linux/arm64
-          extra-build-args: --build-arg SHA1=${CIRCLE_SHA1}
+          extra-build-args: --build-arg SHA1=${CIRCLE_SHA1} --build-arg APP=<< parameters.package_name >>
           create-repo: false
           tag: '${CIRCLE_SHA1},latest'
           # tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
