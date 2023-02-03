@@ -39,7 +39,7 @@ jobs:
           platform: linux/arm64
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1} --build-arg APP=<< parameters.package_name >>
           create-repo: false
-          tag: '${CIRCLE_SHA1},latest'
+          tag: 'latest'
           # tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
 
   deploy:
@@ -57,7 +57,7 @@ jobs:
           family: 'mediator-<< parameters.package_name >>'
           cluster: 'mediator-cluster'
           service-name: '<< parameters.package_name >>-Service'
-          container-image-name-updates: 'container=<< parameters.package_name >>,tag=${CIRCLE_SHA1}'
+          container-image-name-updates: 'container=<< parameters.package_name >>,tag=latest'
           # container-env-var-updates: 'container=<< parameters.package_name >>,name=DD_VERSION,value=${CIRCLE_SHA1}'
 
 workflows:
