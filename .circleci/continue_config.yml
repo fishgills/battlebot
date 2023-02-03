@@ -16,7 +16,7 @@ parameters:
     default: false
 
 jobs:
-  build:
+  deploy_fargate:
     parameters:
       package_name:
         type: string
@@ -27,30 +27,15 @@ jobs:
     working_directory: ~/project/
 
     steps:
-      - checkout:
-          path: ~/project
+      - checkout
       - aws-ecr/build-and-push-image:
           repo: 'mediator-<< parameters.package_name >>'
-          remote-docker-layer-caching: true
-          setup-remote-docker: true
           dockerfile: Dockerfile
           platform: linux/arm64
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1} --build-arg APP=<< parameters.package_name >>
           create-repo: false
           tag: 'latest'
           # tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
-
-  deploy:
-    parameters:
-      package_name:
-        type: string
-    machine:
-      image: ubuntu-2204:2022.04.2 # recommended linux image
-    resource_class: medium
-    working_directory: ~/project/packages/<< parameters.package_name >>
-    steps:
-      - checkout:
-          path: ~/project
       - aws-ecs/update-service:
           family: 'mediator-<< parameters.package_name >>'
           cluster: 'mediator-cluster'
@@ -59,54 +44,25 @@ jobs:
           # container-env-var-updates: 'container=<< parameters.package_name >>,name=DD_VERSION,value=${CIRCLE_SHA1}'
 
 workflows:
-  web:
-    when: << pipeline.parameters.web >>
-    jobs:
-      - build:
-          name: web-build
-          package_name: web
-          context: EnvVariables
-      - deploy:
-          filters:
-            branches:
-              only:
-                - master
-          name: web-deploy
-          context: EnvVariables
-          package_name: web
-          requires:
-            - web-build
   backend:
     when: << pipeline.parameters.backend >>
     jobs:
-      - build:
+      - deploy_fargate:
           name: backend-build
           package_name: backend
           context: EnvVariables
-      - deploy:
           filters:
             branches:
               only:
                 - master
-          name: backend-deploy
-          context: EnvVariables
-          package_name: backend
-          requires:
-            - backend-build
   bot:
     when: << pipeline.parameters.bot >>
     jobs:
-      - build:
+      - deploy_fargate:
           name: bot-build
           package_name: bot
           context: EnvVariables
-      - deploy:
           filters:
             branches:
               only:
                 - master
-          name: bot-deploy
-          context: EnvVariables
-          package_name: bot
-          requires:
-            - bot-build
