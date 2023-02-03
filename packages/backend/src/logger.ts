@@ -10,32 +10,10 @@ export class MyLogger extends ConsoleLogger {
 
   @cache
   static get Logger() {
-    let logger: bLogger;
-    if (process.env.NODE_ENV === 'production') {
-      logger = bLogger.createLogger({
-        name: 'server',
-        level: 'debug',
-      });
-    } else {
-      logger = bLogger.createLogger({
-        name: 'server-dev',
-        streams: [
-          {
-            level: 'debug',
-            type: 'raw',
-            stream: bStream({}),
-          },
-          {
-            type: 'rotating-file',
-            period: '1d',
-            count: 3,
-            path: '/tmp/server.log',
-            level: 'debug',
-          },
-        ],
-      });
-    }
-    return logger;
+    return bLogger.createLogger({
+      name: 'server',
+      level: 'debug',
+    });
   }
 
   public constructor() {

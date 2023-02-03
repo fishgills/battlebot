@@ -1,6 +1,5 @@
 import tracer from 'dd-trace';
 import * as bLogger from 'bunyan';
-import bStream from 'bunyan-debug-stream';
 import { format } from 'date-fns';
 import { Logger, LogLevel } from '@slack/bolt';
 
@@ -11,30 +10,10 @@ export class BotLogger implements Logger {
   private level: LogLevel;
 
   public constructor() {
-    if (process.env.NODE_ENV === 'production') {
-      this.log = bLogger.createLogger({
-        name: 'bot',
-        level: 'debug',
-      });
-    } else {
-      this.log = bLogger.createLogger({
-        name: 'bot-dev',
-        streams: [
-          {
-            level: 'debug',
-            type: 'raw',
-            stream: bStream({}),
-          },
-          {
-            type: 'rotating-file',
-            period: '1d',
-            count: 3,
-            path: '/tmp/bot.log',
-            level: 'info',
-          },
-        ],
-      });
-    }
+    this.log = bLogger.createLogger({
+      name: 'bot',
+      level: 'debug',
+    });
   }
 
   public getLevel(): LogLevel {
