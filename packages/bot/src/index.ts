@@ -28,15 +28,15 @@ const app = new App({
   clientSecret: process.env['SLACK_CLIENT_SECRET'],
   // socketMode: false,
   // developerMode: false,
-  // customRoutes: [
-  //   {
-  //     path: '/health-check',
-  //     method: 'GET',
-  //     handler: (req, res) => {
-  //       res.writeHead(200), res.end('UP');
-  //     },
-  //   },
-  // ],
+  customRoutes: [
+    {
+      path: '/health',
+      method: 'GET',
+      handler: (req, res) => {
+        res.writeHead(200), res.end('UP');
+      },
+    },
+  ],
   convoStore: new MemoryStore(),
   logger: Logger,
   scopes,

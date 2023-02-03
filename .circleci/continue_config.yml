@@ -7,10 +7,10 @@ parameters:
   # A parameter per package
   backend:
     type: boolean
-    default: true
+    default: false
   bot:
     type: boolean
-    default: true
+    default: false
   web:
     type: boolean
     default: false
