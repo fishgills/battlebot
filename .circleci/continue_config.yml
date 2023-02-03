@@ -20,9 +20,11 @@ jobs:
     parameters:
       package_name:
         type: string
-    resource_class: medium
-    machine:
-      image: ubuntu-2204:current
+    resource_class: Docker.medium
+    docker:
+      - image: cimg/base:current
+    # machine:
+    #   image: ubuntu-2204:current
     working_directory: ~/project/
 
     steps:
