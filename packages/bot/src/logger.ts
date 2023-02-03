@@ -50,7 +50,7 @@ export class BotLogger implements Logger {
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   private record(record: any): [{ time: string }, any] {
-    // this.injectDDTrace(record);
+    this.injectDDTrace(record);
     return [
       {
         time: format(new Date(), 'dd/LLL/yyyy:H:m:s XX'),
