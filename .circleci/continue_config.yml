@@ -20,7 +20,6 @@ jobs:
     parameters:
       package_name:
         type: string
-    resource_class: medium
     machine:
       docker_layer_caching: true # Docker Layer Caching
       resource_class: arm.medium # Resource Class(ARM VM)
