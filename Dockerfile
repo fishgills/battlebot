@@ -46,4 +46,4 @@ COPY --from=builder /app/packages/$APP/dist/ /app/packages/$APP/
 WORKDIR /app/packages/$APP/
 RUN yarn install --prod
 HEALTHCHECK CMD curl -f http://localhost:${PORT}/health || exit 1
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT /app/packages/$APP/docker-entrypoint.sh
