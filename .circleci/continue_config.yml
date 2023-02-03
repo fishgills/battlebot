@@ -29,6 +29,10 @@ jobs:
       - checkout:
           path: ~/project
       - run:
+          name: ECR Login
+          command: |
+            aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+      - run:
           name: Pull image
           command: |
             docker pull ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/mediator-<< parameters.package_name >>:latest
