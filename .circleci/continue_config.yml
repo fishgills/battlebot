@@ -35,7 +35,7 @@ jobs:
           path: ~/project
       - aws-ecr/build-and-push-image:
           repo: 'mediator-<< parameters.package_name >>'
-          dockerfile: packages/<< parameters.package_name >>/Dockerfile
+          dockerfile: Dockerfile
           platform: linux/arm64
           extra-build-args: --build-arg SHA1=${CIRCLE_SHA1} --build-arg APP=<< parameters.package_name >>
           create-repo: false
