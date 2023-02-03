@@ -34,7 +34,6 @@ LABEL com.datadoghq.tags.version=$SHA1
 
 WORKDIR /app
 
-RUN apk add curl 
 COPY --from=builder /app/yarn.lock /app/yarn.lock
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/packages/$APP/package.json /app/packages/$APP/package.json
@@ -46,5 +45,7 @@ COPY --from=builder /app/packages/$APP/dist/ /app/packages/$APP/
 
 WORKDIR /app/packages/$APP/
 RUN yarn install --prod
+RUN apk add curl 
+
 HEALTHCHECK CMD curl -f http://localhost:${PORT}/health || exit 1
 ENTRYPOINT /app/packages/$APP/docker-entrypoint.sh
