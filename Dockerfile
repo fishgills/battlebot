@@ -27,6 +27,7 @@ ENV DB_PASSWORD $DB_PASSWORD
 ARG APP
 ENV APP $APP
 ARG SHA1
+ENV SHA1 $SHA1
 
 LABEL com.datadoghq.tags.env=production
 LABEL com.datadoghq.tags.service=$APP
