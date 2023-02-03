@@ -15,18 +15,13 @@ parameters:
     type: boolean
     default: false
 
-executors:
-  node:
-    docker:
-      - image: cimg/node:lts
-
 jobs:
   build:
     parameters:
       package_name:
         type: string
     docker:
-      - image: cimg/base:2021.04
+      - image: cimg/base:2020.01
     # machine:
     #   image: ubuntu-2004:current
     # resource_class: arm.medium
