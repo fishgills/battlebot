@@ -24,7 +24,7 @@ jobs:
       - image: cimg/base:current
     # machine:
     #   image: ubuntu-2004:current
-    # resource_class: arm.medium
+    resource_class: Docker.Medium
     working_directory: ~/project/
 
     steps:
