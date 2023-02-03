@@ -21,7 +21,7 @@ jobs:
       package_name:
         type: string
     docker:
-      - image: cimg/base
+      - image: cimg/base:current
     # machine:
     #   image: ubuntu-2004:current
     resource_class: arm.medium
