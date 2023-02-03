@@ -20,7 +20,7 @@ jobs:
     parameters:
       package_name:
         type: string
-    resource_class: Docker.medium
+    resource_class: medium
     docker:
       - image: cimg/base:current
     # machine:
