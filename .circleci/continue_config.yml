@@ -34,6 +34,8 @@ jobs:
       - checkout:
           path: ~/project
       - aws-ecr/build-and-push-image:
+          remote-docker-layer-caching: true
+          setup-remote-docker: true
           repo: 'mediator-<< parameters.package_name >>'
           dockerfile: Dockerfile
           platform: linux/arm64
