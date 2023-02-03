@@ -21,10 +21,10 @@ jobs:
       package_name:
         type: string
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base
     # machine:
     #   image: ubuntu-2004:current
-    # resource_class: arm.medium
+    resource_class: arm.medium
     working_directory: ~/project/
 
     steps:
