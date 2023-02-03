@@ -1,4 +1,4 @@
 #!/bin/sh
 
-echo "Starting the slack bot"
+echo "Starting the slack bot!"
 node index.js
