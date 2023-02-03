@@ -25,9 +25,11 @@ jobs:
     parameters:
       package_name:
         type: string
-    machine:
-      image: ubuntu-2004:current
-    resource_class: arm.medium
+    docker:
+      - image: cimg/base:2021.04
+    # machine:
+    #   image: ubuntu-2004:current
+    # resource_class: arm.medium
     working_directory: ~/project/
 
     steps:
