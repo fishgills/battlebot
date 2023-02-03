@@ -28,10 +28,11 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run:
+          name: Pull image
+          command: |
+            docker pull ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/mediator-<< parameters.package_name >>:latest
       - aws-ecr/build-and-push-image:
-          executor: aws-ecr/default
-          remote-docker-layer-caching: true
-          setup-remote-docker: true
           repo: 'mediator-<< parameters.package_name >>'
           dockerfile: Dockerfile
           platform: linux/arm64
