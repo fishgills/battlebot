@@ -75,5 +75,5 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/docker-entrypoint.sh ./
 RUN chmod +x /app/docker-entrypoint.sh
 RUN yarn install --prod
-# HEALTHCHECK CMD curl -f http://localhost:$PORT/.well-known/apollo/server-health || exit 1
+HEALTHCHECK CMD curl -f http://localhost:$PORT/health || exit 1
 ENTRYPOINT ["./docker-entrypoint.sh"]
