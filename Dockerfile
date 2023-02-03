@@ -24,9 +24,14 @@ ENV DB_HOST $DB_HOST
 
 ARG DB_PASSWORD
 ENV DB_PASSWORD $DB_PASSWORD
-
 ARG APP
+ARG SHA1
 
+LABEL com.datadoghq.tags.env=production
+LABEL com.datadoghq.tags.service=$APP
+LABEL com.datadoghq.tags.version=$SHA1
+
+ENV NODE_ENV production
 WORKDIR /app
 
 
