@@ -23,7 +23,7 @@ export class HelpObserver extends MentionObserver {
         }),
         this.blocks,
       )
-      .getBlocks();
+      .buildToObject();
 
     this.msgUser(e, helpBlocks);
     return;

@@ -27,7 +27,7 @@ export class RerollObserver extends ActionObserver {
       ).reroll;
       await event.respond({
         response_type: 'ephemeral',
-        blocks: editCharacterModal(char),
+        blocks: editCharacterModal(char).blocks,
       });
     } catch (e) {
       await event.respond(e.response.errors[0].message);
