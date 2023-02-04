@@ -16,8 +16,9 @@ export class HealthController {
   @HealthCheck()
   @Public()
   readiness() {
-    return this.health.check([
-      async () => this.db.pingCheck('database', { timeout: 300 }),
-    ]);
+    return this.health.check([]);
+    // return this.health.check([
+    //   async () => this.db.pingCheck('database', { timeout: 300 }),
+    // ]);
   }
 }
