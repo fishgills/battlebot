@@ -55,7 +55,7 @@ const app = new App({
     port,
   });
   Logger.info(`Starting mode: ${process.env.NODE_ENV}`);
-  Logger.info('Starting bolt', port);
+  Logger.info('Starting bolt with port:', port);
 })();
 
 app.message(t('reward_emoji'), async (args) => {

@@ -1,24 +1,7 @@
 {
   "folders": [
     {
-      "name": "web",
-      "path": "packages/web"
-    },
-    {
-      "name": "backend",
-      "path": "packages/backend"
-    },
-    {
-      "name": "bot",
-      "path": "packages/bot"
-    },
-    {
-      "name": "stripe",
-      "path": "packages/stripe"
-    },
-    {
-      "path": ".",
-      "name": "root"
+      "path": "."
     }
   ],
   "settings": {

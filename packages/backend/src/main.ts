@@ -4,10 +4,10 @@ dotenv.config();
 import 'axios-debug-log';
 import passport from 'passport';
 import session from 'express-session';
+import MySQLStoreCreator from 'express-mysql-session';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DBStore } from './slack-auth/session-store';
-import { SessionModel } from './slack-auth/session-model';
+import * as mysql2 from 'mysql2/promise';
 import { Logger } from '@nestjs/common';
 import { MyLogger } from 'logger';
 const whitelist = [
@@ -40,13 +40,37 @@ async function bootstrap() {
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
+  const options = {
+    host: process.env['DB_HOST'],
+    port: 3306,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: 'bot',
+    expiration: 1000 * 60 * 60 * 24,
+  };
+
+  const connection = mysql2.createPool({
+    host: process.env['DB_HOST'],
+    port: 3306,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: 'bot',
+  });
+  const sessionStore = new (MySQLStoreCreator(session as any))({}, connection);
+
   app.use(
     session({
       secret: process.env.OAUTH2_CLIENT_SECRET || 'boof',
+      store: sessionStore,
       resave: false,
       saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24,
+      },
     }),
   );
+
   // app.use(
   //   session({
   //     store: new DBStore({
