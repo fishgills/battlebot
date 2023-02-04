@@ -73,7 +73,7 @@ async function bootstrap() {
   app.use(passport.session());
   const port = Number(process.env.PORT) || 4000;
   const hostname = process.env.HOSTNAME || '0.0.0.0';
-  await app.listen(port, hostname, () => {
+  await app.listen(port, '0.0.0.0', () => {
     const addr =
       'http' + (ssl ? 's' : '') + '://' + hostname + ':' + port + '/';
     Logger.log('Listening at ' + addr);
