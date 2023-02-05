@@ -1,21 +1,30 @@
 import tracer from 'dd-trace';
-import * as bLogger from 'bunyan';
 import { format } from 'date-fns';
 import { Logger, LogLevel } from '@slack/bolt';
-
+import {
+  createLogger,
+  transports,
+  format as wformat,
+  Logger as wLogger,
+} from 'winston';
 export class BotLogger implements Logger {
-  private log: bLogger;
+  private log: wLogger;
 
   /** Setting for level */
   private level: LogLevel;
 
   public constructor() {
-    this.log = bLogger.createLogger({
-      name: 'bot',
+    console.log('creating logger');
+    this.log = createLogger({
       level: 'debug',
+      exitOnError: false,
+      format:
+        process.env['NODE_ENV'] !== 'production'
+          ? wformat.combine(wformat.colorize(), wformat.simple())
+          : wformat.json(),
+      transports: new transports.Console(),
     });
   }
-
   public getLevel(): LogLevel {
     return this.level;
   }
@@ -28,21 +37,22 @@ export class BotLogger implements Logger {
   }
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  private record(record: any): [{ time: string }, any] {
+  private record(record: any) {
     this.injectDDTrace(record);
-    return [
-      {
-        time: format(new Date(), 'dd/LLL/yyyy:H:m:s XX'),
-      },
-      record,
-    ];
+    return record;
+    // return [
+    //   {
+    //     time: format(new Date(), 'dd/LLL/yyyy:H:m:s XX'),
+    //   },
+    //   record,
+    // ];
   }
 
   /**
    * Sets the instance's log level so that only messages which are equal or more severe are output to the console.
    */
   public setLevel(level: LogLevel): void {
-    this.log.level(level);
+    return;
   }
 
   /**
@@ -56,28 +66,28 @@ export class BotLogger implements Logger {
    * Log a debug message
    */
   public debug(...msg: any[]): void {
-    msg.forEach((record) => this.log.debug(...this.record(record)));
+    msg.forEach((record) => this.log.debug(this.record(record)));
   }
 
   /**
    * Log an info message
    */
   public info(...msg: any[]): void {
-    msg.forEach((record) => this.log.info(...this.record(record)));
+    msg.forEach((record) => this.log.info(this.record(record)));
   }
 
   /**
    * Log a warning message
    */
   public warn(...msg: any[]): void {
-    msg.forEach((record) => this.log.warn(...this.record(record)));
+    msg.forEach((record) => this.log.warn(record));
   }
 
   /**
    * Log an error message
    */
   public error(...msg: any[]): void {
-    msg.forEach((record) => this.log.error(...this.record(record)));
+    msg.forEach((record) => this.log.error(record));
   }
 }
 const Logger = new BotLogger();

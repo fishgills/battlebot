@@ -9,7 +9,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as mysql2 from 'mysql2/promise';
 import { Logger } from '@nestjs/common';
-import { MyLogger } from 'logger';
+import { WinstonModule } from 'nest-winston';
+import winston from 'winston';
 const whitelist = [
   'battlebot.ngrok.io',
   'mediatingmediator.com',
@@ -25,7 +26,18 @@ async function bootstrap() {
   const ssl = process.env.SSL ? true : false;
 
   const app = await NestFactory.create(AppModule, {
-    logger: new MyLogger(),
+    logger: WinstonModule.createLogger({
+      level: 'debug',
+      exitOnError: false,
+      format:
+        process.env.NODE_ENV !== 'production'
+          ? winston.format.combine(
+              winston.format.colorize(),
+              winston.format.simple(),
+            )
+          : winston.format.json(),
+      transports: new winston.transports.Console(),
+    }),
   });
   app.enableCors({
     origin: (origin, callback) => {
@@ -40,14 +52,6 @@ async function bootstrap() {
     preflightContinue: false,
     optionsSuccessStatus: 204,
   });
-  const options = {
-    host: process.env['DB_HOST'],
-    port: 3306,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: 'bot',
-    expiration: 1000 * 60 * 60 * 24,
-  };
 
   const connection = mysql2.createPool({
     host: process.env['DB_HOST'],

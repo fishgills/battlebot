@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { forwardRef, Logger, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CharacterModule } from './characters/character.module';
@@ -56,8 +56,7 @@ import { database } from 'typeorm/database.config';
     UsersModule,
     HealthModule,
   ],
-  providers: [],
-
+  providers: [Logger],
   controllers: [],
 })
 export class AppModule {}

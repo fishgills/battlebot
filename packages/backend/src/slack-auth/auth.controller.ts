@@ -14,7 +14,7 @@ import { SlackLoginGuard } from './login.guard';
 
 @Controller()
 export class SlackAuthController {
-  private readonly logger = new Logger(SlackAuthController.name);
+  constructor(private readonly logger: Logger) {}
   @UseGuards(SlackLoginGuard)
   @Get('/login')
   login() {

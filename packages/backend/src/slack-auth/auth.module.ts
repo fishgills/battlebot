@@ -1,5 +1,5 @@
 // src/auth/auth.module.ts
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { SlackAuthController } from './auth.controller';
 import { buildOpenIdClient, OidcStrategy } from './oidc.strategy';
@@ -19,6 +19,6 @@ const OidcStrategyFactory = {
     PassportModule.register({ session: true, defaultStrategy: 'oidc' }),
   ],
   controllers: [SlackAuthController],
-  providers: [OidcStrategyFactory, SessionSerializer],
+  providers: [OidcStrategyFactory, SessionSerializer, Logger],
 })
 export class SlackAuthModule {}

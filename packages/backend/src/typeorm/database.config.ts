@@ -5,8 +5,6 @@ import { CharacterEntity } from '../characters/character.entity';
 import { RewardEntity } from '../rewards/reward.entity';
 import { ConvoEntity } from '../convostore/convo.entity';
 import { UserEntity } from '../users/users.entity';
-import { TypeOrmLoggerAdapter } from '@eropple/typeorm-bunyan-logger';
-import { MyLogger } from '../logger';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
 export const database: MysqlConnectionOptions = {
@@ -18,7 +16,6 @@ export const database: MysqlConnectionOptions = {
   dropSchema: false,
   synchronize: false,
   migrationsRun: false,
-  logger: new TypeOrmLoggerAdapter(MyLogger.Logger),
   cache: false,
   migrations: [`${__dirname}/migrations/*.{ts,js}`],
   migrationsTableName: 'history',

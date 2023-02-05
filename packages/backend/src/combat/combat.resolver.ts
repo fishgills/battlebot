@@ -8,7 +8,6 @@ import {
   ResolveField,
   Parent,
   Context,
-  Int,
   ID,
 } from '@nestjs/graphql';
 import { CharacterType } from 'characters/character.type';
@@ -20,10 +19,10 @@ import { CombatService } from './combat.service';
 import { CreateCombatInput } from './dto/create-combat.input';
 @Resolver(() => CombatModel)
 export class CombatResolver {
-  private readonly logger = new Logger(CombatResolver.name);
   constructor(
     @Inject(CombatService) private combatService: CombatService,
     @Inject(CharacterService) private charService: CharacterService,
+    private readonly logger: Logger,
   ) {}
 
   @Query(() => [CombatModel])

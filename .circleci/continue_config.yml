@@ -7,10 +7,10 @@ parameters:
   # A parameter per package
   backend:
     type: boolean
-    default: false
+    default: true
   bot:
     type: boolean
-    default: false
+    default: true
   web:
     type: boolean
     default: false
@@ -41,7 +41,7 @@ jobs:
           cluster: 'mediator-cluster'
           service-name: '<< parameters.package_name >>-Service'
           container-image-name-updates: 'container=<< parameters.package_name >>,tag=$(echo $CIRCLE_SHA1 | cut -c -8)'
-          # container-env-var-updates: 'container=backend,name=test,value=blah'
+          container-env-var-updates: 'container=backend,name=DD_SERVICE,value=<< parameters.package_name >>'
 workflows:
   backend:
     when: << pipeline.parameters.backend >>

@@ -13,7 +13,6 @@
   },
   "devDependencies": {
     "@serverless/typescript": "^3.25.0",
-    "@types/bunyan": "^1.8.8",
     "@types/jsonwebtoken": "^9.0.0",
     "@types/serverless": "^3",
     "concurrently": "^7.6.0",
@@ -30,8 +29,6 @@
     "@slack/oauth": "^2.6.0",
     "@types/node": "^18.11.18",
     "apollo-link-token-refresh": "^0.4.0",
-    "bunyan": "^1.8.15",
-    "bunyan-debug-stream": "^3.1.0",
     "cross-fetch": "^3.1.5",
     "date-fns": "^2.29.3",
     "dd-trace": "^3.11.0",
@@ -41,6 +38,7 @@
     "jsonwebtoken": "^9.0.0",
     "pino-http": "^8.3.1",
     "rxjs": "^7.8.0",
-    "slack-block-builder": "^2.7.2"
+    "slack-block-builder": "^2.7.2",
+    "winston": "^3.8.2"
   }
 }
