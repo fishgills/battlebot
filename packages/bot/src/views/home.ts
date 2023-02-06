@@ -12,6 +12,9 @@ import { characterSheetBlocks } from './character';
 const characterStats = (character: CharacterType, home: HomeTabBuilder) => {
   home.blocks(
     ...characterSheetBlocks(character),
+    Blocks.Section({
+      text: t('battle_stats'),
+    }),
     Blocks.Section().fields([
       t('leaderboard_attacks'),
       character.attacking.length + '',
@@ -26,7 +29,11 @@ const rewardScores = (
   fromScoreBoard: RewardScore[],
   home: HomeTabBuilder,
 ) => {
-  const rewardScoreReduce = (prev, curr, index) => {
+  const rewardScoreReduce = (
+    prev: string[],
+    curr: RewardScore,
+    index: number,
+  ) => {
     prev.push(`${index + 1}) <@${curr.userId}>`, curr.count + '');
     return prev;
   };
@@ -40,15 +47,16 @@ const rewardScores = (
     [],
   );
   home.blocks(
-    Blocks.Section({
-      text: t('received_reward_score_board'),
-    }),
     Blocks.Divider(),
+    Blocks.Section({
+      text: t('received_reward_score_board', t('reward_emoji')),
+    }),
+
     Blocks.Section().fields(toScoreBlocks.length > 0 ? toScoreBlocks : 'None'),
-    Blocks.Section({
-      text: t('given_reward_score_board'),
-    }),
     Blocks.Divider(),
+    Blocks.Section({
+      text: t('given_reward_score_board', t('reward_emoji')),
+    }),
     Blocks.Section().fields(
       fromScoreBlocks.length > 0 ? fromScoreBlocks : 'None',
     ),

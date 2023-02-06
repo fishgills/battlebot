@@ -47,13 +47,13 @@ export class RewardService {
   getScoreBoard(teamId: string, direction: AllowedDirections, today?: boolean) {
     const query = this.repo
       .createQueryBuilder('scores')
-      .select(`"scores.${direction}"`, 'userId')
+      .select(`${direction}`, 'userId')
       .addSelect('teamId')
       .addSelect('count(*)', 'count')
       .andWhere('teamId = :id', {
         id: teamId,
       })
-      .groupBy(`"${direction}"`)
+      .groupBy(`${direction}`)
       .orderBy('count', 'DESC');
     if (today) {
       const today = startOfToday().toISOString();

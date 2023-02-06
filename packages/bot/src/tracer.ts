@@ -1,17 +1,9 @@
 import tracer from 'dd-trace';
-// const mytracer = tracer.init({
-//   logInjection: true,
-//   env: process.env['NODE_ENV'],
-//   service: 'bot',
-// });
-// mytracer.use('bunyan', {
-//   enabled: true,
-//   service: 'bot',
-// });
-// mytracer.use('graphql');
 tracer.init({
-  logInjection: true,
+  logInjection: process.env['NODE_ENV'] === 'production',
   service: 'bot',
   env: process.env['NODE_ENV'],
+  version: process.env['SHA1'],
 });
+tracer.use('graphql');
 export default tracer;

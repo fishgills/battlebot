@@ -11,8 +11,8 @@
   "character_strength_emoji": ":heart_eyes:",
   "character_vitality_emoji": ":book:",
   "command": "/mediator",
-  "received_reward_score_board": "Received Compliments",
-  "given_reward_score_board": "Given Compliments",
+  "received_reward_score_board": "Who has received the most {0}.",
+  "given_reward_score_board": "Who has given the most {0}",
   "sheet_help_command": "`{0} resume`",
   "sheet_help_description": "To retrieve your clone's resume:",
   "sheet_no_character": "You have no clone working here.",
@@ -49,8 +49,9 @@
   "character_deleted": "Your clone has been fired. Feel free to make a new one!",
   "character_delete_no_character": "You have no clone to fire!",
   "visit_web_site": "This feature will be available on the website.",
-  "leaderboard_attacks": "One on Ones Requested",
-  "leaderboard_defends": "One on Ones Received",
+  "leaderboard_attacks": "One on Ones Initiated",
+  "leaderboard_defends": "One on Ones Joined",
   "reward_help_description": "Also, you can give out rewards to other players/clones. To give a reward:",
-  "reward_help_example": "@Bob and @Joe, great job making progress! Have a {0}!"
+  "reward_help_example": "@Bob and @Joe, great job making progress! Have a {0}!",
+  "battle_stats": "Your character statistics:"
 }

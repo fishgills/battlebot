@@ -10,6 +10,7 @@ export type Translations = StringToStringMap;
 let _locale: string;
 let _translations: Translations;
 let _supportedLocales: ReadonlyArray<string>;
+const _localeCache: any[] = [];
 
 export function containsNormalized(
   arr: ReadonlyArray<string>,
@@ -134,9 +135,11 @@ function loadAndSet(locale: string): void {
   return;
 }
 function load(locale: string) {
+  if (_localeCache[locale]) return _localeCache[locale];
   const url = join(__dirname, 'lang', locale + '.json');
 
   console.log(url);
   const json = JSON.parse(readFileSync(url, 'utf-8'));
+  _localeCache[locale] = json;
   return json;
 }
