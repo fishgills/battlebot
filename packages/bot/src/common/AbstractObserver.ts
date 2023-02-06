@@ -11,8 +11,12 @@ export abstract class Observer<T> {
     this.logger.info(`created ${command} observer`);
   }
 
-  protected log(msg: string) {
+  protected debug(msg: string) {
     this.logger.debug(msg);
+  }
+
+  protected log(msg: string) {
+    this.logger.info(msg);
   }
 
   abstract msgUser(event: T, content: SlackMessageDto | string): Promise<any>;

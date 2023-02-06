@@ -112,7 +112,7 @@ const refreshToken = new TokenRefreshLink({
     }
   },
   fetchAccessToken: async () => {
-    Logger.info('Retrieve JWT Token');
+    Logger.verbose('Retrieve JWT Token');
     const endpoint = new URL(process.env['GRAPHQL_ENDPOINT']);
 
     const fetchFrom = `${endpoint.protocol}//${endpoint.host}/auth/login`;

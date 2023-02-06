@@ -78,6 +78,15 @@ export class BotLogger implements Logger {
   }
 
   /**
+   *
+   * Log a verbose message
+   *
+   * @param msg Array of messages
+   */
+  public verbose(...msg: any[]): void {
+    msg.forEach((record) => this.log.verbose(record));
+  }
+  /**
    * Log an error message
    */
   public error(...msg: any[]): void {

@@ -39,6 +39,7 @@ export class RewardObserver<
       return;
     }
 
+    this.log(`Giving rewards to ${users.map((user) => user.id).join(',')}`);
     const givenRewards = (
       await sdk.rewardsGivenToday({
         teamId: e.context.teamId,

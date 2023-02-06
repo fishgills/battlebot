@@ -65,7 +65,7 @@ export class CombatObserver extends MentionObserver {
         teamId: e.payload.team_id,
       });
     } catch (exception) {
-      this.log('target has no character');
+      this.debug('target has no character');
       this.msgUser(e, t('combat_update_target_no_char', targetUser.id));
       e.client.chat.postMessage({
         channel: targetUser.id,
@@ -90,7 +90,7 @@ export class CombatObserver extends MentionObserver {
         this.msgUser(e, t('combat_update_throttle'));
         return;
       }
-      this.log(err.message);
+      this.debug(err.message);
       return;
     }
 

@@ -35,7 +35,7 @@ export class CharacterDeleteObserver extends MentionObserver {
         await this.msgUser(e, t('character_delete_no_character'));
       }
     } catch (err) {
-      this.log(err);
+      this.debug(err);
     }
     return;
   }
