@@ -9,7 +9,9 @@ import { SlackAuthModule } from './slack-auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
 import {
   ApolloServerPluginInlineTrace,
+  ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginLandingPageLocalDefault,
+  ApolloServerPluginLandingPageProductionDefault,
 } from 'apollo-server-core';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DataloaderModule } from 'dataloader/dataloader.module';
@@ -36,11 +38,8 @@ import { database } from 'typeorm/database.config';
       useFactory: (dlService: DataloaderService) => {
         return {
           cache: 'bounded',
-          playground: true,
-          plugins: [
-            ApolloServerPluginInlineTrace(),
-            ApolloServerPluginLandingPageLocalDefault(),
-          ],
+          playground: false,
+          plugins: [ApolloServerPluginLandingPageLocalDefault()],
           autoSchemaFile: true,
           context: (obj) => {
             return {
