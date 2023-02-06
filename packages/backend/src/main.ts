@@ -17,6 +17,7 @@ const whitelist = [
   'studio.apollographql.com',
   'postman.co',
   'electron://altair',
+  'localhost:4000',
 ];
 const sessionLengthInMinutes = 5;
 const sessionLengthInSeconds = sessionLengthInMinutes * 60;
