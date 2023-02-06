@@ -36,7 +36,7 @@ import { database } from 'typeorm/database.config';
       useFactory: (dlService: DataloaderService) => {
         return {
           cache: 'bounded',
-          playground: false,
+          playground: true,
           plugins: [
             ApolloServerPluginInlineTrace(),
             ApolloServerPluginLandingPageLocalDefault(),
