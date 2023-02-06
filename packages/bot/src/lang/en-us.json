@@ -52,6 +52,6 @@
   "leaderboard_attacks": "One on Ones Initiated",
   "leaderboard_defends": "One on Ones Joined",
   "reward_help_description": "Also, you can give out rewards to other players/clones. To give a reward:",
-  "reward_help_example": "@Bob and @Joe, great job making progress! Have a {0}!",
+  "reward_help_example": "><@{1}>, @Bob and @Joe did a great job, give them a {0}!",
   "battle_stats": "Your character statistics:"
 }

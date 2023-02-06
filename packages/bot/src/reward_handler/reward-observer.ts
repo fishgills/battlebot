@@ -1,5 +1,5 @@
 import { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
-import { Blocks } from 'slack-block-builder';
+import { Blocks, SectionBuilder } from 'slack-block-builder';
 import { Observer } from '../common/AbstractObserver';
 import { t } from '../locale';
 import { sdk } from '../utils/gql';
@@ -8,13 +8,13 @@ import { getUsernames, isGenericMessageEvent } from '../utils/helpers';
 export class RewardObserver<
   T extends SlackEventMiddlewareArgs<'app_mention'> & AllMiddlewareArgs,
 > extends Observer<T> {
-  getHelpBlocks() {
+  getHelpBlocks(e: T): SectionBuilder[] {
     return [
       Blocks.Section({
         text: t('reward_help_description'),
       }),
       Blocks.Section({
-        text: t('reward_help_example', t('reward_emoji')),
+        text: t('reward_help_example', t('reward_emoji'), e.context.botUserId),
       }),
     ];
   }

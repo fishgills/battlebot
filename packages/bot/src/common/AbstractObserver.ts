@@ -24,5 +24,5 @@ export abstract class Observer<T> {
   abstract listener(e: T): Promise<void>;
 
   abstract update(e: T): Promise<void>;
-  abstract getHelpBlocks(): SectionBuilder[];
+  abstract getHelpBlocks(e: T): SectionBuilder[];
 }

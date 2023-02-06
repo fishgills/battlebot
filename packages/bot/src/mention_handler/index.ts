@@ -21,7 +21,7 @@ const helpObserver = new HelpObserver();
   RewardObserver,
 ].forEach((t) => {
   const obs = new t();
-  helpObserver.addBlocks(obs.getHelpBlocks());
+  helpObserver.addBlocks(obs.getHelpBlocks);
   if (obs instanceof BaseObserver) Command$.subscribe((e) => obs.listener(e));
 });
 
