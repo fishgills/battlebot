@@ -16,7 +16,7 @@ export class BotLogger implements Logger {
   public constructor() {
     console.log('creating logger');
     this.log = createLogger({
-      level: 'debug',
+      level: process.env['NODE_ENV'] === 'production' ? 'verbose' : 'debug',
       exitOnError: false,
       format:
         process.env['NODE_ENV'] !== 'production'

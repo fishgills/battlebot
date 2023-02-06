@@ -20,7 +20,7 @@ import { Store } from './installation_store';
 import tracer from 'dd-trace';
 import { MyStateStore } from './state_store';
 
-const scopes = ['users:read', 'channels:history', 'commands', 'chat:write'];
+const scopes = ['app_mentions:read', 'commands'];
 
 const app = new App({
   signingSecret: process.env['SLACK_SIGNING_SECRET'],
@@ -58,13 +58,6 @@ const app = new App({
   Logger.info('Starting bolt with port:', port);
 })();
 
-app.message(t('reward_emoji'), async (args) => {
-  if (!isGenericMessageEvent(args.message)) {
-    return;
-  }
-  Shield$.next(args);
-});
-
 app.command(t('command'), async (args) => {
   await args.ack();
   Command$.next(args);
@@ -75,6 +68,9 @@ app.command(`${t('command')}-dev`, async (args) => {
   Command$.next(args);
 });
 
+app.event('app_mention', async (args) => {
+  Shield$.next(args);
+});
 app.event('app_home_opened', async (args) => {
   if (args.payload.tab !== 'home') return;
   const content = await homePage(args.context.teamId, args.payload.user);

@@ -7,12 +7,7 @@ import { RewardModule } from './rewards/reward.module';
 import { SlackInstallModule } from './installs/install.module';
 import { SlackAuthModule } from './slack-auth/auth.module';
 import { HttpModule } from '@nestjs/axios';
-import {
-  ApolloServerPluginInlineTrace,
-  ApolloServerPluginLandingPageGraphQLPlayground,
-  ApolloServerPluginLandingPageLocalDefault,
-  ApolloServerPluginLandingPageProductionDefault,
-} from 'apollo-server-core';
+import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DataloaderModule } from 'dataloader/dataloader.module';
 import { DataloaderService } from 'dataloader/dataloader.service';

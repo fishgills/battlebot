@@ -28,7 +28,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule, {
     logger: WinstonModule.createLogger({
-      level: 'debug',
+      level: process.env['NODE_ENV'] === 'production' ? 'verbose' : 'debug',
       exitOnError: false,
       format:
         process.env.NODE_ENV !== 'production'
