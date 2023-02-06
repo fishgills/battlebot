@@ -40,12 +40,6 @@ export class BotLogger implements Logger {
   private record(record: any) {
     this.injectDDTrace(record);
     return record;
-    // return [
-    //   {
-    //     time: format(new Date(), 'dd/LLL/yyyy:H:m:s XX'),
-    //   },
-    //   record,
-    // ];
   }
 
   /**
