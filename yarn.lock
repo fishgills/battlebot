@@ -11141,7 +11141,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:13.1.6":
+"next@npm:^13.1.6":
   version: 13.1.6
   resolution: "next@npm:13.1.6"
   dependencies:
@@ -12627,7 +12627,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:18.2.0":
+"react-dom@npm:^18.2.0":
   version: 18.2.0
   resolution: "react-dom@npm:18.2.0"
   dependencies:
@@ -12646,7 +12646,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.2.0":
+"react@npm:^18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
   dependencies:
@@ -14739,9 +14739,9 @@ __metadata:
     "@types/react-dom": 18.0.10
     eslint: 8.33.0
     eslint-config-next: 13.1.6
-    next: 13.1.6
-    react: 18.2.0
-    react-dom: 18.2.0
+    next: ^13.1.6
+    react: ^18.2.0
+    react-dom: ^18.2.0
     typescript: 4.9.5
   languageName: unknown
   linkType: soft

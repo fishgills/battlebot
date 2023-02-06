@@ -65,3 +65,14 @@ workflows:
             branches:
               only:
                 - master
+  web:
+    when: << pipeline.parameters.web >>
+    jobs:
+      - deploy_fargate:
+          name: web-build
+          package_name: web
+          context: EnvVariables
+          filters:
+            branches:
+              only:
+                - master
