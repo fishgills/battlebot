@@ -3,9 +3,7 @@ import { Blocks, Message, SectionBuilder } from 'slack-block-builder';
 import { t } from '../locale';
 import { MentionObserver } from './observer';
 
-type BlockFn = (
-  e: SlackCommandMiddlewareArgs & AllMiddlewareArgs,
-) => SectionBuilder[];
+type BlockFn = (e: AllMiddlewareArgs) => SectionBuilder[];
 export class HelpObserver extends MentionObserver {
   getHelpBlocks(): SectionBuilder[] {
     throw new Error('Method not implemented.');

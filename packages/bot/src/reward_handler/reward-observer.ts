@@ -3,7 +3,7 @@ import { Blocks, SectionBuilder } from 'slack-block-builder';
 import { Observer } from '../common/AbstractObserver';
 import { t } from '../locale';
 import { sdk } from '../utils/gql';
-import { getUsernames, isGenericMessageEvent } from '../utils/helpers';
+import { getUsernames } from '../utils/helpers';
 
 export class RewardObserver<
   T extends SlackEventMiddlewareArgs<'app_mention'> & AllMiddlewareArgs,

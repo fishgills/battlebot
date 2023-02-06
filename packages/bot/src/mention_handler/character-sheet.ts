@@ -1,5 +1,6 @@
 import { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from '@slack/bolt';
-import { Blocks } from 'slack-block-builder';
+import { StringIndexed } from '@slack/bolt/dist/types/helpers';
+import { Blocks, SectionBuilder } from 'slack-block-builder';
 import { t } from '../locale';
 import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
@@ -9,7 +10,9 @@ export class SheetObserver extends MentionObserver {
   constructor() {
     super('resume');
   }
-  getHelpBlocks() {
+  getHelpBlocks(
+    e: SlackCommandMiddlewareArgs & AllMiddlewareArgs,
+  ): SectionBuilder[] {
     return [
       Blocks.Section({
         text: t('sheet_help_description'),
