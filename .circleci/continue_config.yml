@@ -14,6 +14,9 @@ parameters:
   web:
     type: boolean
     default: false
+  dockerfile:
+    type: string
+    default: 'Dockerfile'
 
 jobs:
   deploy_fargate:
@@ -30,7 +33,7 @@ jobs:
       - checkout
       - aws-ecr/build-and-push-image:
           repo: 'mediator-<< parameters.package_name >>'
-          dockerfile: Dockerfile
+          dockerfile: << pipeline.parameters.dockerfile >>
           platform: linux/arm64
           extra-build-args: --build-arg SHA1=$(echo $CIRCLE_SHA1 | cut -c -8) --build-arg APP=<< parameters.package_name >>
           create-repo: false
@@ -72,6 +75,7 @@ workflows:
           name: web-build
           package_name: web
           context: EnvVariables
+          dockerfile: packages/web/Dockerfile
           filters:
             branches:
               only:
