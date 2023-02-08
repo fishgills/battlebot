@@ -7,10 +7,10 @@ parameters:
   # A parameter per package
   backend:
     type: boolean
-    default: false
+    default: true
   bot:
     type: boolean
-    default: false
+    default: true
   web:
     type: boolean
     default: true
@@ -79,7 +79,6 @@ workflows:
           package_name: web
           context: EnvVariables
           dockerfile: packages/web/Dockerfile
-          dlc: false
           filters:
             branches:
               only:

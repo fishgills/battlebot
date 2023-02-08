@@ -49,5 +49,6 @@ WORKDIR /app/packages/$APP/
 RUN yarn install --prod
 RUN apk add curl 
 
+EXPOSE $PORT
 HEALTHCHECK CMD curl -f http://localhost:${PORT}/health || exit 1
 ENTRYPOINT /app/packages/$APP/docker-entrypoint.sh

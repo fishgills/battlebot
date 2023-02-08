@@ -1,57 +1,39 @@
-FROM node:18-alpine AS base
+FROM --platform=$BUILDPLATFORM node:alpine as base
 
-# Install dependencies only when needed
-FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+FROM --platform=$BUILDPLATFORM base as deps
+
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json yarn.lock ./
-COPY packages/web/package.json ./packages/web/package.json
-# Install dependencies based on the preferred package manager
+COPY packages/web/package.json packages/web/package.json
+
 RUN yarn
 
+FROM base as builder
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app/
+WORKDIR /app
+
 COPY --from=deps /app/node_modules ./node_modules
-COPY packages/web/ /app/packages/web
+COPY packages/web/ /app/packages/web/
 COPY --from=deps /app/packages/web/node_modules ./packages/web/node_modules
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+
 WORKDIR /app/packages/web
 
-RUN yarn build
+RUN yarn build:ssr
 
-# If using npm comment out above and use below instead
-# RUN npm run build
 
-# Production image, copy all the files and run next
-FROM base AS runner
-WORKDIR /app/packages/web
+FROM --platform=$BUILDPLATFORM base as runner
+ARG PORT
+ENV PORT $PORT
+
+WORKDIR /app
 
 ENV NODE_ENV production
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+COPY --from=builder /app/packages/web/dist /app/dist
 
-COPY --from=builder /app/packages/web/public ./public
+EXPOSE $PORT
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/packages/web/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/packages/web/.next/static ./.next/static
-
-USER nextjs
-
-EXPOSE 3000
-
-ENV PORT 3000
-
-CMD ["node", "server.js"]
+CMD ["node", "dist/web/server/main.js"]
