@@ -33,7 +33,8 @@ WORKDIR /app
 ENV NODE_ENV production
 
 COPY --from=builder /app/packages/web/dist /app/dist
+RUN apk add --no-cache curl 
 
 EXPOSE $PORT
-
+HEALTHCHECK CMD curl -f http://localhost:${PORT}/health || exit 1
 CMD ["node", "dist/web/server/main.js"]
