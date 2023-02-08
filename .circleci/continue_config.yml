@@ -14,15 +14,15 @@ parameters:
   web:
     type: boolean
     default: false
-  dockerfile:
-    type: string
-    default: 'Dockerfile'
 
 jobs:
   deploy_fargate:
     parameters:
       package_name:
         type: string
+      dockerfile:
+        type: string
+        default: Dockerfile
     machine:
       docker_layer_caching: true # Docker Layer Caching
       resource_class: arm.medium # Resource Class(ARM VM)
@@ -33,7 +33,7 @@ jobs:
       - checkout
       - aws-ecr/build-and-push-image:
           repo: 'mediator-<< parameters.package_name >>'
-          dockerfile: << pipeline.parameters.dockerfile >>
+          dockerfile: << parameters.dockerfile >>
           platform: linux/arm64
           extra-build-args: --build-arg SHA1=$(echo $CIRCLE_SHA1 | cut -c -8) --build-arg APP=<< parameters.package_name >>
           create-repo: false
