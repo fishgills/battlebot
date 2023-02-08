@@ -13,7 +13,7 @@ parameters:
     default: false
   web:
     type: boolean
-    default: false
+    default: true
 
 jobs:
   deploy_fargate:
