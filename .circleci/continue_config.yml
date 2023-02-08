@@ -35,7 +35,7 @@ jobs:
     steps:
       - checkout
       - aws-ecr/build-and-push-image:
-          repo: 'mediator-<< parameters.package_name >>'
+          repo: '<< parameters.package_name >>'
           dockerfile: << parameters.dockerfile >>
           platform: linux/arm64
           extra-build-args: --build-arg SHA1=$(echo $CIRCLE_SHA1 | cut -c -8) --build-arg APP=<< parameters.package_name >>
@@ -43,7 +43,7 @@ jobs:
           tag: '$(echo $CIRCLE_SHA1 | cut -c -8),latest'
           # tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
       - aws-ecs/update-service:
-          family: 'mediator-<< parameters.package_name >>'
+          family: '<< parameters.package_name >>'
           cluster: 'mediator-cluster'
           service-name: '<< parameters.package_name >>-Service'
           container-image-name-updates: 'container=<< parameters.package_name >>,tag=$(echo $CIRCLE_SHA1 | cut -c -8)'
