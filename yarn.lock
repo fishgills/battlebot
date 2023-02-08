@@ -1977,6 +1977,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@datadog/browser-core@npm:4.33.0":
+  version: 4.33.0
+  resolution: "@datadog/browser-core@npm:4.33.0"
+  checksum: 5972791f652155c933d3fc90ff88435e457a2043ca969b54e7fd78c5adfec25c4a3233616737ce7e011adb653a64ddca9539bc50465b5dda133d61b2157981b3
+  languageName: node
+  linkType: hard
+
+"@datadog/browser-rum-core@npm:4.33.0":
+  version: 4.33.0
+  resolution: "@datadog/browser-rum-core@npm:4.33.0"
+  dependencies:
+    "@datadog/browser-core": 4.33.0
+  checksum: ddbc2a2abde4af220a0e5455cf76bcbe8e3bc3a3d20dcb238b586277dceacef39e707164944771cb310c2a22bc8eabb852aa3711e033996c49671453f971eac0
+  languageName: node
+  linkType: hard
+
+"@datadog/browser-rum@npm:^4.33.0":
+  version: 4.33.0
+  resolution: "@datadog/browser-rum@npm:4.33.0"
+  dependencies:
+    "@datadog/browser-core": 4.33.0
+    "@datadog/browser-rum-core": 4.33.0
+  peerDependencies:
+    "@datadog/browser-logs": 4.33.0
+  peerDependenciesMeta:
+    "@datadog/browser-logs":
+      optional: true
+  checksum: 2055e6a91d1eaa32184dc92b38c0984e58319eef3b5f267035037eaa1e9ac72675c7d7102c452a6f2bf0f380d98ca0b6429a7307128b2d3374d6e9c457d6998a
+  languageName: node
+  linkType: hard
+
 "@datadog/native-appsec@npm:2.0.0":
   version: 2.0.0
   resolution: "@datadog/native-appsec@npm:2.0.0"
@@ -14733,6 +14764,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "web@workspace:packages/web"
   dependencies:
+    "@datadog/browser-rum": ^4.33.0
     "@types/eslint": ^8.21.0
     "@types/node": 18.11.19
     "@types/react": 18.0.27

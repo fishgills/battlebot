@@ -16,8 +16,8 @@ RUN yarn
 FROM base AS builder
 WORKDIR /app/
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages/web/node_modules ./packages/web/node_modules
 COPY packages/web/ /app/packages/web
+COPY --from=deps /app/packages/web/node_modules ./packages/web/node_modules
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
