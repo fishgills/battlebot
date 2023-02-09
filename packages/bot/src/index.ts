@@ -10,7 +10,6 @@ gab.init({
 });
 
 import { App, BlockButtonAction, LogLevel, MemoryStore } from '@slack/bolt';
-import { isGenericMessageEvent } from './utils/helpers';
 import { Command$ } from './mention_handler';
 import { Action$, ActionsRegex } from './actions';
 import { Shield$ } from './reward_handler';
@@ -20,7 +19,7 @@ import { Store } from './installation_store';
 import tracer from 'dd-trace';
 import { MyStateStore } from './state_store';
 
-const scopes = ['app_mentions:read', 'commands'];
+const scopes = ['app_mentions:read', 'commands', 'users:read'];
 
 const app = new App({
   signingSecret: process.env['SLACK_SIGNING_SECRET'],
