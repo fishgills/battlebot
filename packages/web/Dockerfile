@@ -1,6 +1,6 @@
-FROM --platform=$BUILDPLATFORM node:alpine as base
+FROM node:alpine as base
 
-FROM --platform=$BUILDPLATFORM base as deps
+FROM base as deps
 
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -24,7 +24,7 @@ WORKDIR /app/packages/web
 RUN yarn build:ssr
 
 
-FROM --platform=$BUILDPLATFORM base as runner
+FROM base as runner
 ARG PORT
 ENV PORT $PORT
 
