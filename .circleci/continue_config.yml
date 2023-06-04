@@ -39,11 +39,9 @@ jobs:
       - gcp-gcr/build-image:
           image: << parameters.package_name >>
           dockerfile: << parameters.dockerfile >>
-          registry-url: us
           extra_build_args: --build-arg SHA1=$(echo $CIRCLE_SHA1 | cut -c -8) --build-arg APP=<< parameters.package_name >>
           # tag: '$(echo $CIRCLE_SHA1 | cut -c -8)'
       - gcp-gcr/push-image:
-          registry-url: us
           image: << parameters.package_name >>
 
       # - aws-ecr/build-and-push-image:
