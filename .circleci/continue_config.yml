@@ -28,7 +28,7 @@ jobs:
         type: boolean
         default: true
     machine:
-      # docker_layer_caching: << parameters.dlc >> # Docker Layer Caching
+      docker_layer_caching: << parameters.dlc >> # Docker Layer Caching
       resource_class: medium # Resource Class(ARM VM)
       image: ubuntu-2004:current
     working_directory: ~/project/
@@ -81,6 +81,7 @@ workflows:
           name: bot-build
           package_name: bot
           context: EnvVariables
+          dlc: true
           filters:
             branches:
               only:
