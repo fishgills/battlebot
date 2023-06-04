@@ -36,7 +36,7 @@ jobs:
     steps:
       - checkout
       - gcp-gcr/gcr-auth:
-          google-service-key: terraform
+          gcloud-service-key: terraform
       - gcp-gcr/build-image:
           image: << parameters.package_name >>
           dockerfile: << parameters.dockerfile >>
