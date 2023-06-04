@@ -35,10 +35,11 @@ jobs:
 
     steps:
       - checkout
-      - gcp-gcr/build-and-push-image:
+      - gcp-gcr/build-image:
           image: << parameters.package_name >>
-          setup-remote-docker: true
-          use-docker-layer-caching: true
+          dockerfile: << parameters.dockerfile >>
+          extra_build_args: --build-arg SHA1=$(echo $CIRCLE_SHA1 | cut -c -8) --build-arg APP=<< parameters.package_name >>
+          tag: '$(echo $CIRCLE_SHA1 | cut -c -8)'
 
       # - aws-ecr/build-and-push-image:
       #     repo: '<< parameters.package_name >>'
@@ -79,15 +80,15 @@ workflows:
             branches:
               only:
                 - master
-  # web:
-  #   when: << pipeline.parameters.web >>
-  #   jobs:
-  #     - deploy_fargate:
-  #         name: web-build
-  #         package_name: web
-  #         context: EnvVariables
-  #         dockerfile: packages/web/Dockerfile
-  #         filters:
-  #           branches:
-  #             only:
-  #               - master
+  web:
+    when: << pipeline.parameters.web >>
+    jobs:
+      - deploy_fargate:
+          name: web-build
+          package_name: web
+          context: EnvVariables
+          dockerfile: packages/web/Dockerfile
+          filters:
+            branches:
+              only:
+                - master
