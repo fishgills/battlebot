@@ -39,6 +39,7 @@ jobs:
       - gcp-gcr/build-image:
           image: << parameters.package_name >>
           dockerfile: << parameters.dockerfile >>
+          registry-url: us.gcr.io
           # extra_build_args: --build-arg SHA1=$(echo $CIRCLE_SHA1 | cut -c -8) --build-arg APP=<< parameters.package_name >>
           # tag: '$(echo $CIRCLE_SHA1 | cut -c -8)'
 
