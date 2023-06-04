@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM public.ecr.aws/docker/library/node:lts-alpine as builder
+FROM public.ecr.aws/docker/library/node:lts-alpine as builder
 ARG APP
 
 WORKDIR /app
@@ -12,7 +12,7 @@ COPY ./packages/$APP packages/$APP
 WORKDIR /app/packages/$APP
 RUN yarn build
 
-FROM --platform=$BUILDPLATFORM  public.ecr.aws/docker/library/node:lts-alpine as runner
+FROM public.ecr.aws/docker/library/node:lts-alpine as runner
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 

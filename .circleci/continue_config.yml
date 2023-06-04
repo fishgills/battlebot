@@ -28,8 +28,8 @@ jobs:
         type: boolean
         default: true
     machine:
-      docker_layer_caching: << parameters.dlc >> # Docker Layer Caching
-      resource_class: arm.medium # Resource Class(ARM VM)
+      # docker_layer_caching: << parameters.dlc >> # Docker Layer Caching
+      resource_class: medium # Resource Class(ARM VM)
       image: ubuntu-2004:current
     working_directory: ~/project/
 
