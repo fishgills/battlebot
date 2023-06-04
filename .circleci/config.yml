@@ -1,7 +1,6 @@
 version: 2.1
-setup: true
 orbs:
-  path-filtering: circleci/path-filtering@0.1.3
+  path-filtering: circleci/path-filtering@0.1.5
 
 workflows:
   always-run:
@@ -9,6 +8,6 @@ workflows:
       - path-filtering/filter:
           mapping: |
             packages/bot/.* bot true
-            packages/backend/.* backend false
-            packages/web/.* web false
+            packages/backend/.* backend true
+            packages/web/.* web true
           base-revision: master
