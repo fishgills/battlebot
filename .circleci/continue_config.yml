@@ -36,8 +36,9 @@ jobs:
     steps:
       - checkout
       - gcp-gcr/build-and-push-image:
-          context: << parameters.context >>
           image: << parameters.package_name >>
+          setup-remote-docker: true
+          use-docker-layer-caching: true
 
       # - aws-ecr/build-and-push-image:
       #     repo: '<< parameters.package_name >>'
@@ -56,17 +57,17 @@ jobs:
       #     # ${var.account}.dkr.ecr.${var.region}.amazonaws.com/${lower(each.value.name)}:latest
       #     # container-env-var-updates: 'container=backend,name=DD_SERVICE,value=<< parameters.package_name >>'
 workflows:
-  # backend:
-  #   when: << pipeline.parameters.backend >>
-  #   jobs:
-  #     - deploy_fargate:
-  #         name: backend-build
-  #         package_name: backend
-  #         context: EnvVariables
-  #         filters:
-  #           branches:
-  #             only:
-  #               - master
+  backend:
+    when: << pipeline.parameters.backend >>
+    jobs:
+      - deploy_fargate:
+          name: backend-build
+          package_name: backend
+          context: EnvVariables
+          filters:
+            branches:
+              only:
+                - master
   bot:
     when: << pipeline.parameters.bot >>
     jobs:
