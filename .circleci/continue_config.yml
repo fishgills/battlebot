@@ -8,13 +8,13 @@ parameters:
   # A parameter per package
   backend:
     type: boolean
-    default: false
+    default: true
   bot:
     type: boolean
     default: true
   web:
     type: boolean
-    default: false
+    default: true
 
 jobs:
   deploy_fargate:
