@@ -23,6 +23,10 @@ jobs:
       dlc:
         type: boolean
         default: true
+    machine:
+      docker_layer_caching: << parameters.dlc >>
+      resource_class: medium
+      image: ubuntu-2004:current
     working_directory: ~/project/
     steps:
       - checkout
@@ -40,6 +44,8 @@ jobs:
           source-tag: $CIRCLE_SHA1
           target-tag: latest
   deploy_container:
+    docker:
+      - image: cimg/base:stable
     working_directory: ~/project/
     parameters:
       dockerfile:
