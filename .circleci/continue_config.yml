@@ -50,8 +50,6 @@ jobs:
       image: ubuntu-2004:current
     working_directory: ~/project/
     parameters:
-      name:
-        type: string
       dockerfile:
         type: string
         default: Dockerfile
