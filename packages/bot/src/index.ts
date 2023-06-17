@@ -50,11 +50,12 @@ const app = new App({
 });
 (async () => {
   const port = Number(process.env.PORT);
+  console.log(process.env);
   await app.start({
     port,
   });
   Logger.info(`Starting mode: ${process.env.NODE_ENV}`);
-  Logger.info('Starting bolt with port:', port);
+  Logger.info(`Starting bolt with port: ${port}`);
 })();
 
 app.command(t('command'), async (args) => {

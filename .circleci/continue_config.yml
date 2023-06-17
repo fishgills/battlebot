@@ -2,7 +2,8 @@ version: 2.1
 orbs:
   # aws-ecr: circleci/aws-ecr@8.2.1
   # aws-ecs: circleci/aws-ecs@3.2.0
-  gcp-gcr: circleci/gcp-gcr@0.15.1
+  # gcp-gcr: circleci/gcp-gcr@0.15.1
+  gcp-cloud-run: circleci/gcp-cloud-run@1.0.2
 
 parameters:
   # A parameter per package
@@ -35,14 +36,17 @@ jobs:
 
     steps:
       - checkout
-      - gcp-gcr/gcr-auth
-      - gcp-gcr/build-image:
-          image: << parameters.package_name >>
-          dockerfile: << parameters.dockerfile >>
-          extra_build_args: --build-arg SHA1=$(echo $CIRCLE_SHA1 | cut -c -8) --build-arg APP=<< parameters.package_name >>
-          # tag: '$(echo $CIRCLE_SHA1 | cut -c -8)'
-      - gcp-gcr/push-image:
-          image: << parameters.package_name >>
+      - cloudrun/init
+      - cloudrun/build:
+        tag: gcr.io/slack-battle-bot/<<parameters.package_name>>:${CIRCLE_SHA1}
+      # - gcp-gcr/gcr-auth
+      # - gcp-gcr/build-image:
+      #     image: << parameters.package_name >>
+      #     dockerfile: << parameters.dockerfile >>
+      #     extra_build_args: --build-arg SHA1=$(echo $CIRCLE_SHA1 | cut -c -8) --build-arg APP=<< parameters.package_name >>
+      #     # tag: '$(echo $CIRCLE_SHA1 | cut -c -8)'
+      # - gcp-gcr/push-image:
+      #     image: << parameters.package_name >>
 
       # - aws-ecr/build-and-push-image:
       #     repo: '<< parameters.package_name >>'

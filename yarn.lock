@@ -2815,8 +2815,8 @@ __metadata:
   dependencies:
     "@apollo/client": ^3.7.7
     "@serverless/typescript": ^3.27.0
-    "@slack/bolt": ^3.12.2
-    "@slack/oauth": ^2.6.0
+    "@slack/bolt": ^3.13.1
+    "@slack/oauth": ^2.6.1
     "@types/jsonwebtoken": ^9.0.1
     "@types/node": ^18.11.19
     "@types/serverless": ^3.12.9
@@ -4870,26 +4870,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@slack/bolt@npm:^3.12.2":
-  version: 3.12.2
-  resolution: "@slack/bolt@npm:3.12.2"
+"@slack/bolt@npm:^3.13.1":
+  version: 3.13.1
+  resolution: "@slack/bolt@npm:3.13.1"
   dependencies:
     "@slack/logger": ^3.0.0
-    "@slack/oauth": ^2.5.1
+    "@slack/oauth": ^2.6.1
     "@slack/socket-mode": ^1.3.0
     "@slack/types": ^2.7.0
     "@slack/web-api": ^6.7.1
     "@types/express": ^4.16.1
-    "@types/node": 18.11.8
+    "@types/node": 18.16.0
     "@types/promise.allsettled": ^1.0.3
     "@types/tsscmp": ^1.0.0
-    axios: ^0.26.1
+    axios: ^0.27.2
     express: ^4.16.4
+    path-to-regexp: ^6.2.1
     please-upgrade-node: ^3.2.0
     promise.allsettled: ^1.0.2
     raw-body: ^2.3.3
     tsscmp: ^1.0.6
-  checksum: c0db5e9a36e7d3c225ae19b5bf079aa7b9cb82a172395d1c36bfe5b54bd1d328f8d8b3d09676431e9b505380c61d140fba19c63a7e252f1b9b361cfa04cb78de
+  checksum: 0c00a9ecf4d13378969e04dd39a101bf954ca030b414fc9150ecfb54b7cdf84763e8ffc98b7eb62338cc8f8e306d6f6503621c8fd58bbab3b4e204dcdebc6301
   languageName: node
   linkType: hard
 
@@ -4902,9 +4903,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@slack/oauth@npm:^2.5.1, @slack/oauth@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "@slack/oauth@npm:2.6.0"
+"@slack/oauth@npm:^2.6.1":
+  version: 2.6.1
+  resolution: "@slack/oauth@npm:2.6.1"
   dependencies:
     "@slack/logger": ^3.0.0
     "@slack/web-api": ^6.3.0
@@ -4912,7 +4913,7 @@ __metadata:
     "@types/node": ">=12"
     jsonwebtoken: ^9.0.0
     lodash.isstring: ^4.0.1
-  checksum: f435e7aa2c55ac5732ae7976e6f602fa862e2100d6200b24b3f0c7b6d96cc8a02a0ab80f94d503a3d1a9afb030c4c7ee35b14a3d20925e005e069e35f1874641
+  checksum: d86baf8e729f94d108c6fb2c94bd9553dd5070232d6c86da9399769abed69abab84dad6e47b4aeebab140fc4911b7c8e2941ea370ab87149e487092c66e6c348
   languageName: node
   linkType: hard
 
@@ -5355,10 +5356,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:18.11.8":
-  version: 18.11.8
-  resolution: "@types/node@npm:18.11.8"
-  checksum: 60b358f97c1a029722dc785811b217615ef20249c3fbde60a65869cfd7a5cd5b1872ee95c79c187ef70e5a078f4ac7670d2129803985268b1f021ad6e8040af8
+"@types/node@npm:18.16.0":
+  version: 18.16.0
+  resolution: "@types/node@npm:18.16.0"
+  checksum: 63e0042136663b9e85ce503a4c65406cc6621fdba63ea66c74b4b1364a9aa9bdb57cadcb76696abab177f38a819b0fa6ace9e7f1647dcb990aedb1b4bd01012f
   languageName: node
   linkType: hard
 
@@ -6692,15 +6693,6 @@ __metadata:
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
   checksum: c4dc4e119064c9aed09a3de309bedb797a139a6fb372223aafe3e0c10a7d4a14e4d3e9c9d309467fadb9d2b490b891ee3df96ef5b55716bb971910466ff9f0c5
-  languageName: node
-  linkType: hard
-
-"axios@npm:^0.26.1":
-  version: 0.26.1
-  resolution: "axios@npm:0.26.1"
-  dependencies:
-    follow-redirects: ^1.14.8
-  checksum: d9eb58ff4bc0b36a04783fc9ff760e9245c829a5a1052ee7ca6013410d427036b1d10d04e7380c02f3508c5eaf3485b1ae67bd2adbfec3683704745c8d7a6e1a
   languageName: node
   linkType: hard
 
@@ -10048,7 +10040,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.8, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.0":
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.0":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
@@ -14363,6 +14355,13 @@ __metadata:
   version: 3.2.0
   resolution: "path-to-regexp@npm:3.2.0"
   checksum: c3d35cda3b26d9e604d789b9a1764bb9845f53ca8009d5809356b4677a3c064b0f01117a05a5b4b77bafd5ae002a82592e3f3495e885c22961f8b1dab8bd6ae7
+  languageName: node
+  linkType: hard
+
+"path-to-regexp@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "path-to-regexp@npm:6.2.1"
+  checksum: f0227af8284ea13300f4293ba111e3635142f976d4197f14d5ad1f124aebd9118783dd2e5f1fe16f7273743cc3dbeddfb7493f237bb27c10fdae07020cc9b698
   languageName: node
   linkType: hard
 
