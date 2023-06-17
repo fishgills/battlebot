@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.15.1
-  gcp-cloud-run: circleci/gcp-cloud-run@1.0.2
+  gcp-cloud-run: livup/gcp-cloud-run@1.0.32
 parameters:
   backend:
     type: boolean
@@ -46,6 +46,7 @@ jobs:
       - gcp-cloud-run/init
       - gcp-cloud-run/deploy:
           image: gcr.io/slack-battle-bot/<< parameters.package_name >>:$CIRLCE_SHA1
+          platform: managed
           region: us-west1
           service-name: << parameters.package_name >>
           unauthenticated: true
