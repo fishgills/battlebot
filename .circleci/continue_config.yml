@@ -40,24 +40,17 @@ jobs:
       # - cloudrun/build:
       #   tag: gcr.io/slack-battle-bot/<<parameters.package_name>>:${CIRCLE_SHA1}
       - gcp-gcr/gcr-auth
-      # - gcp-gcr/build-image:
-      #     image: << parameters.package_name >>
-      #     dockerfile: << parameters.dockerfile >>
-      #     extra_build_args: --build-arg SHA1=$CIRCLE_SHA1 --build-arg APP=<< parameters.package_name >>
-      #     tag: $CIRCLE_SHA1
-      # - gcp-gcr/push-image:
-      #     image: << parameters.package_name >>
-      #     tag: $CIRCLE_SHA1
-      - gcp-gcr/build-and-push-image:
+      - gcp-gcr/build-image:
           image: << parameters.package_name >>
           dockerfile: << parameters.dockerfile >>
           extra_build_args: --build-arg SHA1=$CIRCLE_SHA1 --build-arg APP=<< parameters.package_name >>
           tag: $CIRCLE_SHA1
-      - gcp-gcr/tag-image:
+      - gcp-gcr/push-image:
           image: << parameters.package_name >>
-          source-tag: $CIRCLE_SHA1
-          target-tag: latest
-
+          tag: $CIRCLE_SHA1,latest
+      - gcp-cloud-run/init
+      - gcp-cloud-run/deploy:
+        
       # - aws-ecr/build-and-push-image:
       #     repo: '<< parameters.package_name >>'
       #     dockerfile: << parameters.dockerfile >>
