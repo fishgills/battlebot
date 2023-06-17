@@ -1,12 +1,8 @@
 version: 2.1
 orbs:
-  # aws-ecr: circleci/aws-ecr@8.2.1
-  # aws-ecs: circleci/aws-ecs@3.2.0
   gcp-gcr: circleci/gcp-gcr@0.15.1
   gcp-cloud-run: circleci/gcp-cloud-run@1.0.2
-
 parameters:
-  # A parameter per package
   backend:
     type: boolean
     default: false
@@ -16,7 +12,6 @@ parameters:
   web:
     type: boolean
     default: false
-
 jobs:
   deploy_fargate:
     parameters:
@@ -29,44 +24,29 @@ jobs:
         type: boolean
         default: true
     machine:
-      docker_layer_caching: << parameters.dlc >> # Docker Layer Caching
-      resource_class: medium # Resource Class(ARM VM)
+      docker_layer_caching: << parameters.dlc >>
+      resource_class: medium
       image: ubuntu-2004:current
     working_directory: ~/project/
-
     steps:
       - checkout
-      # - cloudrun/init
-      # - cloudrun/build:
-      #   tag: gcr.io/slack-battle-bot/<<parameters.package_name>>:${CIRCLE_SHA1}
       - gcp-gcr/gcr-auth
-      - gcp-gcr/build-image:
+      - gcp-gcr/build-and-push-image:
           image: << parameters.package_name >>
           dockerfile: << parameters.dockerfile >>
           extra_build_args: --build-arg SHA1=$CIRCLE_SHA1 --build-arg APP=<< parameters.package_name >>
           tag: $CIRCLE_SHA1
-      - gcp-gcr/push-image:
+      - gcp-gcr/tag-image:
           image: << parameters.package_name >>
-          tag: $CIRCLE_SHA1,latest
+          source-tag: $CIRCLE_SHA1
+          target-tag: latest
       - gcp-cloud-run/init
       - gcp-cloud-run/deploy:
-        
-      # - aws-ecr/build-and-push-image:
-      #     repo: '<< parameters.package_name >>'
-      #     dockerfile: << parameters.dockerfile >>
-      #     platform: linux/arm64
-      #     extra-build-args: --build-arg SHA1=$(echo $CIRCLE_SHA1 | cut -c -8) --build-arg APP=<< parameters.package_name >>
-      #     create-repo: false
-      #     tag: '$(echo $CIRCLE_SHA1 | cut -c -8)'
-      #     # tag: '${CIRCLE_SHA1},$(echo $CIRCLE_BRANCH | sed -e "s/[^a-zA-Z]/\-/g")'
-      # - aws-ecs/update-service:
-      #     family: '<< parameters.package_name >>'
-      #     cluster: 'mediator-cluster'
-      #     service-name: '<< parameters.package_name >>'
-      #     container-image-name-updates: 'container=<< parameters.package_name >>,image-and-tag=$AWS_ECR_REGISTRY_ID.dkr.ecr.$AWS_REGION.amazonaws.com/<< parameters.package_name >>:$(echo $CIRCLE_SHA1 | cut -c -8)'
+          image: gcr.io/slack-battle-bot/<< parameters.package_name >>:$CIRLCE_SHA1
+          region: us-west1
+          service-name: << parameters.package_name >>
+          unauthenticated: true
 
-      #     # ${var.account}.dkr.ecr.${var.region}.amazonaws.com/${lower(each.value.name)}:latest
-      #     # container-env-var-updates: 'container=backend,name=DD_SERVICE,value=<< parameters.package_name >>'
 workflows:
   backend:
     when: << pipeline.parameters.backend >>
