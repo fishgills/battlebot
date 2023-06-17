@@ -12,7 +12,7 @@ parameters:
     default: false
   bot:
     type: boolean
-    default: false
+    default: true
   web:
     type: boolean
     default: false
