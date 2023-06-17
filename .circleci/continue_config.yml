@@ -23,11 +23,11 @@ jobs:
       dlc:
         type: boolean
         default: true
-    # machine:
-    #   docker_layer_caching: << parameters.dlc >>
-    #   resource_class: medium
-    #   image: ubuntu-2004:current
-    # working_directory: ~/project/
+    machine:
+      docker_layer_caching: << parameters.dlc >>
+      resource_class: medium
+      image: ubuntu-2004:current
+    working_directory: ~/project/
     steps:
       - checkout
       - gcp-gcr/gcr-auth
@@ -44,6 +44,11 @@ jobs:
           source-tag: $CIRCLE_SHA1
           target-tag: latest
   deploy_container:
+    machine:
+      docker_layer_caching: << parameters.dlc >>
+      resource_class: medium
+      image: ubuntu-2004:current
+    working_directory: ~/project/
     parameters:
       name:
         type: string
