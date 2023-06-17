@@ -88,6 +88,8 @@ workflows:
               only:
                 - master
       - deploy_container:
+          requires:
+            - build_deploy_container
           name: bot
           context: EnvVariables
           filters:
