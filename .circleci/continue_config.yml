@@ -15,7 +15,7 @@ parameters:
 jobs:
   build_deploy_container:
     parameters:
-      package_name:
+      name:
         type: string
       dockerfile:
         type: string
@@ -32,20 +32,20 @@ jobs:
       - checkout
       - gcp-gcr/gcr-auth
       - gcp-gcr/build-image:
-          image: << parameters.package_name >>
+          image: << parameters.name >>
           dockerfile: << parameters.dockerfile >>
-          extra_build_args: --build-arg SHA1=$CIRCLE_SHA1 --build-arg APP=<< parameters.package_name >>
+          extra_build_args: --build-arg SHA1=$CIRCLE_SHA1 --build-arg APP=<< parameters.name >>
           tag: $CIRCLE_SHA1
       - gcp-gcr/push-image:
-          image: << parameters.package_name >>
+          image: << parameters.name >>
           tag: $CIRCLE_SHA1
       - gcp-gcr/tag-image:
-          image: << parameters.package_name >>
+          image: << parameters.name >>
           source-tag: $CIRCLE_SHA1
           target-tag: latest
   deploy_container:
     parameters:
-      package_name:
+      name:
         type: string
       dockerfile:
         type: string
@@ -56,10 +56,10 @@ jobs:
     steps:
       - gcp-cloud-run/init
       - gcp-cloud-run/deploy:
-          image: gcr.io/slack-battle-bot/<< parameters.package_name >>:$CIRLCE_SHA1
+          image: gcr.io/slack-battle-bot/<< parameters.name >>:$CIRLCE_SHA1
           platform: managed
           region: us-west1
-          service-name: << parameters.package_name >>
+          service-name: << parameters.name >>
           unauthenticated: true
 
 workflows:
@@ -67,8 +67,7 @@ workflows:
     when: << pipeline.parameters.backend >>
     jobs:
       - build_deploy_container:
-          # name: backend-build
-          package_name: backend
+          name: backend
           context: EnvVariables
           filters:
             branches:
@@ -78,7 +77,7 @@ workflows:
     when: << pipeline.parameters.bot >>
     jobs:
       - build_deploy_container:
-          package_name: bot
+          name: bot
           context: EnvVariables
           dlc: true
           filters:
@@ -86,7 +85,7 @@ workflows:
               only:
                 - master
       - deploy_container:
-          package_name: bot
+          name: bot
           context: EnvVariables
           filters:
             branches:
@@ -96,8 +95,7 @@ workflows:
     when: << pipeline.parameters.web >>
     jobs:
       - build_deploy_container:
-          # name: web-build
-          package_name: web
+          name: web
           context: EnvVariables
           dockerfile: packages/web/Dockerfile
           filters:
