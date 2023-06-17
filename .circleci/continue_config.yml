@@ -70,6 +70,7 @@ workflows:
     when: << pipeline.parameters.backend >>
     jobs:
       - build_deploy_container:
+          package_name: backend
           name: backend
           context: EnvVariables
           filters:
@@ -102,6 +103,7 @@ workflows:
     when: << pipeline.parameters.web >>
     jobs:
       - build_deploy_container:
+          package_name: web
           name: web
           context: EnvVariables
           dockerfile: packages/web/Dockerfile
