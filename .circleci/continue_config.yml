@@ -13,7 +13,7 @@ parameters:
     type: boolean
     default: false
 jobs:
-  deploy_fargate:
+  build_deploy_container:
     parameters:
       package_name:
         type: string
@@ -23,11 +23,11 @@ jobs:
       dlc:
         type: boolean
         default: true
-    machine:
-      docker_layer_caching: << parameters.dlc >>
-      resource_class: medium
-      image: ubuntu-2004:current
-    working_directory: ~/project/
+    # machine:
+    #   docker_layer_caching: << parameters.dlc >>
+    #   resource_class: medium
+    #   image: ubuntu-2004:current
+    # working_directory: ~/project/
     steps:
       - checkout
       - gcp-gcr/gcr-auth
@@ -43,6 +43,17 @@ jobs:
           image: << parameters.package_name >>
           source-tag: $CIRCLE_SHA1
           target-tag: latest
+  deploy_container:
+    parameters:
+      package_name:
+        type: string
+      dockerfile:
+        type: string
+        default: Dockerfile
+      dlc:
+        type: boolean
+        default: true
+    steps:
       - gcp-cloud-run/init
       - gcp-cloud-run/deploy:
           image: gcr.io/slack-battle-bot/<< parameters.package_name >>:$CIRLCE_SHA1
@@ -55,8 +66,8 @@ workflows:
   backend:
     when: << pipeline.parameters.backend >>
     jobs:
-      - deploy_fargate:
-          name: backend-build
+      - build_deploy_container:
+          # name: backend-build
           package_name: backend
           context: EnvVariables
           filters:
@@ -66,8 +77,7 @@ workflows:
   bot:
     when: << pipeline.parameters.bot >>
     jobs:
-      - deploy_fargate:
-          name: bot-build
+      - build_deploy_container:
           package_name: bot
           context: EnvVariables
           dlc: true
@@ -75,11 +85,18 @@ workflows:
             branches:
               only:
                 - master
+      - deploy_container:
+          package_name: bot
+          context: EnvVariables
+          filters:
+            branches:
+              only:
+                - master          
   web:
     when: << pipeline.parameters.web >>
     jobs:
-      - deploy_fargate:
-          name: web-build
+      - build_deploy_container:
+          # name: web-build
           package_name: web
           context: EnvVariables
           dockerfile: packages/web/Dockerfile
