@@ -15,8 +15,8 @@ parameters:
 jobs:
   build_deploy_container:
     parameters:
-      # name:
-      #   type: string
+      package_name:
+        type: string
       dockerfile:
         type: string
         default: Dockerfile
@@ -48,6 +48,8 @@ jobs:
       - image: cimg/base:stable
     working_directory: ~/project/
     parameters:
+      package_name:
+        type: string
       dockerfile:
         type: string
         default: Dockerfile
