@@ -59,7 +59,7 @@ jobs:
     steps:
       - gcp-cloud-run/init
       - gcp-cloud-run/deploy:
-          image: gcr.io/slack-battle-bot/<< parameters.package_name >>:$CIRLCE_SHA1
+          image: gcr.io/slack-battle-bot/<< parameters.package_name >>:${CIRLCE_SHA1}
           platform: managed
           region: us-west1
           service-name: << parameters.package_name >>
