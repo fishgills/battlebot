@@ -82,7 +82,7 @@ workflows:
     jobs:
       - build_deploy_container:
           package_name: bot
-          name: build & push bot container
+          # name: build & push bot container
           context: EnvVariables
           dlc: true
           filters:
@@ -92,7 +92,7 @@ workflows:
       - deploy_container:
           requires:
             - build_deploy_container
-          name: deploy bot
+          # name: deploy bot
           package_name: bot
           context: EnvVariables
           filters:
