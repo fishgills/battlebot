@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { CharactersModule } from './characters/characters.module';
 import { CombatModule } from './combat/combat.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CombatModule } from './combat/combat.module';
     }),
     CharactersModule,
     CombatModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -77,6 +77,16 @@ workflows:
             branches:
               only:
                 - master
+      - deploy_container:
+          requires:
+            - build_deploy_container
+          # name: deploy bot
+          package_name: backend
+          context: EnvVariables
+          filters:
+            branches:
+              only:
+                - master
   bot:
     when: << pipeline.parameters.bot >>
     jobs:
@@ -98,7 +108,7 @@ workflows:
           filters:
             branches:
               only:
-                - master          
+                - master
   web:
     when: << pipeline.parameters.web >>
     jobs:
