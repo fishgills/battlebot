@@ -12,10 +12,10 @@ import { HealthModule } from './health/health.module';
     TypeOrmModule.forRoot({
       logging: true,
       type: 'mysql',
-      host: 'localhost',
+      host: process.env.DB_INSTANCE,
       port: 3306,
-      username: 'root',
-      password: 'bot',
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
       database: 'botdb',
       synchronize: true,
       autoLoadEntities: true,
