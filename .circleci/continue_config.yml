@@ -5,7 +5,7 @@ orbs:
 parameters:
   backend:
     type: boolean
-    default: false
+    default: true
   bot:
     type: boolean
     default: true
