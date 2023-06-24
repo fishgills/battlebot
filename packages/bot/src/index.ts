@@ -50,7 +50,6 @@ const app = new App({
 });
 (async () => {
   const port = Number(process.env.PORT);
-  console.log(process.env);
   await app.start({
     port,
   });

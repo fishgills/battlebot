@@ -1,56 +1,31 @@
-import { forwardRef, Logger, Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CharacterModule } from './characters/character.module';
+import { DataSource } from 'typeorm';
+import { CharactersModule } from './characters/characters.module';
 import { CombatModule } from './combat/combat.module';
-import { RewardModule } from './rewards/reward.module';
-import { SlackInstallModule } from './installs/install.module';
-import { SlackAuthModule } from './slack-auth/auth.module';
-import { HttpModule } from '@nestjs/axios';
-import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { DataloaderModule } from 'dataloader/dataloader.module';
-import { DataloaderService } from 'dataloader/dataloader.service';
-import { ConvoModule } from 'convostore/convo.module';
-import { AuthModule } from 'auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { HealthModule } from './health/health.module';
-import { database } from 'typeorm/database.config';
 
 @Module({
   imports: [
-    forwardRef(() => CharacterModule),
-    CombatModule,
-    SlackInstallModule,
-    RewardModule,
-    HttpModule,
-    ConvoModule,
-    TypeOrmModule.forRoot(database),
-    GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      imports: [DataloaderModule],
-      inject: [DataloaderService],
-      driver: ApolloDriver,
-      useFactory: (dlService: DataloaderService) => {
-        return {
-          cache: 'bounded',
-          playground: false,
-          plugins: [ApolloServerPluginLandingPageLocalDefault()],
-          autoSchemaFile: true,
-          context: (obj) => {
-            return {
-              req: obj.req,
-              loaders: dlService.createLoaders(),
-            };
-          },
-        };
-      },
+    TypeOrmModule.forRoot({
+      logging: true,
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: 'bot',
+      database: 'botdb',
+      synchronize: true,
+      autoLoadEntities: true,
+      dropSchema: true,
     }),
-    AuthModule,
-    SlackAuthModule,
-    UsersModule,
-    HealthModule,
+    CharactersModule,
+    CombatModule,
   ],
-  providers: [Logger],
-  controllers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private dataSource: DataSource) {}
+}
