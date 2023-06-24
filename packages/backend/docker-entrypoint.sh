@@ -1,3 +1,3 @@
 #!/bin/sh
-
-node dist/main.js
+ls -al
+node main.js
