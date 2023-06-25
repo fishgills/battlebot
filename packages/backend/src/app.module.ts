@@ -12,7 +12,7 @@ import { HealthModule } from './health/health.module';
     TypeOrmModule.forRoot({
       logging: true,
       type: 'mysql',
-      host: process.env.DB_INSTANCE,
+      socketPath: process.env.INSTANCE_UNIX_SOCKET,
       port: 3306,
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
