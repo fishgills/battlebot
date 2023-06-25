@@ -12,14 +12,15 @@ import { HealthModule } from './health/health.module';
     TypeOrmModule.forRoot({
       logging: true,
       type: 'mysql',
-      socketPath: process.env.INSTANCE_UNIX_SOCKET,
+      ...(process.env.INSTANCE_UNIX_SOCKET && {
+        socketPath: process.env.INSTANCE_UNIX_SOCKET,
+      }),
+      ...(process.env.DB_HOST && { host: process.env.host }),
       port: 3306,
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: 'botdb',
-      synchronize: true,
       autoLoadEntities: true,
-      dropSchema: true,
     }),
     CharactersModule,
     CombatModule,

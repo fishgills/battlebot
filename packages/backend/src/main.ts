@@ -12,5 +12,4 @@ async function bootstrap() {
   app.useGlobalFilters(new OrmExceptionFilter());
   await app.listen(process.env.PORT || 3000);
 }
-console.log(process.env);
 bootstrap();

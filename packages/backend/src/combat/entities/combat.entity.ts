@@ -1,6 +1,6 @@
-import { BaseEntity } from 'src/base/entity';
-import { CharacterEntity } from 'src/characters/entities/character.entity';
-import { CombatLog } from 'src/gamerules';
+import { BaseEntity } from '../../base/entity';
+import { CharacterEntity } from '../../characters/entities/character.entity';
+import { CombatLog } from '../../gamerules';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity()

@@ -1,5 +1,5 @@
-import { BaseEntity } from 'src/base/entity';
-import { CombatEntity } from 'src/combat/entities/combat.entity';
+import { BaseEntity } from '../../base/entity';
+import { CombatEntity } from '../../combat/entities/combat.entity';
 import { Column, Entity, OneToMany, Unique } from 'typeorm';
 
 @Entity()
