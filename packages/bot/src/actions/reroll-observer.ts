@@ -1,8 +1,8 @@
 import { SectionBuilder } from 'slack-block-builder';
 import { ObserveType } from '.';
-import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
 import { ActionObserver } from './action-observer';
+import api from '../utils/api';
 
 export class RerollObserver extends ActionObserver {
   getHelpBlocks(): SectionBuilder[] {
@@ -15,16 +15,12 @@ export class RerollObserver extends ActionObserver {
   async update(event: ObserveType): Promise<void> {
     try {
       let char = (
-        await sdk.characterByOwner({
-          owner: event.body.user.id,
-          teamId: event.context.teamId,
-        })
-      ).findByOwner;
-      char = (
-        await sdk.rollCharacter({
-          id: char.id,
-        })
-      ).reroll;
+        await api.characters.charactersControllerFindByOwner(
+          event.body.user.id,
+          event.context.teamId,
+        )
+      ).data;
+      char = (await api.characters.charactersControllerReroll(char.id)).data;
       await event.respond({
         response_type: 'ephemeral',
         blocks: editCharacterModal(char).blocks,

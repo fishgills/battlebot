@@ -10,6 +10,11 @@ export class BaseService<BaseEntity> {
     return this.repo.find();
   }
 
+  /**
+   *
+   * @param id UUID of Entity
+   * @returns
+   */
   findOne(id: string): Promise<BaseEntity> {
     return this.repo.findOneById(id);
   }

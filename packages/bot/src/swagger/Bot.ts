@@ -549,6 +549,20 @@ export class Api<
         format: 'json',
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @name CharactersControllerReroll
+     * @request POST:/characters/{id}/reroll
+     */
+    charactersControllerReroll: (id: string, params: RequestParams = {}) =>
+      this.request<CharacterEntity, any>({
+        path: `/characters/${id}/reroll`,
+        method: 'POST',
+        format: 'json',
+        ...params,
+      }),
   };
   combat = {
     /**

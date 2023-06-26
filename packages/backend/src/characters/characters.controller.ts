@@ -58,4 +58,18 @@ export class CharactersController {
   findByOwner(@Param('id') owner: string, @Param('team') team: string) {
     return this.charactersService.findByOwner(owner, team);
   }
+
+  @Post(':id/reroll')
+  async reroll(
+    @Param('id')
+    id: string,
+  ) {
+    const char = await this.charactersService.findOne(id);
+    if (char.rolls >= 5) {
+      throw new Error('Character ran out of rolls');
+    }
+    this.charactersService.rollCharacter(char);
+    await this.charactersService.update(id, char);
+    return char;
+  }
 }
