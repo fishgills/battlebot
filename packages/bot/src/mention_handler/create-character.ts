@@ -1,8 +1,8 @@
 import { SlackCommandMiddlewareArgs, AllMiddlewareArgs } from '@slack/bolt';
 import { Blocks } from 'slack-block-builder';
 import { t } from '../locale';
-import { sdk } from '../utils/gql';
 import { MentionObserver } from './observer';
+import api from '../utils/api';
 
 export class CharacterCreateObserver extends MentionObserver {
   constructor() {
@@ -31,23 +31,22 @@ export class CharacterCreateObserver extends MentionObserver {
     }
     try {
       const char = (
-        await sdk.characterByOwner({
-          owner: e.payload.user_id,
-          teamId: e.payload.team_id,
-        })
-      ).findByOwner;
+        await api.characters.charactersControllerFindByOwner(
+          e.payload.user_id,
+          e.payload.team_id,
+        )
+      ).data;
       if (char.id) {
         await this.msgUser(e, t('create_update_already_have_char'));
         return;
       }
     } catch (err) {
-      await sdk.addCharacter({
-        input: {
-          owner: e.payload.user_id,
-          name: e.payload.text.trim().split(' ')[1],
-          teamId: e.payload.team_id,
-        },
+      await api.characters.charactersControllerCreate({
+        owner: e.payload.user_id,
+        name: e.payload.text.trim().split(' ')[1],
+        teamId: e.payload.team_id,
       });
+
       await this.msgUser(e, t('create_update_char_created'));
     }
   }

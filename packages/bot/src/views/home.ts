@@ -2,14 +2,14 @@ import gql from 'graphql-tag';
 import { Blocks, HomeTab, HomeTabBuilder } from 'slack-block-builder';
 import {
   AllowedDirections,
-  CharacterType,
+  CharacterEntity,
   RewardScore,
 } from '../generated/graphql';
 import { t } from '../locale';
 import { client, sdk } from '../utils/gql';
 import { characterSheetBlocks } from './character';
 
-const characterStats = (character: CharacterType, home: HomeTabBuilder) => {
+const characterStats = (character: CharacterEntity, home: HomeTabBuilder) => {
   home.blocks(
     ...characterSheetBlocks(character),
     Blocks.Section({

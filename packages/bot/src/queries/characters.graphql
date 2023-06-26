@@ -1,4 +1,4 @@
-fragment CharacterParts on CharacterType {
+fragment CharacterParts on CharacterEntity {
   defense
   vitality
   strength

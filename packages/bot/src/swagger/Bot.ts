@@ -607,10 +607,15 @@ export class Api<
      * @name CombatControllerStart
      * @request POST:/combat/start
      */
-    combatControllerStart: (params: RequestParams = {}) =>
+    combatControllerStart: (
+      data: CreateCombatDto,
+      params: RequestParams = {},
+    ) =>
       this.request<CombatEntity, any>({
         path: `/combat/start`,
         method: 'POST',
+        body: data,
+        type: ContentType.Json,
         format: 'json',
         ...params,
       }),

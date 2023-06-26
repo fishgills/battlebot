@@ -1,11 +1,11 @@
 import { SlackCommandMiddlewareArgs, AllMiddlewareArgs } from '@slack/bolt';
 import { Blocks } from 'slack-block-builder';
-import { CharacterByOwnerQuery, CharacterType } from '../generated/graphql';
 import { t } from '../locale';
-import { sdk } from '../utils/gql';
 import { getUsernames, to } from '../utils/helpers';
 import { battleLog, notifyLevelUp } from '../views/character';
 import { MentionObserver } from './observer';
+import { CharacterEntity } from '../swagger/Bot';
+import api from '../utils/api';
 
 export class CombatObserver extends MentionObserver {
   constructor() {
@@ -28,13 +28,14 @@ export class CombatObserver extends MentionObserver {
   ): Promise<void> {
     this.log(`starting combat`);
 
-    let char: CharacterType;
+    let char: CharacterEntity;
     try {
-      const result = await sdk.characterByOwner({
-        owner: e.payload.user_id,
-        teamId: e.payload.team_id,
-      });
-      char = result.findByOwner;
+      const char = (
+        await api.characters.charactersControllerFindByOwner(
+          e.payload.user_id,
+          e.payload.team_id,
+        )
+      ).data;
     } catch (err) {
       this.msgUser(e, t('combat_update_no_character'));
       return;
@@ -58,12 +59,14 @@ export class CombatObserver extends MentionObserver {
 
     const targetUser = targets[0];
 
-    let target: CharacterByOwnerQuery;
+    let target: CharacterEntity;
     try {
-      target = await sdk.characterByOwner({
-        owner: targetUser.id,
-        teamId: e.payload.team_id,
-      });
+      target = (
+        await api.characters.charactersControllerFindByOwner(
+          targetUser.id,
+          e.payload.team_id,
+        )
+      ).data;
     } catch (exception) {
       this.debug('target has no character');
       this.msgUser(e, t('combat_update_target_no_char', targetUser.id));
@@ -78,13 +81,20 @@ export class CombatObserver extends MentionObserver {
     }
 
     const [err, combatLog] = await to(
-      sdk.startCombat({
-        input: {
-          attackerId: char.id,
-          defenderId: target.findByOwner.id,
-        },
+      api.combat.combatControllerStart({
+        attackerId: char.id,
+        defenderId: target.id,
       }),
     );
+
+    // const [err, combatLog] = await to(
+    //   sdk.startCombat({
+    //     input: {
+    //       attackerId: char.id,
+    //       defenderId: target.findByOwner.id,
+    //     },
+    //   }),
+    // );
     if (err) {
       if (err.message.indexOf('Combat started too fast') > -1) {
         this.msgUser(e, t('combat_update_throttle'));
@@ -95,7 +105,7 @@ export class CombatObserver extends MentionObserver {
     }
 
     const log = battleLog({
-      combat: combatLog,
+      combat: combatLog.data,
       channel: e.payload.channel,
     });
 
@@ -108,9 +118,9 @@ export class CombatObserver extends MentionObserver {
       ...log,
     });
     await notifyLevelUp(
-      combatLog.start.winner,
+      combatLog.data.winner,
       char,
-      target.findByOwner,
+      target,
       e.respond,
       targetUser.id,
       e.client,

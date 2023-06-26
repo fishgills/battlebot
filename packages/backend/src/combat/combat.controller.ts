@@ -52,7 +52,7 @@ export class CombatController {
 
   @Post('start')
   async start(
-    @Body('input')
+    @Body()
     input: CreateCombatDto,
   ) {
     // const combatCount = await this.combatService.findAll({
