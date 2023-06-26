@@ -79,7 +79,19 @@ export interface UpdateCharacterDto {
   owner?: string;
   /** Slack Team Id */
   teamId?: string;
+  strength?: number;
+  vitality?: number;
+  defense?: number;
+  extraPoints?: number;
+  active: boolean;
 }
+
+export interface DeleteCharacterInput {
+  owner: string;
+  teamId: string;
+}
+
+export type DeleteResult = object;
 
 export interface CreateCombatDto {
   attackerId: string;
@@ -452,6 +464,24 @@ export class Api<
         path: `/characters`,
         method: 'GET',
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CharactersControllerRemoveFromTeam
+     * @request DELETE:/characters
+     */
+    charactersControllerRemoveFromTeam: (
+      data: DeleteCharacterInput,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, DeleteResult>({
+        path: `/characters`,
+        method: 'DELETE',
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 

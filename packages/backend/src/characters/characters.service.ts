@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CharacterEntity } from './entities/character.entity';
 import { BaseService } from 'src/base/service';
+import { DeleteCharacterInput } from './dto/delete-character.dt';
 
 @Injectable()
 export class CharactersService extends BaseService<CharacterEntity> {
@@ -12,6 +13,12 @@ export class CharactersService extends BaseService<CharacterEntity> {
     repo: Repository<CharacterEntity>,
   ) {
     super(repo);
+  }
+  removeFromTeam(input: DeleteCharacterInput) {
+    return this.repo.delete({
+      teamId: input.teamId,
+      owner: input.owner,
+    });
   }
 
   findByOwner(

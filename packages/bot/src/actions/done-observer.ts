@@ -1,8 +1,8 @@
 import { SectionBuilder } from 'slack-block-builder';
 import { ObserveType } from '.';
-import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
 import { ActionObserver } from './action-observer';
+import api from '../utils/api';
 
 export class DoneObserver extends ActionObserver {
   getHelpBlocks(): SectionBuilder[] {
@@ -13,22 +13,20 @@ export class DoneObserver extends ActionObserver {
     this.command = 'complete';
   }
   async update(event: ObserveType): Promise<void> {
-    const { findByOwner } = await sdk.characterByOwner({
-      owner: event.body.user.id,
-      teamId: event.context.teamId,
-    });
+    const { data } = await api.characters.charactersControllerFindByOwner(
+      event.body.user.id,
+      event.context.teamId,
+    );
 
-    if (findByOwner.active) {
+    if (data.active) {
       return;
     }
 
-    findByOwner.active = true;
-    await sdk.CharacterUpdate({
-      input: {
-        active: true,
-      },
-      characterUpdateId: findByOwner.id,
+    data.active = true;
+    await api.characters.charactersControllerUpdate(data.id, {
+      active: true,
     });
-    await this.msgUser(event, editCharacterModal(findByOwner));
+
+    await this.msgUser(event, editCharacterModal(data));
   }
 }

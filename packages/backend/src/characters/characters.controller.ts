@@ -10,6 +10,9 @@ import {
 import { CharactersService } from './characters.service';
 import { CreateCharacterDto } from './dto/create-character.dto';
 import { UpdateCharacterDto } from './dto/update-character.dto';
+import { DeleteCharacterInput } from './dto/delete-character.dt';
+import { ApiResponse } from '@nestjs/swagger';
+import { DeleteResult } from 'typeorm';
 
 @Controller('characters')
 export class CharactersController {
@@ -41,6 +44,14 @@ export class CharactersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.charactersService.remove(id);
+  }
+
+  @Delete()
+  @ApiResponse({
+    type: DeleteResult,
+  })
+  removeFromTeam(@Body() input: DeleteCharacterInput) {
+    return this.charactersService.removeFromTeam(input);
   }
 
   @Get('owner/:team/:id')
