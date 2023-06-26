@@ -9,7 +9,7 @@ import {
 export abstract class BaseEntity extends TypeOrmBaseEntity {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @ApiProperty()
   @CreateDateColumn()

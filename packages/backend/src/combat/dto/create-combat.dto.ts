@@ -1,1 +1,4 @@
-export class CreateCombatDto {}
+export class CreateCombatDto {
+  attackerId: string;
+  defenderId: string;
+}
