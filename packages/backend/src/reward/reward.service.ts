@@ -11,7 +11,7 @@ import { AllowedDirections } from './dto/scoreboard';
 export class RewardService extends BaseService<RewardEntity> {
   constructor(
     @InjectRepository(RewardEntity)
-    private repo: Repository<RewardEntity>,
+    repo: Repository<RewardEntity>,
   ) {
     super(repo);
   }

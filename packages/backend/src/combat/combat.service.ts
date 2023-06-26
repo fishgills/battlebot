@@ -9,8 +9,8 @@ import { BaseService } from 'src/base/service';
 export class CombatService extends BaseService<CombatEntity> {
   constructor(
     @InjectRepository(CombatEntity)
-    charactersRepository: Repository<CombatEntity>,
+    repo: Repository<CombatEntity>,
   ) {
-    super(charactersRepository);
+    super(repo);
   }
 }

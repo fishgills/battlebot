@@ -2,9 +2,9 @@ import { AllMiddlewareArgs, SlackCommandMiddlewareArgs } from '@slack/bolt';
 import { StringIndexed } from '@slack/bolt/dist/types/helpers';
 import { Blocks, SectionBuilder } from 'slack-block-builder';
 import { t } from '../locale';
-import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
 import { MentionObserver } from './observer';
+import api from '../utils/api';
 
 export class SheetObserver extends MentionObserver {
   constructor() {
@@ -29,11 +29,11 @@ export class SheetObserver extends MentionObserver {
     this.log(`requested character sheet`);
     try {
       const char = (
-        await sdk.characterByOwner({
-          owner: event.payload.user_id,
-          teamId: event.payload.team_id,
-        })
-      ).findByOwner;
+        await api.characters.charactersControllerFindByOwner(
+          event.payload.user_id,
+          event.payload.team_id,
+        )
+      ).data;
       await this.msgUser(event, editCharacterModal(char));
     } catch (e) {
       this.log(`character not found`);

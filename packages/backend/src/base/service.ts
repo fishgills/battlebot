@@ -4,25 +4,25 @@ import { Injectable } from '@nestjs/common';
 import { BaseEntity } from './entity';
 @Injectable()
 export class BaseService<BaseEntity> {
-  constructor(private readonly repository: Repository<BaseEntity>) {}
+  constructor(protected repo: Repository<BaseEntity>) {}
 
   findAll(): Promise<BaseEntity[]> {
-    return this.repository.find();
+    return this.repo.find();
   }
 
   findOne(id: string): Promise<BaseEntity> {
-    return this.repository.findOneById(id);
+    return this.repo.findOneById(id);
   }
 
   remove(id: string) {
-    return this.repository.delete(id);
+    return this.repo.delete(id);
   }
 
   create(entity: DeepPartial<BaseEntity>): Promise<BaseEntity> {
-    return this.repository.save(entity);
+    return this.repo.save(entity);
   }
 
   update(id: any, entity: Partial<BaseEntity>) {
-    return this.repository.save(id, entity);
+    return this.repo.save(id, entity);
   }
 }

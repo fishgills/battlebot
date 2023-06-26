@@ -42,4 +42,9 @@ export class CharactersController {
   remove(@Param('id') id: string) {
     return this.charactersService.remove(id);
   }
+
+  @Get('owner/:team/:id')
+  findByOwner(@Param('id') owner: string, @Param('team') team: string) {
+    return this.charactersService.findByOwner(owner, team);
+  }
 }

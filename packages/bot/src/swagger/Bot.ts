@@ -465,6 +465,24 @@ export class Api<
         method: 'DELETE',
         ...params,
       }),
+
+    /**
+     * No description
+     *
+     * @name CharactersControllerFindByOwner
+     * @request GET:/characters/owner/{team}/{id}
+     */
+    charactersControllerFindByOwner: (
+      id: string,
+      team: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<CharacterEntity, any>({
+        path: `/characters/owner/${team}/${id}`,
+        method: 'GET',
+        format: 'json',
+        ...params,
+      }),
   };
   combat = {
     /**

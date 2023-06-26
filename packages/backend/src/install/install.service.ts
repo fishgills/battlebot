@@ -9,7 +9,7 @@ import { UpdateInstallDto } from './dto/update-install.dto';
 export class InstallService extends BaseService<InstallEntity> {
   constructor(
     @InjectRepository(InstallEntity)
-    private repo: Repository<InstallEntity>,
+    repo: Repository<InstallEntity>,
   ) {
     super(repo);
   }

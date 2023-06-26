@@ -9,8 +9,20 @@ import { BaseService } from 'src/base/service';
 export class CharactersService extends BaseService<CharacterEntity> {
   constructor(
     @InjectRepository(CharacterEntity)
-    charactersRepository: Repository<CharacterEntity>,
+    repo: Repository<CharacterEntity>,
   ) {
-    super(charactersRepository);
+    super(repo);
+  }
+
+  findByOwner(
+    owner: string,
+    teamId: string | undefined,
+  ): Promise<CharacterEntity> {
+    return this.repo.findOneOrFail({
+      where: {
+        owner,
+        teamId,
+      },
+    });
   }
 }
