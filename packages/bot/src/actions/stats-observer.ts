@@ -1,9 +1,9 @@
 import { SectionBuilder } from 'slack-block-builder';
 import { ObserveType } from '.';
 import { t } from '../locale';
-import { sdk } from '../utils/gql';
 import { editCharacterModal } from '../views/character';
 import { ActionObserver } from './action-observer';
+import api from '../utils/api';
 
 export class StatsObserver extends ActionObserver {
   getHelpBlocks(): SectionBuilder[] {
@@ -14,10 +14,11 @@ export class StatsObserver extends ActionObserver {
     this.command = 'stat-incr';
   }
   async update(event: ObserveType): Promise<void> {
-    const { findByOwner } = await sdk.characterByOwner({
-      owner: event.body.user.id,
-      teamId: event.context.teamId,
-    });
+    const { data: findByOwner } =
+      await api.characters.charactersControllerFindByOwner(
+        event.body.user.id,
+        event.context.teamId,
+      );
 
     if (findByOwner.extraPoints <= 0) {
       this.msgUser(event, t('no_points'));
@@ -25,15 +26,13 @@ export class StatsObserver extends ActionObserver {
     }
 
     findByOwner[event.action.value] += 1;
-    await sdk.CharacterUpdate({
-      characterUpdateId: findByOwner.id,
-      input: {
-        defense: findByOwner.defense,
-        strength: findByOwner.strength,
-        vitality: findByOwner.vitality,
-        extraPoints: findByOwner.extraPoints - 1,
-      },
+    await api.characters.charactersControllerUpdate(findByOwner.id, {
+      defense: findByOwner.defense,
+      strength: findByOwner.strength,
+      vitality: findByOwner.vitality,
+      extraPoints: findByOwner.extraPoints - 1,
     });
+
     await this.msgUser(event, editCharacterModal(findByOwner));
   }
 }

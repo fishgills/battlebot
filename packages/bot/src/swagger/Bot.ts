@@ -83,7 +83,7 @@ export interface UpdateCharacterDto {
   vitality?: number;
   defense?: number;
   extraPoints?: number;
-  active: boolean;
+  active?: boolean;
 }
 
 export interface DeleteCharacterInput {

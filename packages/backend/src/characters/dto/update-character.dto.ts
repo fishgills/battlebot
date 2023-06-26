@@ -6,5 +6,5 @@ export class UpdateCharacterDto extends PartialType(CreateCharacterDto) {
   vitality?: number;
   defense?: number;
   extraPoints?: number;
-  active!: boolean;
+  active?: boolean;
 }
