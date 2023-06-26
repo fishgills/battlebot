@@ -6,14 +6,14 @@ import {
   setIfTruthy,
   SlackMessageDto,
 } from 'slack-block-builder';
-import { CharacterType, StartCombatMutation } from '../generated/graphql';
 import { t } from '../locale';
 import { nextLevel, numToEmoji } from '../utils/helpers';
+import { CharacterEntity } from '../swagger/Bot';
 
 export const notifyLevelUp = (
-  winner: Pick<CharacterType, 'level' | 'id'>,
-  org_attacker: CharacterType,
-  org_defender: CharacterType,
+  winner: CharacterEntity,
+  org_attacker: CharacterEntity,
+  org_defender: CharacterEntity,
   attacker_resp: RespondFn,
   org_def_slack_id: string,
   event: any,
@@ -35,7 +35,7 @@ export const notifyLevelUp = (
   }
 };
 
-const saveBlock = (char: Partial<CharacterType>) => {
+const saveBlock = (char: Partial<CharacterEntity>) => {
   if (char.active) {
     return;
   }
@@ -63,7 +63,7 @@ const saveBlock = (char: Partial<CharacterType>) => {
   return block;
 };
 
-export const statBlock = (character: Partial<CharacterType>) => {
+export const statBlock = (character: Partial<CharacterEntity>) => {
   const stats = [
     {
       id: 'strength',
@@ -99,7 +99,7 @@ export const statBlock = (character: Partial<CharacterType>) => {
   });
 };
 
-export const characterSheetBlocks = (character: Partial<CharacterType>) => {
+export const characterSheetBlocks = (character: Partial<CharacterEntity>) => {
   return [
     Blocks.Section({
       text: t('character_name', character.name),
@@ -133,7 +133,7 @@ export const characterSheetBlocks = (character: Partial<CharacterType>) => {
     Blocks.Divider(),
   ];
 };
-export const editCharacterModal = (character: Partial<CharacterType>) => {
+export const editCharacterModal = (character: Partial<CharacterEntity>) => {
   return Message()
     .asUser()
     .blocks(...characterSheetBlocks(character))

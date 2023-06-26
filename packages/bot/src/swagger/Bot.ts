@@ -19,6 +19,11 @@ export interface CreateCharacterDto {
 }
 
 export interface CharacterEntity {
+  id: number;
+  /** @format date-time */
+  created_at: string;
+  /** @format date-time */
+  updated_at: string;
   name: string;
   owner: string;
   attacking: CombatEntity[];
@@ -39,6 +44,11 @@ export interface CharacterEntity {
 export type CombatLog = object;
 
 export interface CombatEntity {
+  id: number;
+  /** @format date-time */
+  created_at: string;
+  /** @format date-time */
+  updated_at: string;
   attacker: CharacterEntity;
   attackerId: string;
   defender: CharacterEntity;
@@ -70,6 +80,11 @@ export interface CreateRewardDto {
 }
 
 export interface RewardEntity {
+  id: number;
+  /** @format date-time */
+  created_at: string;
+  /** @format date-time */
+  updated_at: string;
   destination: string;
   source: string;
   teamId: string;
@@ -94,6 +109,11 @@ export interface CreateInstallDto {
 }
 
 export interface InstallEntity {
+  id: number;
+  /** @format date-time */
+  created_at: string;
+  /** @format date-time */
+  updated_at: string;
   team_id: string;
   installObj: {
     bot?: {
