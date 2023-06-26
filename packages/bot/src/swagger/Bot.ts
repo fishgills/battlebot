@@ -19,15 +19,15 @@ export interface CreateCharacterDto {
 }
 
 export interface CharacterEntity {
-  id: number;
+  id: string;
   /** @format date-time */
   created_at: string;
   /** @format date-time */
   updated_at: string;
-  name: string;
-  owner: string;
   attacking: CombatEntity[];
   defending: CombatEntity[];
+  name: string;
+  owner: string;
   strength: number;
   defense: number;
   vitality: number;
@@ -41,19 +41,32 @@ export interface CharacterEntity {
   active: boolean;
 }
 
-export type CombatLog = object;
+export interface CombatRound {
+  attacker: CharacterEntity;
+  defender: CharacterEntity;
+  hit: boolean;
+  damage: number;
+  attackRoll: number;
+  attackBonus: number;
+  defenderDefense: number;
+  defenderHealth: number;
+}
+
+export interface CombatLog {
+  combat: CombatRound[];
+}
 
 export interface CombatEntity {
-  id: number;
+  id: string;
   /** @format date-time */
   created_at: string;
   /** @format date-time */
   updated_at: string;
+  log: CombatLog;
   attacker: CharacterEntity;
   attackerId: string;
   defender: CharacterEntity;
   defenderId: string;
-  log: CombatLog;
   winner: CharacterEntity;
   loser: CharacterEntity;
   rewardGold: number;
@@ -68,7 +81,10 @@ export interface UpdateCharacterDto {
   teamId?: string;
 }
 
-export type CreateCombatDto = object;
+export interface CreateCombatDto {
+  attackerId: string;
+  defenderId: string;
+}
 
 export type UpdateCombatDto = object;
 
@@ -80,7 +96,7 @@ export interface CreateRewardDto {
 }
 
 export interface RewardEntity {
-  id: number;
+  id: string;
   /** @format date-time */
   created_at: string;
   /** @format date-time */
@@ -109,7 +125,7 @@ export interface CreateInstallDto {
 }
 
 export interface InstallEntity {
-  id: number;
+  id: string;
   /** @format date-time */
   created_at: string;
   /** @format date-time */
@@ -582,6 +598,20 @@ export class Api<
       this.request<void, any>({
         path: `/combat/${id}`,
         method: 'DELETE',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CombatControllerStart
+     * @request POST:/combat/start
+     */
+    combatControllerStart: (params: RequestParams = {}) =>
+      this.request<CombatEntity, any>({
+        path: `/combat/start`,
+        method: 'POST',
+        format: 'json',
         ...params,
       }),
   };

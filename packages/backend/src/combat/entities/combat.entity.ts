@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { BaseEntity } from '../../base/entity';
 import { CharacterEntity } from '../../characters/entities/character.entity';
 import { CombatLog } from '../../gamerules';
@@ -26,6 +27,9 @@ export class CombatEntity extends BaseEntity {
   @Column({
     type: 'json',
     nullable: true,
+  })
+  @ApiProperty({
+    type: () => CombatLog,
   })
   log: CombatLog;
 

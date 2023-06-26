@@ -19,11 +19,17 @@ export class CharacterEntity extends BaseEntity {
     lazy: true,
     onDelete: 'CASCADE',
   })
+  @ApiProperty({
+    type: () => [CombatEntity],
+  })
   attacking: CombatEntity[];
 
   @OneToMany(() => CombatEntity, (combat) => combat.defender, {
     lazy: true,
     onDelete: 'CASCADE',
+  })
+  @ApiProperty({
+    type: () => [CombatEntity],
   })
   defending: CombatEntity[];
 

@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 import { CharacterEntity } from '../characters/entities/character.entity';
 import { CombatEntity } from '../combat/entities/combat.entity';
 import { RewardEntity } from '../reward/entities/reward.entity';
-import { InstallEntity } from 'src/install/entities/install.entity';
+import { InstallEntity } from '../install/entities/install.entity';
 
 export default new DataSource({
   logging: true,

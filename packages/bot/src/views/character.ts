@@ -8,7 +8,12 @@ import {
 } from 'slack-block-builder';
 import { t } from '../locale';
 import { nextLevel, numToEmoji } from '../utils/helpers';
-import { CharacterEntity } from '../swagger/Bot';
+import {
+  CharacterEntity,
+  CombatEntity,
+  CombatLog,
+  CreateCombatDto,
+} from '../swagger/Bot';
 
 export const notifyLevelUp = (
   winner: CharacterEntity,
@@ -141,27 +146,27 @@ export const editCharacterModal = (character: Partial<CharacterEntity>) => {
 };
 
 export const battleLog = (options: {
-  combat: StartCombatMutation;
+  combat: CombatEntity;
   channel: string;
 }) => {
   const blocks = [
     Blocks.Header({
       text: t(
         'battlelog_header',
-        options.combat.start.attacker.name,
-        options.combat.start.defender.name,
+        options.combat.attacker.name,
+        options.combat.defender.name,
       ),
     }),
     Blocks.Section({
       text: t(
         'battlelog_initiative_header',
-        options.combat.start.log.combat[0].attacker.name,
-        options.combat.start.log.combat[0].defender.name,
+        options.combat.log.combat[0].attacker.name,
+        options.combat.log.combat[0].defender.name,
       ),
     }),
   ];
 
-  for (const log of options.combat.start.log.combat) {
+  for (const log of options.combat.log.combat) {
     let blockStr: string;
     if (log.attackRoll === 20) {
       blockStr = t('battlelog_critical_roll', log.attacker.name);
@@ -213,7 +218,7 @@ export const battleLog = (options: {
           text: t(
             'battlelog_gold_report',
             log.attacker.name,
-            options.combat.start.rewardGold,
+            options.combat.rewardGold,
             t('character_gold_emoji'),
           ),
         }),
@@ -224,7 +229,7 @@ export const battleLog = (options: {
   return Message()
     .channel(options.channel)
     .text(
-      `${options.combat.start.attacker.name} has defeated ${options.combat.start.defender.name}`,
+      `${options.combat.attacker.name} has defeated ${options.combat.defender.name}`,
     )
     .blocks(...blocks)
     .buildToObject();

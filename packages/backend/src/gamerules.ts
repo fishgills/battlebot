@@ -1,5 +1,6 @@
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { CharacterEntity } from './characters/entities/character.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export const modifier = (value: number) => {
   return Math.floor((value - 10) / 2);
@@ -33,17 +34,29 @@ export class WhoGoesFirst {
 }
 
 export class CombatRound {
+  @ApiProperty({
+    type: () => CharacterEntity,
+  })
   attacker: CharacterEntity;
 
+  @ApiProperty({
+    type: () => CharacterEntity,
+  })
   defender: CharacterEntity;
 
+  @ApiProperty()
   hit: boolean;
 
+  @ApiProperty()
   damage?: number;
+  @ApiProperty()
   attackRoll: number;
 
+  @ApiProperty()
   attackBonus: number;
+  @ApiProperty()
   defenderDefense: number;
+  @ApiProperty()
   defenderHealth: number;
 }
 
@@ -53,5 +66,8 @@ export class CombatLogInitObj {
 }
 
 export class CombatLog {
+  @ApiProperty({
+    type: () => [CombatRound],
+  })
   combat: CombatRound[];
 }
