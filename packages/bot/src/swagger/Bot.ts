@@ -126,6 +126,18 @@ export interface UpdateRewardDto {
   teamId?: string;
 }
 
+export interface RewardsScoreBoardInput {
+  direction: 'source' | 'destination';
+  teamId: string;
+  today?: boolean;
+}
+
+export interface RewardScore {
+  teamId: string;
+  userId: string;
+  count: number;
+}
+
 export interface CreateInstallDto {
   team_id: string;
   installObj: {
@@ -854,6 +866,25 @@ export class Api<
         path: `/reward/give`,
         method: 'POST',
         query: query,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name RewardControllerScoreBoard
+     * @request POST:/reward/score
+     */
+    rewardControllerScoreBoard: (
+      data: RewardsScoreBoardInput,
+      params: RequestParams = {},
+    ) =>
+      this.request<RewardScore[], any>({
+        path: `/reward/score`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
         format: 'json',
         ...params,
       }),

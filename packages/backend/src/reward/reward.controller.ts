@@ -12,6 +12,8 @@ import { CreateRewardDto } from './dto/create-reward.dto';
 import { UpdateRewardDto } from './dto/update-reward.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { RewardEntity } from './entities/reward.entity';
+import { RewardsScoreBoardInput } from './dto/create-scoreboard.dto';
+import { RewardScore } from './entities/scoreboard.entity';
 
 @Controller('reward')
 export class RewardController {
@@ -62,5 +64,15 @@ export class RewardController {
       input.source,
       input.teamId,
     );
+  }
+
+  @Post('score')
+  async ScoreBoard(@Body() input: RewardsScoreBoardInput) {
+    const result = await this.rewardService.getScoreBoard(
+      input.teamId,
+      input.direction,
+      input.today,
+    );
+    return result as RewardScore[];
   }
 }

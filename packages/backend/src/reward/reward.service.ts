@@ -5,7 +5,7 @@ import { MoreThan, Repository } from 'typeorm';
 import { BaseService } from 'src/base/service';
 import { RewardEntity } from './entities/reward.entity';
 import { startOfToday, subHours } from 'date-fns';
-import { AllowedDirections } from './dto/scoreboard';
+import { AllowedDirections } from './dto/create-scoreboard.dto';
 
 @Injectable()
 export class RewardService extends BaseService<RewardEntity> {

@@ -7,11 +7,9 @@ export enum AllowedDirections {
 
 export class RewardsScoreBoardInput {
   @ApiProperty({
-    type: AllowedDirections,
+    enum: AllowedDirections,
   })
   direction: AllowedDirections;
-  @ApiProperty()
   teamId: string;
-  @ApiProperty()
-  today: boolean;
+  today?: boolean;
 }
