@@ -6,7 +6,7 @@ import {
 } from '@slack/bolt';
 
 import { Logger } from '../logger';
-import { sdk } from './gql';
+import api from './api';
 
 export const isGenericMessageEvent = (
   msg: MessageEvent,
@@ -38,12 +38,8 @@ export function extract<T>(properties: Record<keyof T, true>) {
 export const getTeamInfo = async (
   team_id: string,
 ): Promise<{ token: string }> => {
-  const teamInstall = (
-    await sdk.getInstall({
-      team_id,
-    })
-  ).install;
-
+  const teamInstall = (await api.install.installControllerFindOne(team_id))
+    .data;
   const token = teamInstall.installObj.bot.token;
 
   return {

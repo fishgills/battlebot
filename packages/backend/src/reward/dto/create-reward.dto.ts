@@ -1,19 +1,20 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class CreateCharacterDto {
+export class CreateRewardDto {
   @ApiProperty({
     type: String,
-    example: 'Mister Dude',
   })
-  name: string;
+  source: string;
   @ApiProperty({
     type: String,
-    description: 'Slack User Id',
   })
-  owner: string;
+  destination: string;
+  @ApiPropertyOptional({
+    type: Number,
+  })
+  value: number;
   @ApiProperty({
     type: String,
-    description: 'Slack Team Id',
   })
   teamId: string;
 }

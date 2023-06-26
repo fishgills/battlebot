@@ -6,6 +6,8 @@ import { DataSource } from 'typeorm';
 import { CharactersModule } from './characters/characters.module';
 import { CombatModule } from './combat/combat.module';
 import { HealthModule } from './health/health.module';
+import { RewardModule } from './reward/reward.module';
+import { InstallModule } from './install/install.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { HealthModule } from './health/health.module';
     CharactersModule,
     CombatModule,
     HealthModule,
+    RewardModule,
+    InstallModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,8 +2,8 @@ import { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { Blocks, SectionBuilder } from 'slack-block-builder';
 import { Observer } from '../common/AbstractObserver';
 import { t } from '../locale';
-import { sdk } from '../utils/gql';
 import { getUsernames } from '../utils/helpers';
+import api from '../utils/api';
 
 export class RewardObserver<
   T extends SlackEventMiddlewareArgs<'app_mention'> & AllMiddlewareArgs,
@@ -40,13 +40,11 @@ export class RewardObserver<
     }
 
     this.log(`Giving rewards to ${users.map((user) => user.id).join(',')}`);
-    const givenRewards = (
-      await sdk.rewardsGivenToday({
-        teamId: e.context.teamId,
-        user: e.payload.user,
-      })
-    ).rewardsGivenToday;
-
+    const res = await api.reward.rewardControllerRewardsGivenToday(
+      e.payload.user,
+      e.context.teamId,
+    );
+    const givenRewards = res.data;
     const diff = 10 - givenRewards;
     if (users.length > diff) {
       await this.msgUser(e, t('reward_left', users.length, diff));
@@ -58,10 +56,10 @@ export class RewardObserver<
     );
 
     for (const user of users) {
-      await sdk.giveReward({
-        tid: e.context.teamId,
-        from: e.payload.user,
-        to: user.id,
+      const res = await api.reward.rewardControllerGiveReward({
+        destination: user.id,
+        teamId: e.context.teamId,
+        source: e.payload.user,
       });
     }
   }

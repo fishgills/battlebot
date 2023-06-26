@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { BaseEntity } from '../../base/entity';
 import { CombatEntity } from '../../combat/entities/combat.entity';
 import { Column, Entity, OneToMany, Unique } from 'typeorm';
