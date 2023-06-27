@@ -1,8 +1,6 @@
 import './tracer';
-import * as dotenv from 'dotenv';
+import 'dotenv/config';
 import { gab, t } from './locale';
-
-dotenv.config();
 
 gab.init({
   supportedLocales: ['en-us'],
@@ -22,11 +20,16 @@ import { MyStateStore } from './state_store';
 const scopes = ['app_mentions:read', 'commands', 'users:read'];
 
 const app = new App({
-  signingSecret: process.env['SLACK_SIGNING_SECRET'],
   clientId: process.env['SLACK_CLIENT_ID'],
   clientSecret: process.env['SLACK_CLIENT_SECRET'],
+  ...(process.env.NODE_ENV === 'production' && {
+    signingSecret: process.env['SLACK_SIGNING_SECRET'],
+  }),
   socketMode: process.env.NODE_ENV !== 'production',
   developerMode: process.env.NODE_ENV !== 'production',
+  ...(process.env.NODE_ENV !== 'production' && {
+    appToken: process.env['SLACK_APP_TOKEN'],
+  }),
   customRoutes: [
     {
       path: '/health',
@@ -50,8 +53,9 @@ const app = new App({
 });
 (async () => {
   const port = Number(process.env.PORT);
+  Logger.info(`Got ${port} for port.`);
   await app.start({
-    port,
+    port: port,
   });
   Logger.info(`Starting mode: ${process.env.NODE_ENV}`);
   Logger.info(`Starting bolt with port: ${port}`);

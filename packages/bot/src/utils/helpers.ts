@@ -1,5 +1,6 @@
 import {
   GenericMessageEvent,
+  Installation,
   MessageEvent,
   ReactionAddedEvent,
   ReactionMessageItem,
@@ -38,9 +39,8 @@ export function extract<T>(properties: Record<keyof T, true>) {
 export const getTeamInfo = async (
   team_id: string,
 ): Promise<{ token: string }> => {
-  const teamInstall = (await api.install.installControllerFindOne(team_id))
-    .data;
-  const token = teamInstall.installObj.bot.token;
+  const { data } = await api.install.installControllerFindOne(team_id);
+  const token = (data.installObj as Installation).bot.token;
 
   return {
     token,
