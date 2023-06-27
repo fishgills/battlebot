@@ -139,13 +139,9 @@ export interface RewardScore {
 }
 
 export interface CreateInstallDto {
+  installObj: object;
   team_id: string;
-  installObj: {
-    bot?: {
-      token: string;
-    };
-  };
-  channelId: string;
+  channelId?: string;
 }
 
 export interface InstallEntity {
@@ -155,25 +151,11 @@ export interface InstallEntity {
   /** @format date-time */
   updated_at: string;
   team_id: string;
-  installObj: {
-    bot?: {
-      token: string;
-    };
-  };
+  installObj: object;
   channelId: string;
   stripeSubId?: string;
   stripeCOSId?: string;
   stripeCusId?: string;
-}
-
-export interface UpdateInstallDto {
-  team_id?: string;
-  installObj: {
-    bot?: {
-      token: string;
-    };
-  };
-  channelId?: string;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -940,33 +922,14 @@ export class Api<
     /**
      * No description
      *
-     * @name InstallControllerUpdate
-     * @request PATCH:/install/{id}
-     */
-    installControllerUpdate: (
-      id: string,
-      data: UpdateInstallDto,
-      params: RequestParams = {},
-    ) =>
-      this.request<object[], any>({
-        path: `/install/${id}`,
-        method: 'PATCH',
-        body: data,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name InstallControllerRemove
+     * @name InstallControllerRemoveBy
      * @request DELETE:/install/{id}
      */
-    installControllerRemove: (id: string, params: RequestParams = {}) =>
-      this.request<void, any>({
+    installControllerRemoveBy: (id: string, params: RequestParams = {}) =>
+      this.request<number, any>({
         path: `/install/${id}`,
         method: 'DELETE',
+        format: 'json',
         ...params,
       }),
   };

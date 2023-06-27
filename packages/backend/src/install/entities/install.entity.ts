@@ -1,5 +1,7 @@
+import { Installation } from '@slack/oauth';
 import { BaseEntity } from '../../base/entity';
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class InstallEntity extends BaseEntity {
@@ -10,11 +12,7 @@ export class InstallEntity extends BaseEntity {
     type: 'simple-json',
     nullable: false,
   })
-  installObj: {
-    bot: {
-      token: string;
-    };
-  };
+  installObj: Installation;
 
   @Column({
     nullable: true,

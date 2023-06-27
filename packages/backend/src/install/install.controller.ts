@@ -9,7 +9,9 @@ import {
 } from '@nestjs/common';
 import { InstallService } from './install.service';
 import { CreateInstallDto } from './dto/create-install.dto';
-import { UpdateInstallDto } from './dto/update-install.dto';
+import { FindOptionsWhere } from 'typeorm';
+import { InstallEntity } from './entities/install.entity';
+// import { UpdateInstallDto } from './dto/update-install.dto';
 
 @Controller('install')
 export class InstallController {
@@ -30,14 +32,13 @@ export class InstallController {
   findOne(@Param('id') id: string) {
     return this.installService.findByTeamId(id);
   }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateInstallDto: UpdateInstallDto) {
-    return this.installService.update(+id, updateInstallDto);
-  }
-
+  /**
+   *
+   * @param id Team Id
+   * @returns
+   */
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.installService.remove(id);
+  removeBy(@Param('id') id: string) {
+    return this.installService.removeByTeamId(id);
   }
 }
