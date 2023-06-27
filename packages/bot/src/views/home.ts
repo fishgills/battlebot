@@ -4,6 +4,7 @@ import { t } from '../locale';
 import { characterSheetBlocks } from './character';
 import { CharacterEntity, RewardEntity, RewardScore } from '../swagger/Bot';
 import api from '../utils/api';
+import { Logger } from '../logger';
 
 const characterStats = (character: CharacterEntity, home: HomeTabBuilder) => {
   home.blocks(
@@ -60,6 +61,9 @@ const rewardScores = (
 };
 
 export const homePage = async (teamId: string, userId: string) => {
+  const home = HomeTab();
+  home.callbackId('home-tab');
+  home.externalId(`home-${teamId}`);
   const { data: toScoreBoard } = await api.reward.rewardControllerScoreBoard({
     teamId: teamId,
     direction: 'destination',
@@ -70,19 +74,18 @@ export const homePage = async (teamId: string, userId: string) => {
     direction: 'source',
   });
 
-  const { data } = await api.characters.charactersControllerFindByOwner(
-    userId,
-    teamId,
-  );
-
-  const home = HomeTab();
-
-  home.callbackId('home-tab');
-  home.externalId(`home-${teamId}`);
-  if (data) {
-    characterStats(data, home);
+  try {
+    const { data } = await api.characters.charactersControllerFindByOwner(
+      userId,
+      teamId,
+    );
+    if (data) {
+      characterStats(data, home);
+    }
+  } catch (e) {
+    Logger.error(e);
   }
-  rewardScores(toScoreBoard, fromScoreBoard, home);
 
+  rewardScores(toScoreBoard, fromScoreBoard, home);
   return home.buildToObject();
 };

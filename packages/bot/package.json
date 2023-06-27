@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "prebuild": "rimraf dist",
-    "start": "DEBUG=* ts-node-dev --respawn --inspect -- src/index.ts",
+    "start": "DEBUG=* ts-node-dev --respawn --inspect=9230 -- src/index.ts",
     "startt": "concurrently --kill-others --names \"TS,NM\" -c \"bgBlue.bold,bgMagenta.bold\" \"tsc -w --preserveWatchOutput\" \"DEBUG=* nodemon --respawn --no-colors --inspect -q -w dist dist/index.js\"",
     "start:prod": "node index.js",
     "build": "tsc && cp -r src/lang dist/",
