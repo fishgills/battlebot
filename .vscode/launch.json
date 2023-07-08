@@ -13,7 +13,7 @@
       // "remoteRoot": "Absolute path to the remote directory containing the program",
       "request": "attach",
       "skipFiles": ["<node_internals>/**"],
-      "type": "pwa-node"
+      "type": "node"
     },
     {
       "localRoot": "${workspaceFolder}/packages/bot",
@@ -23,7 +23,7 @@
       // "remoteRoot": "Absolute path to the remote directory containing the program",
       "request": "attach",
       "skipFiles": ["<node_internals>/**"],
-      "type": "pwa-node"
+      "type": "node"
     },
     {
       "type": "node",
