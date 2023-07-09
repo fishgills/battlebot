@@ -13,7 +13,7 @@ export class RewardService extends BaseService<RewardEntity> {
     @InjectRepository(RewardEntity)
     repo: Repository<RewardEntity>,
   ) {
-    super(repo);
+    super();
   }
 
   findFromToday(teamId: string, user: string) {

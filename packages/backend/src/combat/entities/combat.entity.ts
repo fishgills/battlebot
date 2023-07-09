@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseEntity } from '../../base/entity';
+import { MyBaseEntity } from '../../base/entity';
 import { CharacterEntity } from '../../characters/entities/character.entity';
 import { CombatLog } from '../../gamerules';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity()
-export class CombatEntity extends BaseEntity {
+export class CombatEntity extends MyBaseEntity {
   @ManyToOne(() => CharacterEntity, (character) => character.attacking, {
     onDelete: 'CASCADE',
   })

@@ -1,10 +1,10 @@
 import { Installation } from '@slack/oauth';
-import { BaseEntity } from '../../base/entity';
+import { MyBaseEntity } from '../../base/entity';
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
-export class InstallEntity extends BaseEntity {
+export class InstallEntity extends MyBaseEntity {
   @Column()
   team_id: string;
 

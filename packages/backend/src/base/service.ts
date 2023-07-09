@@ -1,33 +1,37 @@
 // base.service.ts
-import { DeepPartial, Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
-import { BaseEntity } from './entity';
-@Injectable()
-export class BaseService<BaseEntity> {
-  constructor(protected repo: Repository<BaseEntity>) {}
+import { DeepPartial, ObjectLiteral, Repository } from 'typeorm';
+import { Logger } from '@nestjs/common';
 
-  findAll(): Promise<BaseEntity[]> {
+export abstract class BaseService<T extends ObjectLiteral> {
+  protected repo: Repository<T>;
+  protected logger: Logger;
+
+  findAll(): Promise<T[]> {
     return this.repo.find();
   }
-
   /**
    *
    * @param id UUID of Entity
    * @returns
    */
-  findOne(id: string): Promise<BaseEntity> {
+  findOne(id: string): Promise<T> {
+    this.logger.debug(`Finding ${id}`);
     return this.repo.findOneById(id);
   }
 
   remove(id: string) {
+    this.logger.debug(`Removing ${id}`);
     return this.repo.delete(id);
   }
 
-  create(entity: DeepPartial<BaseEntity>): Promise<BaseEntity> {
-    return this.repo.save(entity);
+  async create(dto: DeepPartial<T>) {
+    const entity = this.repo.create(dto);
+    this.repo.insert(entity);
+    return entity;
   }
 
-  update(id: any, entity: Partial<BaseEntity>) {
-    return this.repo.save(id, entity);
+  update(id: any, entity: DeepPartial<T>) {
+    this.logger.debug(`Updating ${id}`);
+    return this.repo.update(id, entity);
   }
 }

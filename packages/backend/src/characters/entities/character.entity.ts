@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseEntity } from '../../base/entity';
+import { MyBaseEntity } from '../../base/entity';
 import { CombatEntity } from '../../combat/entities/combat.entity';
 import { Column, Entity, OneToMany, Unique } from 'typeorm';
+import { DiceRoll } from '@dice-roller/rpg-dice-roller';
+import { modifier } from 'src/gamerules';
 
 @Entity()
 @Unique(['owner'])
-export class CharacterEntity extends BaseEntity {
+export class CharacterEntity extends MyBaseEntity {
   @Column({
     length: 100,
     nullable: false,
@@ -87,4 +89,12 @@ export class CharacterEntity extends BaseEntity {
     default: false,
   })
   active: boolean;
+
+  public rollCharacter() {
+    this.strength = new DiceRoll('4d6kh3').total;
+    this.defense = new DiceRoll('4d6kh3').total;
+    this.vitality = new DiceRoll('4d6kh3').total;
+    this.rolls = this.rolls ? ++this.rolls : 1;
+    this.hp = 10 + modifier(this.vitality);
+  }
 }

@@ -13,7 +13,7 @@ export class CombatService extends BaseService<CombatEntity> {
     @InjectRepository(CombatEntity)
     repo: Repository<CombatEntity>,
   ) {
-    super(repo);
+    super();
   }
 
   create(input: CreateCombatDto): Promise<CombatEntity> {

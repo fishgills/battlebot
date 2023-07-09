@@ -83,7 +83,8 @@ export const homePage = async (teamId: string, userId: string) => {
       characterStats(data, home);
     }
   } catch (e) {
-    Logger.error(e);
+    if (e.error.status == 404) Logger.info(`No character found in home page`);
+    else console.error(e.error);
   }
 
   rewardScores(toScoreBoard, fromScoreBoard, home);

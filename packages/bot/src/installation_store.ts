@@ -4,9 +4,11 @@ import {
   InstallationStore,
 } from '@slack/bolt';
 import api from './utils/api';
+import { Logger } from './logger';
 
 export class Store implements InstallationStore {
   async storeInstallation(installation: Installation): Promise<void> {
+    Logger.debug(`Installing Bot`);
     if (
       installation.isEnterpriseInstall &&
       installation.enterprise !== undefined
@@ -29,6 +31,7 @@ export class Store implements InstallationStore {
   async fetchInstallation(
     query: InstallationQuery<boolean>,
   ): Promise<Installation<'v1' | 'v2', boolean>> {
+    Logger.debug(`Fetching Install`);
     if (query.isEnterpriseInstall && query.enterpriseId !== undefined) {
       try {
         const { data: result } = await api.install.installControllerFindOne(
@@ -53,6 +56,7 @@ export class Store implements InstallationStore {
     }
   }
   async deleteInstallation(query: InstallationQuery<boolean>): Promise<void> {
+    Logger.debug(`Deleting Install`);
     if (query.isEnterpriseInstall && query.enterpriseId !== undefined) {
       await api.install.installControllerRemoveBy(query.enterpriseId);
       return;

@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { CharactersService } from './characters.service';
 import { CreateCharacterDto } from './dto/create-character.dto';
@@ -55,8 +57,21 @@ export class CharactersController {
   }
 
   @Get('owner/:team/:id')
-  findByOwner(@Param('id') owner: string, @Param('team') team: string) {
-    return this.charactersService.findByOwner(owner, team);
+  async findByOwner(@Param('id') owner: string, @Param('team') team: string) {
+    try {
+      return await this.charactersService.findByOwner(owner, team);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'No character found.',
+        },
+        HttpStatus.NOT_FOUND,
+        {
+          cause: error,
+        },
+      );
+    }
   }
 
   @Post(':id/reroll')
@@ -68,7 +83,7 @@ export class CharactersController {
     if (char.rolls >= 5) {
       throw new Error('Character ran out of rolls');
     }
-    this.charactersService.rollCharacter(char);
+    char.rollCharacter();
     await this.charactersService.update(id, char);
     return char;
   }

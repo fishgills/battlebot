@@ -18,12 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migration:create": "run-script-os",
-    "migration:run": "run-script-os",
-    "migration:run:windows": "cd src/db; typeorm-ts-node-commonjs migration:run -d typeorm.config.ts",
-    "migration:run:linux": "cd src/db && typeorm-ts-node-commonjs migration:run -d ./typeorm.config.ts",
-    "migration:create:windows": "cd src/db; typeorm-ts-node-commonjs migration:generate -d typeorm.config.ts ",
-    "migration:create:linux": "cd src/db && typeorm-ts-node-commonjs migration:generate -d ./typeorm.config.ts"
+    "migration:run": "cd src/db && typeorm-ts-node-commonjs migration:run -d ./typeorm.config.ts",
+    "migration:create": "cd src/db && typeorm-ts-node-commonjs migration:generate -d ./typeorm.config.ts"
   },
   "dependencies": {
     "@dice-roller/rpg-dice-roller": "^5.3.2",

@@ -7,7 +7,13 @@ gab.init({
   locale: 'en-us',
 });
 
-import { App, BlockButtonAction, LogLevel, MemoryStore } from '@slack/bolt';
+import {
+  App,
+  BlockButtonAction,
+  HTTPReceiver,
+  LogLevel,
+  MemoryStore,
+} from '@slack/bolt';
 import { Command$ } from './mention_handler';
 import { Action$, ActionsRegex } from './actions';
 import { Shield$ } from './reward_handler';
@@ -16,20 +22,23 @@ import { Logger } from './logger';
 import { Store } from './installation_store';
 import tracer from 'dd-trace';
 import { MyStateStore } from './state_store';
+import { ErrorHandler, ExtendedErrorHandler } from '@slack/bolt/dist/App';
+import { loggers } from 'winston';
 
 const scopes = ['app_mentions:read', 'commands', 'users:read'];
+
+const error: ExtendedErrorHandler = async (error) => {
+  // Check the details of the error to handle cases where you should retry sending a message or stop the app
+  console.error(`Generic Error:`);
+  console.error(error);
+};
 
 const app = new App({
   clientId: process.env['SLACK_CLIENT_ID'],
   clientSecret: process.env['SLACK_CLIENT_SECRET'],
-  ...(process.env.NODE_ENV === 'production' && {
-    signingSecret: process.env['SLACK_SIGNING_SECRET'],
-  }),
-  socketMode: process.env.NODE_ENV !== 'production',
-  developerMode: process.env.NODE_ENV !== 'production',
-  ...(process.env.NODE_ENV !== 'production' && {
-    appToken: process.env['SLACK_APP_TOKEN'],
-  }),
+  signingSecret: process.env['SLACK_SIGNING_SECRET'],
+  appToken: process.env['SLACK_APP_TOKEN'],
+  socketMode: true,
   customRoutes: [
     {
       path: '/health',
@@ -44,6 +53,7 @@ const app = new App({
   scopes,
   stateSecret: 'test',
   logLevel: LogLevel.DEBUG,
+  extendedErrorHandler: true,
   installerOptions: {
     stateStore: new MyStateStore(),
     stateVerification: true,
@@ -51,6 +61,8 @@ const app = new App({
   },
   installationStore: new Store(),
 });
+app.error(error);
+
 (async () => {
   const port = Number(process.env.PORT);
   Logger.info(`Got ${port} for port.`);

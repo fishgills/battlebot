@@ -1,9 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { BaseEntity } from '../../base/entity';
+import { MyBaseEntity } from '../../base/entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity('reward_model')
-export class RewardEntity extends BaseEntity {
+export class RewardEntity extends MyBaseEntity {
   @Column()
   @ApiProperty({
     readOnly: true,
