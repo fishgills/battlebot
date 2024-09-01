@@ -1,37 +1,35 @@
-// base.service.ts
-import { DeepPartial, ObjectLiteral, Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
+import { DeepPartial, FindOneOptions, Repository } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-export abstract class BaseService<T extends ObjectLiteral> {
-  protected repo: Repository<T>;
-  protected logger: Logger;
+export abstract class BaseService<T> {
+  protected constructor(
+    protected readonly repository: Repository<T>,
+    protected readonly logger: Logger,
+  ) {}
 
-  findAll(): Promise<T[]> {
-    return this.repo.find();
-  }
-  /**
-   *
-   * @param id UUID of Entity
-   * @returns
-   */
-  findOne(id: string): Promise<T> {
-    this.logger.debug(`Finding ${id}`);
-    return this.repo.findOneById(id);
+  async create(entity: DeepPartial<T>) {
+    this.logger.debug(`Creating entity`);
+    return await this.repository.save(entity);
   }
 
-  remove(id: string) {
-    this.logger.debug(`Removing ${id}`);
-    return this.repo.delete(id);
+  async findOne(options: FindOneOptions<T>) {
+    this.logger.debug(`Finding one ${options}`);
+    return this.repository.findOne(options);
   }
 
-  async create(dto: DeepPartial<T>) {
-    const entity = this.repo.create(dto);
-    this.repo.insert(entity);
-    return entity;
+  async findAll() {
+    this.logger.debug(`Finding all`);
+    return this.repository.find();
   }
 
-  update(id: any, entity: DeepPartial<T>) {
+  async update(id: string, entity: QueryDeepPartialEntity<T>) {
     this.logger.debug(`Updating ${id}`);
-    return this.repo.update(id, entity);
+    return this.repository.update(id, entity as QueryDeepPartialEntity<T>);
+  }
+
+  async delete(id: string) {
+    this.logger.debug(`Deleting ${id}`);
+    await this.repository.delete(id);
   }
 }

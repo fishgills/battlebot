@@ -11,9 +11,9 @@ import { AllowedDirections } from './dto/create-scoreboard.dto';
 export class RewardService extends BaseService<RewardEntity> {
   constructor(
     @InjectRepository(RewardEntity)
-    repo: Repository<RewardEntity>,
+    protected repo: Repository<RewardEntity>,
   ) {
-    super();
+    super(repo, new Logger('RewardService'));
   }
 
   findFromToday(teamId: string, user: string) {

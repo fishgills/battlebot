@@ -32,7 +32,11 @@ export class CharactersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.charactersService.findOne(id);
+    return this.charactersService.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   @Patch(':id')
@@ -45,7 +49,7 @@ export class CharactersController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.charactersService.remove(id);
+    return this.charactersService.delete(id);
   }
 
   @Delete()
@@ -79,11 +83,15 @@ export class CharactersController {
     @Param('id')
     id: string,
   ) {
-    const char = await this.charactersService.findOne(id);
+    let char = await this.charactersService.findOne({
+      where: {
+        id,
+      },
+    });
     if (char.rolls >= 5) {
       throw new Error('Character ran out of rolls');
     }
-    char.rollCharacter();
+    char = this.charactersService.rollCharacter(char);
     await this.charactersService.update(id, char);
     return char;
   }

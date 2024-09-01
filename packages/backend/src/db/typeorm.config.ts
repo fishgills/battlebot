@@ -11,7 +11,7 @@ export default new DataSource({
   ...(process.env.INSTANCE_UNIX_SOCKET && {
     socketPath: process.env.INSTANCE_UNIX_SOCKET,
   }),
-  ...(process.env.DB_HOST && { host: process.env.host }),
+  ...(process.env.DB_HOST && { host: process.env.DB_HOST }),
   port: 3306,
   migrationsRun: true,
   migrations: ['./migrations/*{.ts,.js}'],

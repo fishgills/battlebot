@@ -15,8 +15,7 @@ export class CharactersService extends BaseService<CharacterEntity> {
     @InjectRepository(CharacterEntity)
     protected repo: Repository<CharacterEntity>,
   ) {
-    super();
-    this.logger = new Logger('CharacterService');
+    super(repo, new Logger('CharacterService'));
   }
   removeFromTeam(input: DeleteCharacterInput) {
     return this.repo.delete({
@@ -26,8 +25,8 @@ export class CharactersService extends BaseService<CharacterEntity> {
   }
 
   async create(dto: CreateCharacterDto) {
-    const character = this.repo.create(dto);
-    character.rollCharacter();
+    let character = await super.create(dto);
+    character = this.rollCharacter(character);
     this.repo.insert(character);
     return character;
   }
@@ -43,5 +42,14 @@ export class CharactersService extends BaseService<CharacterEntity> {
         teamId,
       },
     });
+  }
+
+  rollCharacter(char: CharacterEntity) {
+    char.strength = new DiceRoll('4d6kh3').total;
+    char.defense = new DiceRoll('4d6kh3').total;
+    char.vitality = new DiceRoll('4d6kh3').total;
+    char.rolls = char.rolls ? ++char.rolls : 1;
+    char.hp = 10 + modifier(char.vitality);
+    return char;
   }
 }

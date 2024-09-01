@@ -89,12 +89,4 @@ export class CharacterEntity extends MyBaseEntity {
     default: false,
   })
   active: boolean;
-
-  public rollCharacter() {
-    this.strength = new DiceRoll('4d6kh3').total;
-    this.defense = new DiceRoll('4d6kh3').total;
-    this.vitality = new DiceRoll('4d6kh3').total;
-    this.rolls = this.rolls ? ++this.rolls : 1;
-    this.hp = 10 + modifier(this.vitality);
-  }
 }

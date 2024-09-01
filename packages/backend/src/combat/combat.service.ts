@@ -1,5 +1,5 @@
 // characters.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import { CombatEntity } from './entities/combat.entity';
@@ -11,9 +11,9 @@ import { CombatLog } from 'src/gamerules';
 export class CombatService extends BaseService<CombatEntity> {
   constructor(
     @InjectRepository(CombatEntity)
-    repo: Repository<CombatEntity>,
+    protected repo: Repository<CombatEntity>,
   ) {
-    super();
+    super(repo, new Logger('CombatService'));
   }
 
   create(input: CreateCombatDto): Promise<CombatEntity> {
@@ -23,16 +23,20 @@ export class CombatService extends BaseService<CombatEntity> {
     });
   }
 
-  findOne(id: string, options?: FindOneOptions<CombatEntity>) {
-    const conditions = {
-      where: {
-        id: id,
-      },
-    };
-    return this.repo.findOneOrFail({
-      ...conditions,
-    });
+  findOne(options: FindOneOptions<CombatEntity>) {
+    return this.repo.findOneOrFail(options);
   }
+
+  // findOne(id: string, options?: FindOneOptions<CombatEntity>) {
+  //   const conditions = {
+  //     where: {
+  //       id: id,
+  //     },
+  //   };
+  //   return this.repo.findOneOrFail({
+  //     ...conditions,
+  //   });
+  // }
   updateLog(combatId: string, log: CombatLog) {
     return this.repo.update(
       {

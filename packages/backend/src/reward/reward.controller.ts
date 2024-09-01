@@ -34,17 +34,24 @@ export class RewardController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.rewardService.findOne(id);
+    return this.rewardService.findOne({
+      where: {
+        id: id,
+      },
+    });
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRewardDto: UpdateRewardDto) {
-    return this.rewardService.update(+id, updateRewardDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateRewardDto: UpdateRewardDto,
+  ) {
+    return this.rewardService.update(id, updateRewardDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.rewardService.remove(id);
+    return this.rewardService.delete(id);
   }
   @Get('rewards-today')
   @ApiResponse({

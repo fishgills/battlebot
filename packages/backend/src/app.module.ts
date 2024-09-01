@@ -17,11 +17,12 @@ import { InstallModule } from './install/install.module';
       ...(process.env.INSTANCE_UNIX_SOCKET && {
         socketPath: process.env.INSTANCE_UNIX_SOCKET,
       }),
-      ...(process.env.DB_HOST && { host: process.env.host }),
+      ...(process.env.DB_HOST && { host: process.env.DB_HOST }),
       port: 3306,
       username: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: 'botdb',
+      synchronize: process.env.NODE_ENV !== 'production',
       autoLoadEntities: true,
     }),
     CharactersModule,

@@ -37,7 +37,11 @@ export class CombatController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.combatService.findOne(id);
+    return this.combatService.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   @Patch(':id')
@@ -47,7 +51,7 @@ export class CombatController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.combatService.remove(id);
+    return this.combatService.delete(id);
   }
 
   @Post('start')
@@ -74,7 +78,10 @@ export class CombatController {
 
     let combat = await this.combatService.create(input);
 
-    combat = await this.combatService.findOne(combat.id, {
+    combat = await this.combatService.findOne({
+      where: {
+        id: combat.id,
+      },
       relations: ['attacker', 'defender'],
     });
 
@@ -115,12 +122,16 @@ export class CombatController {
     combat.rewardGold = new DiceRoll('4d6kh2').total;
     await this.combatService.update(combat.id, combat);
 
-    const winner = await this.charService.findOne(
-      log.combat[log.combat.length - 1].attacker.id,
-    );
-    const loser = await this.charService.findOne(
-      log.combat[log.combat.length - 1].defender.id,
-    );
+    const winner = await this.charService.findOne({
+      where: {
+        id: log.combat[log.combat.length - 1].attacker.id,
+      },
+    });
+    const loser = await this.charService.findOne({
+      where: {
+        id: log.combat[log.combat.length - 1].defender.id,
+      },
+    });
 
     winner.gold = winner.gold += combat.rewardGold;
     winner.xp = winner.xp += Math.floor(

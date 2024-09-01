@@ -12,8 +12,7 @@ export class InstallService extends BaseService<InstallEntity> {
     @InjectRepository(InstallEntity)
     protected repo: Repository<InstallEntity>,
   ) {
-    super();
-    this.logger = new Logger('InstallService');
+    super(repo, new Logger('InstallService'));
   }
 
   async updateByTeamId(input: Partial<InstallEntity>) {
