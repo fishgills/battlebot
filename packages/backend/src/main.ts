@@ -1,26 +1,18 @@
-import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { OrmExceptionFilter } from './exception-handler';
-import {
-  AllExceptionsFilter,
-  TypoORMExceptionFilter,
-} from './global/global.filter';
+import { Logger } from 'nestjs-pino';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { env } from './config/config.module';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const config = new DocumentBuilder()
-    .setTitle('Bot API')
-    .addBearerAuth()
-    .setVersion('1.0')
-    .build();
+  // app.useLogger(app.get(Logger));
+
+  const config = new DocumentBuilder().setTitle('Bot API').build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  app.useGlobalFilters(new OrmExceptionFilter());
-  const port = process.env.PORT || 3000;
 
-  app.useGlobalFilters(new TypoORMExceptionFilter());
-  console.info(`Starting on port ${port}`);
-  await app.listen(port);
+  await app.listen(env.PORT);
 }
 bootstrap();
