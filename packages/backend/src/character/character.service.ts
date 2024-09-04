@@ -5,6 +5,8 @@ import { Character } from './character.entity';
 import { User } from 'src/user/user.entity';
 import { Dice, DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { modifier } from 'src/gamerules';
+import { CombatLog } from './combat-log-types';
+import { log } from 'console';
 
 @Injectable()
 export class CharacterService {
@@ -47,11 +49,18 @@ export class CharacterService {
     return this.charactersRepository.delete(id);
   }
   async combat(characterId: number, character2Id: number) {
-    let logs: any[] = [];
-
     this.logger.log(`Combat between ${characterId} and ${character2Id}`);
     const character1 = await this.findCharacterById(characterId);
     const character2 = await this.findCharacterById(character2Id);
+
+    if (!character1 || !character2) {
+      throw new Error('Character not found');
+    }
+
+    character1.initCombat();
+    character2.initCombat();
+
+    let logs: CombatLog[] = [];
 
     const character1Initiative =
       new DiceRoll('1d20').total + character1.dexterity;
@@ -70,15 +79,21 @@ export class CharacterService {
       defender = character1;
     }
 
+    logs.push(
+      this.createLogEntry('initiative', 0, character1, character2, {
+        winner: attacker.name,
+      }),
+    );
+
     this.logger.log(`Attacker: ${attacker.name}`);
     this.logger.log(`Defender: ${defender.name}`);
 
     let rounds = 0;
-    while (character1.hitPoints > 0 && character2.hitPoints > 0) {
+    while (character1.combatHitPoints > 0 && character2.combatHitPoints > 0) {
       rounds += 1;
       this.logger.log(`Round ${rounds}`);
 
-      logs.push(this.attack(attacker, defender));
+      this.attack(attacker, defender, logs, rounds);
       [attacker, defender] = [defender, attacker];
     }
 
@@ -86,7 +101,7 @@ export class CharacterService {
 
     let winner: Character, loser: Character;
 
-    if (character1.hitPoints > 0) {
+    if (character1.combatHitPoints > 0) {
       winner = character1;
       loser = character2;
     } else {
@@ -98,14 +113,16 @@ export class CharacterService {
     this.logger.log(`Loser: ${loser.name}`);
 
     winner.wins += 1;
-    winner.experiencePoints =
-      winner.experiencePoints +
-      Math.floor((loser.level / winner.level) * new DiceRoll('20d10').total);
+    const xpGain = Math.floor(
+      (loser.level / winner.level) * new DiceRoll('20d10').total,
+    );
+    winner.experiencePoints += xpGain;
+    logs.push(this.createLogEntry('xp-gain', rounds, winner, null, { xpGain }));
+    this.logger.log(`${winner.name} gained ${xpGain} experience points`);
 
     loser.losses += 1;
 
-    delete winner.hitPoints;
-    delete loser.hitPoints;
+    this.checkLevelUp(winner, logs);
 
     await this.charactersRepository.save(winner);
     await this.charactersRepository.save(loser);
@@ -117,7 +134,12 @@ export class CharacterService {
     };
   }
 
-  private attack(attacker: Character, defender: Character) {
+  private attack(
+    attacker: Character,
+    defender: Character,
+    combatLog: CombatLog[],
+    round: number,
+  ) {
     const attackRecord = {
       attacker: attacker.name,
       defender: defender.name,
@@ -126,7 +148,7 @@ export class CharacterService {
       defenderAc: 0,
       hit: false,
       damage: 0,
-      defenderHitPoints: 0,
+      defenderHitPoints: defender.combatHitPoints,
     };
 
     this.logger.log(`${attacker.name} attacks ${defender.name}`);
@@ -153,17 +175,71 @@ export class CharacterService {
       attackRecord.damage = damage;
 
       this.logger.log(`Damage: ${damage}`);
-      defender.hitPoints -= damage;
-      attackRecord.defenderHitPoints = defender.hitPoints;
+      defender.combatHitPoints -= damage;
+      attackRecord.defenderHitPoints = defender.combatHitPoints;
       this.logger.log(
-        `${defender.name} has ${defender.hitPoints} hit points remaining`,
+        `${defender.name} has ${defender.combatHitPoints} hit points remaining`,
       );
     } else {
       attackRecord.hit = false;
 
       this.logger.log('Miss!');
     }
+    combatLog.push(
+      this.createLogEntry('attack', round, attacker, defender, attackRecord),
+    );
+  }
 
-    return attackRecord;
+  private checkLevelUp(character: Character, log: CombatLog[]) {
+    const experienceToLevelUp = this.experienceToLevelUp(character.level);
+    this.logger.log(`Experience to level up: ${experienceToLevelUp}`);
+    this.logger.log(`Current experience: ${character.experiencePoints}`);
+    if (character.experiencePoints >= experienceToLevelUp) {
+      character.level += 1;
+      this.logger.debug(
+        `${character.name} leveled up to level ${character.level}`,
+      );
+      character.experiencePoints = 0;
+
+      if (character.level % 2 === 0) character.extraPoints += 1;
+      const hitPoints = 6 + modifier(character.constitution);
+      character.hitPoints += hitPoints;
+      this.logger.debug(`${character.name} gained ${hitPoints} hit points`);
+      log.push(
+        this.createLogEntry('level-up', 0, character, null, {
+          newLevel: character.level,
+        }),
+      );
+    }
+  }
+
+  private experienceToLevelUp(level: number): number {
+    let toLevel = Math.pow(10, 1.4) * Math.pow(level, 3.5);
+    if (level > 10) toLevel = Math.pow(10, 1.4) * Math.pow(level, 2.4);
+    return Math.floor(toLevel);
+  }
+
+  private createLogEntry(
+    type: CombatLog['type'],
+    round: CombatLog['round'],
+    actor: Character,
+    target: Character | null,
+    details: any = {},
+  ): CombatLog {
+    return {
+      type,
+      round,
+      actor: {
+        id: actor.id,
+        name: actor.name,
+      },
+      target: target
+        ? {
+            id: target.id,
+            name: target.name,
+          }
+        : null,
+      details,
+    };
   }
 }

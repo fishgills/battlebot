@@ -41,4 +41,10 @@ export class Character {
 
   @Column({ default: 0 })
   extraPoints: number;
+
+  combatHitPoints: number;
+
+  initCombat() {
+    this.combatHitPoints = this.hitPoints;
+  }
 }

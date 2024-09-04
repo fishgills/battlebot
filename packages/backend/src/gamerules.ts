@@ -13,16 +13,3 @@ export const getHitPoints = (char: Character) => {
 export const nextLevel = (level: number) => {
   return level * 300;
 };
-
-export const levelUp = (char: Character) => {
-  if (char.experiencePoints < nextLevel(char.level)) {
-    return;
-  }
-
-  const hp = 6 + modifier(char.constitution);
-  char.hitPoints += hp;
-  char.level += 1;
-  if (char.level % 2) {
-    char.extraPoints += 1;
-  }
-};
