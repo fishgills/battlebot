@@ -3,15 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CharacterModule } from './character/character.module';
 import { UserModule } from './user/user.module';
-import { LoggerModule } from 'nestjs-pino';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EnvalidModule } from 'nestjs-envalid';
 import { env, validators } from './config/config.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    EnvalidModule.forRoot({ validators }),
-
+    AuthModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       logging: !env.isProduction,
@@ -33,5 +31,6 @@ import { env, validators } from './config/config.module';
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports: [],
 })
 export class AppModule {}

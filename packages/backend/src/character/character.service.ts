@@ -3,10 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Character } from './character.entity';
 import { User } from 'src/user/user.entity';
-import { Dice, DiceRoll } from '@dice-roller/rpg-dice-roller';
+import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { modifier } from 'src/gamerules';
 import { CombatLog } from './combat-log-types';
-import { log } from 'console';
 
 @Injectable()
 export class CharacterService {
