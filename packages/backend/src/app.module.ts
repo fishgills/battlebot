@@ -6,20 +6,20 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { env, validators } from './config/config.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import typeorm from './config/typeorm';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [typeorm],
+    }),
     AuthModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      logging: !env.isProduction,
-      host: env.DB_HOST,
-      port: env.DB_PORT,
-      username: env.DB_USERNAME,
-      password: env.DB_PASSWORD,
-      database: env.DB,
-      autoLoadEntities: true,
-      synchronize: env.isProduction ? false : true,
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) =>
+        configService.get('typeorm'),
     }),
     CharacterModule,
     UserModule,

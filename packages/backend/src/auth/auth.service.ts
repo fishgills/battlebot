@@ -18,14 +18,17 @@ export class AuthService {
       where: { clientId },
     });
     if (!client) {
-      this.logger.debug(`Client not found: ${clientId}`);
+      this.logger.warn(`Client not found: ${clientId}`);
       return null;
     }
 
     if (client.clientSecret !== clientSecret) {
-      this.logger.debug(`Invalid client secret for ID: ${clientId}`);
+      this.logger.warn(`Invalid client secret for ID: ${clientId}`);
       return null;
     }
+
+    this.logger.log(`Client validated: ${clientId}`);
+
     return client;
   }
 
