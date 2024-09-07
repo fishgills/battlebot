@@ -4,13 +4,30 @@ import { AppService } from './app.service';
 import { CharacterModule } from './character/character.module';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { env, validators } from './config/config.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeorm from './config/typeorm';
+import { LoggerModule } from 'nestjs-pino';
+import { env } from './config/config.module';
+
+import { PrettyOptions } from 'pino-pretty';
 
 @Module({
   imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        autoLogging: false,
+        level: env.isProduction ? 'info' : 'debug',
+        transport: !env.isProduction
+          ? {
+              target: 'pino-pretty',
+              options: {
+                singleLine: true,
+              } as PrettyOptions,
+            }
+          : undefined,
+      },
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeorm],
@@ -23,11 +40,6 @@ import typeorm from './config/typeorm';
     }),
     CharacterModule,
     UserModule,
-    // LoggerModule.forRoot({
-    //   pinoHttp: {
-    //     level: env.isProduction ? 'info' : 'debug',
-    //   },
-    // }),
   ],
   controllers: [AppController],
   providers: [AppService],

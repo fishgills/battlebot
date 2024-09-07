@@ -5,8 +5,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { env } from './config/config.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  // app.useLogger(app.get(Logger));
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
+  app.useLogger(app.get(Logger));
 
   const config = new DocumentBuilder().setTitle('Bot API').build();
 
