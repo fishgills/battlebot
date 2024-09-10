@@ -1,2 +1,3 @@
-schema: ./packages/server/schema.gql
-documents: ./packages/bot/**/*.graphql
+# .graphqlrc.yml
+schema: 'packages/bot/graphql.schema.json'
+documents: 'packages/bot/src/**/*.{graphql,js,ts,jsx,tsx}'

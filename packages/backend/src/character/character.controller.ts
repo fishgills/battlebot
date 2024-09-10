@@ -1,60 +1,64 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Param,
-  Delete,
-  UseGuards,
-  Logger,
-} from '@nestjs/common';
+import { UseGuards, Logger } from '@nestjs/common';
 import { CharacterService } from './character.service';
-import { UserService } from '../user/user.service';
 import { CreateCharacterDto } from './DTO/create-character.dto';
-import { CombatDTO } from './DTO/combat.dto';
+import { CombatInput } from './DTO/combat.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Character } from './character.entity';
+import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
+import { CombatEnd } from './combat-type.dto';
+import GraphQLJSON from 'graphql-type-json';
 
-@Controller('character')
+@Resolver((of) => Character)
 export class CharacterController {
   private readonly logger = new Logger(CharacterController.name);
-  constructor(
-    private readonly characterService: CharacterService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly characterService: CharacterService) {}
 
   @UseGuards(JwtAuthGuard)
-  @Post()
-  async createCharacter(@Body() body: CreateCharacterDto) {
+  @Mutation((returns) => Character)
+  async createCharacter(@Args('CreateCharacter') body: CreateCharacterDto) {
     this.logger.log(`Creating character for user ${body.userId}`);
-    const user = await this.userService.findUserById(body.userId);
-    return this.characterService.createCharacter(user, body.name);
+    return this.characterService.createCharacter(
+      body.name,
+      body.userId,
+      body.teamId,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Query((returns) => [Character])
+  async getCharactersByOwner(
+    @Args('id') id: string,
+    @Args('team') team: string,
+  ) {
+    this.logger.log(`Getting characters for user ${id}`);
+    return await this.characterService.findCharactersByOwner(id, team);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Query((returns) => [Character])
   async getCharacters() {
     this.logger.log('Getting all characters');
-    return this.characterService.findAllCharacters();
+    return await this.characterService.findAllCharacters();
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  async getCharacter(@Param('id') id: number) {
+  @Query((returns) => Character)
+  async getCharacter(@Args('id') id: string) {
     this.logger.log(`Getting character ${id}`);
-    return this.characterService.findCharacterById(id);
+    return await this.characterService.findCharacterById(id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('combat')
-  async combat(@Body() body: CombatDTO) {
+  @Mutation((returns) => CombatEnd)
+  async combat(@Args('info') body: CombatInput) {
     this.logger.log(`Combat between ${body.attackerId} and ${body.defenderId}`);
-    return this.characterService.combat(body.attackerId, body.defenderId);
+    return await this.characterService.combat(body.attackerId, body.defenderId);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  async deleteCharacter(@Param('id') id: number) {
+  @Mutation((returns) => GraphQLJSON)
+  async deleteCharacter(@Args('id') id: string) {
     this.logger.log(`Deleting character ${id}`);
-    return this.characterService.deleteCharacter(id);
+    return await this.characterService.deleteCharacter(id);
   }
 }

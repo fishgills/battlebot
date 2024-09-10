@@ -10,7 +10,7 @@
   "character_stat_incr_button": ":heavy_plus_sign:",
   "character_strength_emoji": ":heart_eyes:",
   "character_vitality_emoji": ":book:",
-  "command": "/mediator",
+  "command": "/battleforge",
   "received_reward_score_board": "Who has received the most {0}.",
   "given_reward_score_board": "Who has given the most {0}",
   "sheet_help_command": "`{0} resume`",

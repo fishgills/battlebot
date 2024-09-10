@@ -1,4 +1,4 @@
-import { env } from 'src/config/config.module';
+import { env } from '../config/config.module';
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddServiceAccount1725692428674 implements MigrationInterface {

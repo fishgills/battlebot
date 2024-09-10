@@ -10,7 +10,7 @@ type base = AllMiddlewareArgs &
   (SlackActionMiddlewareArgs | SlackCommandMiddlewareArgs);
 
 export abstract class BaseObserver<R extends base> extends Observer<R> {
-  abstract getHandleText(event: base): string;
+  abstract getHandleText(event: base): string | undefined;
 
   async msgUser(event: R, content: SlackMessageDto | string) {
     return await event.respond({
@@ -24,5 +24,6 @@ export abstract class BaseObserver<R extends base> extends Observer<R> {
     if (command === this.command) {
       return this.update(e);
     }
+    return Promise.resolve();
   }
 }

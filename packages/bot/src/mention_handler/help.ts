@@ -1,9 +1,9 @@
 import { SlackCommandMiddlewareArgs, AllMiddlewareArgs } from '@slack/bolt';
 import { Blocks, Message, SectionBuilder } from 'slack-block-builder';
-import { t } from '../locale';
 import { MentionObserver } from './observer';
+import t from '../i18n';
 
-type BlockFn = (e: AllMiddlewareArgs) => SectionBuilder[];
+export type BlockFn = (e: AllMiddlewareArgs) => SectionBuilder[];
 export class HelpObserver extends MentionObserver {
   getHelpBlocks(): SectionBuilder[] {
     throw new Error('Method not implemented.');
@@ -23,7 +23,7 @@ export class HelpObserver extends MentionObserver {
     const helpBlocks = Message()
       .blocks(
         Blocks.Section({
-          text: t('help_no_command'),
+          text: t.t('common:help_no_command'),
         }),
         ...blocks,
       )

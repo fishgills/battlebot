@@ -2,11 +2,11 @@ import { SectionBuilder, SlackMessageDto } from 'slack-block-builder';
 import { Logger } from '../logger';
 
 export abstract class Observer<T> {
-  command: string;
+  command = '';
   private logger: typeof Logger;
 
   constructor(command?: string) {
-    this.command = command;
+    if (command) this.command = command;
     this.logger = Logger;
     this.logger.info(`created ${command} observer`);
   }

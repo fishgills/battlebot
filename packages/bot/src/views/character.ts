@@ -1,24 +1,23 @@
-import { RespondFn } from '@slack/bolt';
+import { ModalView, RespondFn } from '@slack/bolt';
+import {
+  AttackLog,
+  Character,
+  CombatEnd,
+  CombatLogType,
+} from '../generated/graphql.js';
+import { tl } from '../i18n.js';
 import {
   Blocks,
   Elements,
   Message,
+  Modal,
   setIfTruthy,
-  SlackMessageDto,
 } from 'slack-block-builder';
-import { t } from '../locale';
-import { nextLevel, numToEmoji } from '../utils/helpers';
-import {
-  CharacterEntity,
-  CombatEntity,
-  CombatLog,
-  CreateCombatDto,
-} from '../swagger/Bot';
 
 export const notifyLevelUp = (
-  winner: CharacterEntity,
-  org_attacker: CharacterEntity,
-  org_defender: CharacterEntity,
+  winner: Character,
+  org_attacker: Character,
+  org_defender: Character,
   attacker_resp: RespondFn,
   org_def_slack_id: string,
   event: any,
@@ -26,7 +25,7 @@ export const notifyLevelUp = (
   if (winner.id === org_attacker.id && winner.level > org_attacker.level) {
     return attacker_resp({
       response_type: 'ephemeral',
-      text: t('character_level_up'),
+      text: tl.t('common:character_level_up'),
     }).then();
   }
 
@@ -34,13 +33,13 @@ export const notifyLevelUp = (
     return event.chat
       .postMessage({
         channel: org_def_slack_id,
-        text: t('character_level_up'),
+        text: tl.t('common:character_level_up'),
       })
       .then();
   }
 };
 
-const saveBlock = (char: Partial<CharacterEntity>) => {
+const saveBlock = (char: Character) => {
   if (char.active) {
     return;
   }
@@ -53,7 +52,7 @@ const saveBlock = (char: Partial<CharacterEntity>) => {
     block.elements(
       Elements.Button({
         actionId: 'reroll',
-        text: t('character_reroll_button'),
+        text: tl.t('common:character_reroll_button'),
       }),
     );
   }
@@ -61,40 +60,40 @@ const saveBlock = (char: Partial<CharacterEntity>) => {
   block.elements(
     Elements.Button({
       actionId: 'complete',
-      text: t('character_done_button'),
+      text: tl.t('common:character_done_button'),
     }),
   );
 
   return block;
 };
 
-export const statBlock = (character: Partial<CharacterEntity>) => {
+export const statBlock = (character: Partial<Character>) => {
   const stats = [
     {
       id: 'strength',
-      emoji: t('character_strength_emoji'),
+      emoji: tl.t('common:character_strength_emoji'),
       value: character.strength,
     },
     {
       id: 'defense',
-      emoji: t('character_defense_emoji'),
-      value: character.defense,
+      emoji: tl.t('common:character_defense_emoji'),
+      value: character.dexterity,
     },
     {
       id: 'vitality',
-      emoji: t('character_vitality_emoji'),
-      value: character.vitality,
+      emoji: tl.t('common:character_vitality_emoji'),
+      value: character.constitution,
     },
   ];
 
   return stats.map((stat) => {
     const block = Blocks.Section({
-      text: t('key_pair', stat.emoji, stat.value),
+      text: tl.t('common:key_pair'),
     });
-    if (character.extraPoints > 0) {
+    if (character.extraPoints !== undefined && character.extraPoints > 0) {
       block.accessory(
         Elements.Button({
-          text: t('character_stat_incr_button'),
+          text: tl.t('common:character_stat_incr_button'),
         })
           .value(stat.id)
           .actionId('stat-incr'),
@@ -104,93 +103,68 @@ export const statBlock = (character: Partial<CharacterEntity>) => {
   });
 };
 
-export const characterSheetBlocks = (character: Partial<CharacterEntity>) => {
+export const characterSheetBlocks = (character: Character) => {
   return [
     Blocks.Section({
-      text: t('character_name', character.name),
+      text: tl.t('common:character_name', character.name),
     }),
     Blocks.Divider(),
     setIfTruthy(character.rolls < 5 && !character.active, [
       Blocks.Section({
-        text: t('character_reroll', 5 - character.rolls),
+        text: tl.t('common:character_reroll'),
       }),
     ]),
     statBlock(character),
     Blocks.Section({
-      text: t('key_pair', t('character_hp_emoji'), character.hp),
+      text: tl.t('common:key_pair'),
     }),
     Blocks.Section({
-      text: t('key_pair', t('character_gold_emoji'), character.gold),
+      text: tl.t('common:key_pair'),
     }),
     saveBlock(character),
     Blocks.Divider(),
     Blocks.Section({
-      text: t(
-        `character_level_stats`,
-        character.name,
-        character.level,
-        character.xp,
-        nextLevel(character.level),
-        character.level,
-        character.level + 1,
-      ),
+      text: tl.t(`character_level_stats`),
     }),
     Blocks.Divider(),
   ];
 };
-export const editCharacterModal = (character: Partial<CharacterEntity>) => {
-  return Message()
-    .asUser()
+export const editCharacterModal = (character: Character): ModalView => {
+  return Modal()
     .blocks(...characterSheetBlocks(character))
     .buildToObject();
 };
 
-export const battleLog = (options: {
-  combat: CombatEntity;
-  channel: string;
-}) => {
+export const battleLog = (options: { combat: CombatEnd; channel: string }) => {
+  const attacker = options.combat.logs[0].actor;
+  const defender = options.combat.logs[0].target;
   const blocks = [
     Blocks.Header({
-      text: t(
-        'battlelog_header',
-        options.combat.attacker.name,
-        options.combat.defender.name,
-      ),
+      text: tl.t('common:battlelog_header'),
     }),
     Blocks.Section({
-      text: t(
-        'battlelog_initiative_header',
-        options.combat.log.combat[0].attacker.name,
-        options.combat.log.combat[0].defender.name,
-      ),
+      text: tl.t('battlelog_initiative_header'),
     }),
   ];
 
-  for (const log of options.combat.log.combat) {
+  for (const log of options.combat.logs) {
     let blockStr: string;
-    if (log.attackRoll === 20) {
-      blockStr = t('battlelog_critical_roll', log.attacker.name);
+
+    if (log.type !== CombatLogType.Attack) {
+      continue;
+    }
+    const attackLog = log as AttackLog;
+
+    if (attackLog.details.attackRoll === 20) {
+      blockStr = tl.t('common:battlelog_critical_roll');
     } else {
-      blockStr = t(
-        'battlelog_attack_roll',
-        log.attacker.name,
-        numToEmoji(log.attackRoll),
-        numToEmoji(log.attackBonus),
-        numToEmoji(log.attackBonus + log.attackRoll),
-        log.defender.name,
-        numToEmoji(log.defenderDefense),
-      );
+      blockStr = tl.t('battlelog_attack_roll');
     }
 
-    if (log.hit) {
-      blockStr += t(
-        'battlelog_hit',
-        log.attacker.name,
-        numToEmoji(log.damage),
-        t('character_hp_emoji'),
-      );
+    if (attackLog.details.hit) {
+      blockStr += tl.t('battlelog_hit');
     } else {
-      blockStr += ' ' + t('battlelog_miss', log.attacker.name);
+      blockStr += ' ' + tl.t('common:battlelog_miss');
     }
     blocks.push(
       Blocks.Section({
@@ -198,29 +172,19 @@ export const battleLog = (options: {
       }),
     );
 
-    if (log.defenderHealth > 0) {
+    if (attackLog.details.damage > 0) {
       blocks.push(
         Blocks.Section({
-          text: t(
-            'battlelog_hp_report',
-            log.defender.name,
-            numToEmoji(log.defenderHealth),
-            t('character_hp_emoji'),
-          ),
+          text: tl.t('battlelog_hp_report'),
         }),
       );
     } else {
       blocks.push(
         Blocks.Section({
-          text: t('battlelog_defeated', log.defender.name),
+          text: tl.t('common:battlelog_defeated', attackLog.target.name),
         }),
         Blocks.Section({
-          text: t(
-            'battlelog_gold_report',
-            log.attacker.name,
-            options.combat.rewardGold,
-            t('character_gold_emoji'),
-          ),
+          text: tl.t('battlelog_gold_report'),
         }),
       );
     }
@@ -229,7 +193,7 @@ export const battleLog = (options: {
   return Message()
     .channel(options.channel)
     .text(
-      `${options.combat.attacker.name} has defeated ${options.combat.defender.name}`,
+      `${options.combat.winner.name} has defeated ${options.combat.loser.name}`,
     )
     .blocks(...blocks)
     .buildToObject();

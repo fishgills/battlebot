@@ -1,160 +1,24 @@
-fragment CharacterParts on CharacterEntity {
-  defense
-  vitality
+fragment CharacterParts on Character {
+  dexterity
+  constitution
   strength
   name
-  xp
+  experiencePoints
   rolls
-  hp
   level
   owner
   id
-  created_at
   gold
   teamId
-  updated_at
   extraPoints
   active
+  hitPoints
+  losses
+  wins
 }
 
-fragment SlackInstallParts on SlackInstallModel {
-  id
-  team_id
-  installObj
-}
-
-mutation addCharacter($input: CreateCharacterInput!) {
-  createCharacter(input: $input) {
+query getCharactersByOwner($userId: String!, $teamId: String!) {
+  getCharactersByOwner(id: $userId, team: $teamId) {
     ...CharacterParts
   }
-}
-
-mutation startCombat($input: CreateCombatInput!) {
-  start(input: $input) {
-    attacker {
-      id
-      name
-    }
-    defender {
-      id
-      name
-    }
-    rewardGold
-    loser {
-      id
-      name
-    }
-    winner {
-      id
-      name
-      level
-      xp
-    }
-    log {
-      combat {
-        attacker {
-          id
-          name
-        }
-        defender {
-          id
-          name
-        }
-        hit
-        damage
-        attackRoll
-        attackBonus
-        defenderDefense
-        defenderHealth
-      }
-    }
-  }
-}
-query characterByOwner($owner: String!, $teamId: String!) {
-  findByOwner(owner: $owner, teamId: $teamId) {
-    ...CharacterParts
-  }
-}
-
-mutation rollCharacter($id: String!) {
-  reroll(id: $id) {
-    ...CharacterParts
-  }
-}
-
-query getInstall($team_id: String!) {
-  install(team_id: $team_id) {
-    ...SlackInstallParts
-  }
-}
-
-mutation updateInstall($input: UpdateSlackInstallInput!) {
-  updateInstall(input: $input) {
-    ...SlackInstallParts
-  }
-}
-
-mutation createInstall($input: CreateSlackInstallInput!) {
-  createInstall(input: $input) {
-    ...SlackInstallParts
-  }
-}
-
-mutation removeInstall($team_id: String!) {
-  removeInstall(team_id: $team_id)
-}
-
-mutation giveReward($from: String!, $to: String!, $tid: String!) {
-  giveReward(input: { source: $from, destination: $to, teamId: $tid })
-}
-
-query rewardsGivenToday($user: String!, $teamId: String!) {
-  rewardsGivenToday(user: $user, teamId: $teamId)
-}
-
-mutation CharacterUpdate(
-  $characterUpdateId: String!
-  $input: UpdateCharacterInput!
-) {
-  CharacterUpdate(id: $characterUpdateId, input: $input)
-}
-
-query ScoreBoard($input: RewardsScoreBoardInput!) {
-  ScoreBoard(input: $input) {
-    teamId
-    userId
-    count
-  }
-}
-
-query CombatTotals($attacker: String) {
-  combats(attacker: $attacker) {
-    attackerId
-    defenderId
-  }
-}
-
-mutation DeleteConvo($convoId: String!) {
-  deleteConvo(convoId: $convoId)
-}
-
-query Convo($convoId: String!) {
-  convo(convoId: $convoId) {
-    convoId
-    expiresAt
-    value
-  }
-}
-
-mutation CreateConvo($input: CreateConvoInput!) {
-  createConvo(input: $input) {
-    expiresAt
-    value
-    convoId
-    id
-  }
-}
-
-mutation DeleteCharacter($input: DeleteCharacterInput!) {
-  deleteCharacter(input: $input)
 }

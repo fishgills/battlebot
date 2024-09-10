@@ -2,10 +2,15 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Character } from './character.entity';
-import { User } from 'src/user/user.entity';
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { modifier } from 'src/gamerules';
-import { CombatLog } from './combat-log-types';
+import {
+  AttackDetails,
+  AttackLog,
+  CombatEnd,
+  CombatLog,
+  CombatLogType,
+} from './combat-type.dto';
 
 @Injectable()
 export class CharacterService {
@@ -15,7 +20,7 @@ export class CharacterService {
     protected charactersRepository: Repository<Character>,
   ) {}
 
-  async createCharacter(user: User, name: string) {
+  async createCharacter(name: string, owner: string, teamId: string) {
     const con = new DiceRoll('4d6kh3').total;
     const character = this.charactersRepository.create({
       name,
@@ -23,7 +28,6 @@ export class CharacterService {
       constitution: con,
       dexterity: new DiceRoll('4d6kh3').total,
       hitPoints: 10 + modifier(con),
-      user,
     });
     return this.charactersRepository.save(character);
   }
@@ -32,22 +36,27 @@ export class CharacterService {
     return this.charactersRepository.find();
   }
 
-  async findCharacterById(id: number) {
+  async findCharactersByOwner(owner: string, teamId: string) {
+    return this.charactersRepository.find({ where: { owner, teamId } });
+  }
+
+  async findCharacterById(id: string) {
     return this.charactersRepository.findOne({ where: { id } });
   }
 
   async updateCharacterStats(
-    id: number,
+    id: string,
     updates: Partial<Character>,
   ): Promise<Character> {
     await this.charactersRepository.update(id, updates);
     return this.findCharacterById(id);
   }
 
-  async deleteCharacter(id: number) {
-    return this.charactersRepository.delete(id);
+  async deleteCharacter(id: string) {
+    return await this.charactersRepository.delete(id);
   }
-  async combat(characterId: number, character2Id: number) {
+
+  async combat(characterId: string, character2Id: string): Promise<CombatEnd> {
     this.logger.log(`Combat between ${characterId} and ${character2Id}`);
     const character1 = await this.findCharacterById(characterId);
     const character2 = await this.findCharacterById(character2Id);
@@ -78,11 +87,12 @@ export class CharacterService {
       defender = character1;
     }
 
-    logs.push(
-      this.createLogEntry('initiative', 0, character1, character2, {
-        winner: attacker.name,
-      }),
-    );
+    logs.push({
+      type: CombatLogType.INITIATIVE,
+      actor: attacker,
+      target: defender,
+      round: 0,
+    });
 
     this.logger.log(`Attacker: ${attacker.name}`);
     this.logger.log(`Defender: ${defender.name}`);
@@ -116,7 +126,17 @@ export class CharacterService {
       (loser.level / winner.level) * new DiceRoll('20d10').total,
     );
     winner.experiencePoints += xpGain;
-    logs.push(this.createLogEntry('xp-gain', rounds, winner, null, { xpGain }));
+
+    logs.push({
+      type: CombatLogType.XPGAIN,
+      actor: winner,
+      target: loser,
+      round: rounds,
+      details: {
+        xp: xpGain,
+      },
+    });
+
     this.logger.log(`${winner.name} gained ${xpGain} experience points`);
 
     loser.losses += 1;
@@ -139,9 +159,7 @@ export class CharacterService {
     combatLog: CombatLog[],
     round: number,
   ) {
-    const attackRecord = {
-      attacker: attacker.name,
-      defender: defender.name,
+    const attackRecord: AttackDetails = {
       attackRoll: 0,
       attackModifier: 0,
       defenderAc: 0,
@@ -184,9 +202,13 @@ export class CharacterService {
 
       this.logger.log('Miss!');
     }
-    combatLog.push(
-      this.createLogEntry('attack', round, attacker, defender, attackRecord),
-    );
+    combatLog.push({
+      type: CombatLogType.ATTACK,
+      actor: attacker,
+      target: defender,
+      round,
+      details: attackRecord,
+    });
   }
 
   private checkLevelUp(character: Character, log: CombatLog[]) {
@@ -204,11 +226,15 @@ export class CharacterService {
       const hitPoints = 6 + modifier(character.constitution);
       character.hitPoints += hitPoints;
       this.logger.debug(`${character.name} gained ${hitPoints} hit points`);
-      log.push(
-        this.createLogEntry('level-up', 0, character, null, {
+      log.push({
+        type: CombatLogType.LEVELUP,
+        actor: character,
+        target: null,
+        round: 0,
+        details: {
           newLevel: character.level,
-        }),
-      );
+        },
+      });
     }
   }
 
@@ -216,29 +242,5 @@ export class CharacterService {
     let toLevel = Math.pow(10, 1.4) * Math.pow(level, 3.5);
     if (level > 10) toLevel = Math.pow(10, 1.4) * Math.pow(level, 2.4);
     return Math.floor(toLevel);
-  }
-
-  private createLogEntry(
-    type: CombatLog['type'],
-    round: CombatLog['round'],
-    actor: Character,
-    target: Character | null,
-    details: any = {},
-  ): CombatLog {
-    return {
-      type,
-      round,
-      actor: {
-        id: actor.id,
-        name: actor.name,
-      },
-      target: target
-        ? {
-            id: target.id,
-            name: target.name,
-          }
-        : null,
-      details,
-    };
   }
 }

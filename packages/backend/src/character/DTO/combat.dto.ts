@@ -1,15 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, InputType } from '@nestjs/graphql';
 
-export class CombatDTO {
-  @ApiProperty({
-    type: Number,
-    example: 1,
-  })
-  attackerId: number;
-
-  @ApiProperty({
-    type: Number,
-    example: 2,
-  })
-  defenderId: number;
+@InputType()
+export class CombatInput {
+  @Field()
+  attackerId: string;
+  @Field()
+  defenderId: string;
 }

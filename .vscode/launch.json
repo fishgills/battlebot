@@ -18,7 +18,7 @@
     {
       "localRoot": "${workspaceFolder}/packages/bot",
       "name": "Bot",
-      "port": 9230,
+      "port": 9229,
       "restart": true,
       // "remoteRoot": "Absolute path to the remote directory containing the program",
       "request": "attach",

@@ -1,28 +1,20 @@
 import tracer from 'dd-trace';
-import { format } from 'date-fns';
 import { Logger, LogLevel } from '@slack/bolt';
-import {
-  createLogger,
-  transports,
-  format as wformat,
-  Logger as wLogger,
-} from 'winston';
-export class BotLogger implements Logger {
-  private log: wLogger;
+import { pino, Logger as pLogger } from 'pino';
+import { env } from './env';
 
+export class BotLogger implements Logger {
+  private log: pLogger;
   /** Setting for level */
   private level: LogLevel;
 
   public constructor() {
     console.log('creating logger');
-    this.log = createLogger({
-      level: process.env['NODE_ENV'] === 'production' ? 'verbose' : 'debug',
-      exitOnError: false,
-      format:
-        process.env['NODE_ENV'] !== 'production'
-          ? wformat.combine(wformat.colorize(), wformat.simple())
-          : wformat.json(),
-      transports: new transports.Console(),
+
+    this.level = env.isProduction ? LogLevel.INFO : LogLevel.DEBUG;
+
+    this.log = pino({
+      level: this.level,
     });
   }
   public getLevel(): LogLevel {
@@ -84,7 +76,7 @@ export class BotLogger implements Logger {
    * @param msg Array of messages
    */
   public verbose(...msg: any[]): void {
-    msg.forEach((record) => this.log.verbose(record));
+    msg.forEach((record) => this.log.trace(record));
   }
   /**
    * Log an error message

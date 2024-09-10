@@ -1,13 +1,37 @@
-import { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
+import {
+  AllMiddlewareArgs,
+  SlackCommandMiddlewareArgs,
+  SlackEventMiddlewareArgs,
+} from '@slack/bolt';
 import { Blocks, SectionBuilder } from 'slack-block-builder';
 import { Observer } from '../common/AbstractObserver';
 import { t } from '../locale';
 import { getUsernames } from '../utils/helpers';
 import api from '../utils/api';
+import { BaseObserver } from '../common/BaseObserver';
+import { ObserveType } from '../actions';
+
+// export abstract class MentionObserver extends BaseObserver<ObserveType> {
+//   getHandleText(event: ObserveType): string {
+//     const text = normalizeQuotes(event.payload.text);
+//     const match = text.match(/^(\w+) *(.*)$/);
+//     return match ? match[1] : undefined;
+//   }
+//   public static getHelpBlocks<T extends MentionObserver>(
+//     this: new (blah: any) => T,
+//     blah: any,
+//   ): T {
+//     const self = new this(blah);
+//     return self;
+//   }
+// }
 
 export class RewardObserver<
-  T extends SlackEventMiddlewareArgs<'app_mention'> & AllMiddlewareArgs,
-> extends Observer<T> {
+  T extends SlackEventMiddlewareArgs & AllMiddlewareArgs,
+> extends BaseObserver<T> {
+  // export class RewardObserver<
+  //   T extends SlackEventMiddlewareArgs<'app_mention'> & AllMiddlewareArgs,
+  // > extends Observer<T> {
   getHelpBlocks(e: T): SectionBuilder[] {
     return [
       Blocks.Section({

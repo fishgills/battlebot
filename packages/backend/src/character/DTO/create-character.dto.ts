@@ -1,17 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { Field, InputType } from '@nestjs/graphql';
 
+@InputType()
 export class CreateCharacterDto {
-  @ApiProperty({
-    type: String,
-    example: 'Mister Dude',
-  })
+  @Field()
   name: string;
+  @Field()
+  userId: string;
+  @Field()
+  teamId: string;
 
-  @ApiProperty({
-    type: Number,
-    example: 1,
-  })
-  userId: number;
   //   @ApiProperty({
   //     type: String,
   //     description: 'Slack User Id',

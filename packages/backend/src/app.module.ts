@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CharacterModule } from './character/character.module';
-import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -11,6 +10,9 @@ import { LoggerModule } from 'nestjs-pino';
 import { env } from './config/config.module';
 
 import { PrettyOptions } from 'pino-pretty';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -38,8 +40,12 @@ import { PrettyOptions } from 'pino-pretty';
       useFactory: async (configService: ConfigService) =>
         configService.get('typeorm'),
     }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
+    }),
     CharacterModule,
-    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

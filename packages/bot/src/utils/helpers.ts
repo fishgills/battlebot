@@ -1,13 +1,17 @@
 import {
+  AllMiddlewareArgs,
   GenericMessageEvent,
   Installation,
   MessageEvent,
   ReactionAddedEvent,
   ReactionMessageItem,
+  SlackActionMiddlewareArgs,
+  SlackCommandMiddlewareArgs,
 } from '@slack/bolt';
 
 import { Logger } from '../logger';
 import api from './api';
+import { SlackMessageDto } from 'slack-block-builder';
 
 export const isGenericMessageEvent = (
   msg: MessageEvent,
@@ -46,6 +50,20 @@ export const getTeamInfo = async (
     token,
   };
 };
+
+type base = AllMiddlewareArgs &
+  (SlackActionMiddlewareArgs | SlackCommandMiddlewareArgs);
+
+export async function msgUser<R extends base>(
+  event: R,
+  content: SlackMessageDto | string,
+) {
+  return await event.respond({
+    response_type: 'ephemeral',
+    text: typeof content === 'string' ? content : content.text,
+    ...(typeof content !== 'string' && { blocks: content.blocks }),
+  });
+}
 
 export const numToEmoji = (str: number) => {
   if (!str) {
