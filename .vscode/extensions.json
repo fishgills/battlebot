@@ -1,6 +1,3 @@
 {
-    "recommendations": [
-        "circleci.circleci",
-        "genieai.chatgpt-vscode"
-    ]
+  "recommendations": ["circleci.circleci"]
 }

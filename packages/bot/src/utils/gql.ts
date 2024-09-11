@@ -1,5 +1,7 @@
 import {
   ApolloClient,
+  ApolloLink,
+  HttpLink,
   InMemoryCache,
   MutationOptions,
   OperationVariables,
@@ -8,10 +10,16 @@ import {
 import { DocumentNode } from 'graphql';
 import { getSdk, Requester } from '../generated/graphql.js';
 import { env } from '../env.js';
+import { Logger } from '../logger.js';
+import { decode } from 'jsonwebtoken';
+import { TokenRefreshLink } from 'apollo-link-token-refresh';
 
 export type ApolloRequesterOptions<V, R> =
   | Omit<QueryOptions<V>, 'variables' | 'query'>
   | Omit<MutationOptions<R, V>, 'variables' | 'mutation'>;
+
+let token = '';
+let expiresIn = 0;
 
 const validDocDefOps = ['mutation', 'query', 'subscription'];
 
@@ -102,9 +110,59 @@ export function getSdkApollo<C>(client: ApolloClient<C>) {
 
 export type Sdk = ReturnType<typeof getSdkApollo>;
 
+const refreshToken = new TokenRefreshLink({
+  isTokenValidOrUndefined: async (operation) => {
+    if (!token) {
+      return false;
+    }
+    if (expiresIn * 1000 > Date.now()) {
+      return true;
+    }
+    return false;
+  },
+  fetchAccessToken: async () => {
+    Logger.info('Retrieve JWT Token');
+    const endpoint = new URL(env.GRAPHQL_ENDPOINT);
+
+    const fetchFrom = `${endpoint.protocol}//${endpoint.host}/auth/token`;
+
+    const formData = new URLSearchParams();
+    formData.append('client_id', env.CLIENT_ID);
+    formData.append('client_secret', env.CLIENT_SECRET);
+    return fetch(fetchFrom, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+
+      body: formData,
+    });
+  },
+  handleFetch: (newToken) => {
+    const decodedToken = decode(newToken, {
+      json: true,
+    });
+    token = newToken;
+    if (decodedToken) expiresIn = decodedToken.exp as number;
+  },
+});
+
+const authLink = new ApolloLink((operation, forward) => {
+  operation.setContext({
+    headers: {
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  });
+  return forward(operation);
+});
+
+const httpLink = new HttpLink({
+  uri: env.GRAPHQL_ENDPOINT,
+});
+
 export const sdk = getSdkApollo(
   new ApolloClient({
     cache: new InMemoryCache(),
-    uri: env.GRAPHQL_ENDPOINT,
+    link: ApolloLink.from([refreshToken, authLink, httpLink]),
   }),
 );

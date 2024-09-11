@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "clean": "rimraf dist coverage",
-    "start": "tsx watch --clear-screen=false --inspect src/index.ts | pino-pretty",
+    "start": "tsx watch --clear-screen=false --inspect=9230 src/index.ts | pino-pretty",
     "startt": "concurrently --kill-others --names \"TS,NM\" -c \"bgBlue.bold,bgMagenta.bold\" \"tsc -w --preserveWatchOutput\" \"DEBUG=* nodemon --respawn --no-colors --inspect -q -w dist dist/index.js\"",
     "start:prod": "node dist/index.js",
     "build": "tsup",

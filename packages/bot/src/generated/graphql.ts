@@ -56,10 +56,10 @@ export type Character = {
   level: Scalars['Float']['output'];
   losses: Scalars['Float']['output'];
   name: Scalars['String']['output'];
-  owner: Scalars['String']['output'];
   rolls: Scalars['Float']['output'];
   strength: Scalars['Float']['output'];
   teamId: Scalars['String']['output'];
+  userId: Scalars['String']['output'];
   wins: Scalars['Float']['output'];
 };
 
@@ -167,7 +167,7 @@ export type XpGainLog = BaseLog & {
   type: CombatLogType;
 };
 
-export type CharacterPartsFragment = { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, owner: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number };
+export type CharacterPartsFragment = { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number };
 
 export type GetCharactersByOwnerQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -175,7 +175,14 @@ export type GetCharactersByOwnerQueryVariables = Exact<{
 }>;
 
 
-export type GetCharactersByOwnerQuery = { __typename?: 'Query', getCharactersByOwner: Array<{ __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, owner: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number }> };
+export type GetCharactersByOwnerQuery = { __typename?: 'Query', getCharactersByOwner: Array<{ __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number }> };
+
+export type CreateCharacterMutationVariables = Exact<{
+  input: CreateCharacterDto;
+}>;
+
+
+export type CreateCharacterMutation = { __typename?: 'Mutation', createCharacter: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number } };
 
 export const CharacterPartsFragmentDoc = gql`
     fragment CharacterParts on Character {
@@ -186,7 +193,7 @@ export const CharacterPartsFragmentDoc = gql`
   experiencePoints
   rolls
   level
-  owner
+  userId
   id
   gold
   teamId
@@ -204,11 +211,21 @@ export const GetCharactersByOwnerDocument = gql`
   }
 }
     ${CharacterPartsFragmentDoc}`;
+export const CreateCharacterDocument = gql`
+    mutation createCharacter($input: CreateCharacterDto!) {
+  createCharacter(CreateCharacter: $input) {
+    ...CharacterParts
+  }
+}
+    ${CharacterPartsFragmentDoc}`;
 export type Requester<C = {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C>(requester: Requester<C>) {
   return {
     getCharactersByOwner(variables: GetCharactersByOwnerQueryVariables, options?: C): Promise<GetCharactersByOwnerQuery> {
       return requester<GetCharactersByOwnerQuery, GetCharactersByOwnerQueryVariables>(GetCharactersByOwnerDocument, variables, options) as Promise<GetCharactersByOwnerQuery>;
+    },
+    createCharacter(variables: CreateCharacterMutationVariables, options?: C): Promise<CreateCharacterMutation> {
+      return requester<CreateCharacterMutation, CreateCharacterMutationVariables>(CreateCharacterDocument, variables, options) as Promise<CreateCharacterMutation>;
     }
   };
 }

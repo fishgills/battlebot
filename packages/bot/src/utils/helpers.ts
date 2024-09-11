@@ -1,17 +1,12 @@
 import {
   AllMiddlewareArgs,
+  App,
   GenericMessageEvent,
-  Installation,
   MessageEvent,
-  ReactionAddedEvent,
-  ReactionMessageItem,
-  SlackActionMiddlewareArgs,
   SlackCommandMiddlewareArgs,
 } from '@slack/bolt';
 
 import { Logger } from '../logger';
-import api from './api';
-import { SlackMessageDto } from 'slack-block-builder';
 
 export const isGenericMessageEvent = (
   msg: MessageEvent,
@@ -21,11 +16,11 @@ export const isGenericMessageEvent = (
   return test;
 };
 
-export const isMessageItem = (
-  item: ReactionAddedEvent['item'],
-): item is ReactionMessageItem => {
-  return (item as ReactionMessageItem).type === 'message';
-};
+// export const isMessageItem = (
+//   item: ReactionAddedEvent['item'],
+// ): item is ReactionMessageItem => {
+//   return (item as ReactionMessageItem).type === 'message';
+// };
 
 export const titleCase = (str: string): string => {
   return str[0].toLocaleUpperCase() + str.slice(1).toLocaleLowerCase();
@@ -40,29 +35,28 @@ export function extract<T>(properties: Record<keyof T, true>) {
   };
 }
 
-export const getTeamInfo = async (
-  team_id: string,
-): Promise<{ token: string }> => {
-  const { data } = await api.install.installControllerFindOne(team_id);
-  const token = (data.installObj as Installation).bot.token;
+// export const getTeamInfo = async (
+//   team_id: string,
+// ): Promise<{ token: string }> => {
+//   const { data } = await api.install.installControllerFindOne(team_id);
+//   const token = (data.installObj as Installation).bot.token;
 
-  return {
-    token,
-  };
-};
+//   return {
+//     token,
+//   };
+// };
 
-type base = AllMiddlewareArgs &
-  (SlackActionMiddlewareArgs | SlackCommandMiddlewareArgs);
-
-export async function msgUser<R extends base>(
-  event: R,
-  content: SlackMessageDto | string,
+export function msgUser(
+  args: AllMiddlewareArgs & SlackCommandMiddlewareArgs,
+  text: string,
 ) {
-  return await event.respond({
-    response_type: 'ephemeral',
-    text: typeof content === 'string' ? content : content.text,
-    ...(typeof content !== 'string' && { blocks: content.blocks }),
-  });
+  // return await event.respond({
+  //   response_type: 'ephemeral',
+  //   text: typeof content === 'string' ? content : content.text,
+  //   ...(typeof content !== 'string' && { blocks: content.blocks }),
+  // });
+
+  return args.say(text);
 }
 
 export const numToEmoji = (str: number) => {

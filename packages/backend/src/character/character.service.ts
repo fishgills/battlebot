@@ -20,10 +20,12 @@ export class CharacterService {
     protected charactersRepository: Repository<Character>,
   ) {}
 
-  async createCharacter(name: string, owner: string, teamId: string) {
+  async createCharacter(name: string, userId: string, teamId: string) {
     const con = new DiceRoll('4d6kh3').total;
     const character = this.charactersRepository.create({
       name,
+      userId,
+      teamId,
       strength: new DiceRoll('4d6kh3').total,
       constitution: con,
       dexterity: new DiceRoll('4d6kh3').total,
@@ -36,8 +38,8 @@ export class CharacterService {
     return this.charactersRepository.find();
   }
 
-  async findCharactersByOwner(owner: string, teamId: string) {
-    return this.charactersRepository.find({ where: { owner, teamId } });
+  async findCharactersByOwner(userId: string, teamId: string) {
+    return this.charactersRepository.find({ where: { userId, teamId } });
   }
 
   async findCharacterById(id: string) {

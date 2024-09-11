@@ -6,7 +6,7 @@ fragment CharacterParts on Character {
   experiencePoints
   rolls
   level
-  owner
+  userId
   id
   gold
   teamId
@@ -19,6 +19,12 @@ fragment CharacterParts on Character {
 
 query getCharactersByOwner($userId: String!, $teamId: String!) {
   getCharactersByOwner(id: $userId, team: $teamId) {
+    ...CharacterParts
+  }
+}
+
+mutation createCharacter($input: CreateCharacterDto!) {
+  createCharacter(CreateCharacter: $input) {
     ...CharacterParts
   }
 }

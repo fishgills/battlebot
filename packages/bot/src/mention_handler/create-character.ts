@@ -1,21 +1,39 @@
-// import { SlackCommandMiddlewareArgs, AllMiddlewareArgs } from '@slack/bolt';
-// import { Blocks } from 'slack-block-builder';
-// import { t } from '../locale';
-// import { MentionObserver } from './observer';
-// import api from '../utils/api';
-
 import { App } from '@slack/bolt';
 import { onCommand } from '../dispatcher';
 import { Logger } from '../logger';
-import { msgUser } from '../utils/helpers';
+import { tl } from '../i18n';
+import { sdk } from '../utils/gql';
 
 export function createCharacter(app: App) {
-  onCommand('create').subscribe(async ({ userId, flags: args, payload }) => {
-    Logger.info(`requested character sheet`);
-    if (args.length !== 1) {
-      msgUser();
+  onCommand('create').subscribe(async (value) => {
+    Logger.info(`Creating a character...`);
+    if (value.flags.length !== 1) {
+      return await value.args.respond(tl.t('common:create_update_invalid'));
     }
-    Logger.info(args);
+    try {
+      const char = (
+        await sdk.getCharactersByOwner({
+          userId: value.args.payload.user_id,
+          teamId: value.args.payload.team,
+        })
+      ).getCharactersByOwner;
+
+      if (char.length > 0) {
+        return await value.args.respond(
+          tl.t('common:create_update_already_have_char'),
+        );
+      }
+    } catch (err) {
+      await sdk.createCharacter({
+        input: {
+          userId: value.args.payload.user_id,
+          name: value.flags[0],
+          teamId: value.args.payload.team_id,
+        },
+      });
+
+      await value.args.respond(tl.t('common:create_update_char_created'));
+    }
   });
 }
 //   async update(

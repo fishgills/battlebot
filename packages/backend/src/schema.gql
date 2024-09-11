@@ -38,10 +38,10 @@ type Character {
   level: Float!
   losses: Float!
   name: String!
-  owner: String!
   rolls: Float!
   strength: Float!
   teamId: String!
+  userId: String!
   wins: Float!
 }
 

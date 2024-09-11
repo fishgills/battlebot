@@ -1,8 +1,15 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 
 @ObjectType()
 @Entity()
+@Unique(['userId'])
 export class Character {
   @Field((type) => ID)
   @PrimaryGeneratedColumn('uuid')
@@ -10,7 +17,7 @@ export class Character {
 
   @Field()
   @Column()
-  owner: string;
+  userId: string;
 
   @Field()
   @Column()
@@ -63,10 +70,6 @@ export class Character {
   })
   @Column({ default: 0 })
   losses: number;
-
-  // @Field((type) => User)
-  // @ManyToOne(() => User, (user) => user.characters)
-  // user: User;
 
   @Field()
   @Column({ default: 0 })

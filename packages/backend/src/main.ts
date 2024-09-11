@@ -9,6 +9,6 @@ async function bootstrap() {
   });
   app.useLogger(app.get(Logger));
 
-  await app.listen(env.PORT);
+  await app.listen(env.PORT, '0.0.0.0');
 }
 bootstrap();

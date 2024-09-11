@@ -6,26 +6,26 @@ import { editCharacterModal } from '../views/character.js';
 import { tl } from '../i18n.js';
 
 export function characterSheet(app: App) {
-  onCommand('character').subscribe(async ({ userId, flags: args, payload }) => {
+  onCommand('character').subscribe(async (command) => {
     Logger.info(`requested character sheet`);
     try {
       const char = (
         await sdk.getCharactersByOwner({
-          userId: payload.user_id,
-          teamId: payload.team,
+          userId: command.args.payload.user_id,
+          teamId: command.args.payload.team,
         })
       ).getCharactersByOwner;
 
       await app.client.views.open({
-        token: payload.token,
-        trigger_id: payload.trigger_id,
+        token: command.args.payload.token,
+        trigger_id: command.args.payload.trigger_id,
         view: editCharacterModal(char[0]),
       });
     } catch (e) {
       Logger.info(`character not found`);
       await app.client.chat.postMessage({
-        token: payload.token,
-        channel: userId,
+        token: command.args.payload.token,
+        channel: command.userId,
         text: tl.t('common:sheet_no_character'),
       });
     }

@@ -29,4 +29,10 @@ export const env = cleanEnv(process.env, {
   GRAPHQL_ENDPOINT: str({
     default: 'http://localhost:3000/graphql',
   }),
+  CLIENT_ID: str({
+    default: 'service-client-1',
+  }),
+  CLIENT_SECRET: str({
+    default: 'dev-secret',
+  }),
 });
