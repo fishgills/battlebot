@@ -13,6 +13,7 @@ import { characterSheet } from './mention_handler/character-sheet.js';
 // import tracer from './tracer.js';
 import { createCharacter } from './mention_handler/create-character.js';
 import { StringIndexed } from '@slack/bolt/dist/types/helpers.js';
+import { deleteCharacter } from './mention_handler/delete-character.js';
 
 tl.changeLanguage('en');
 
@@ -95,6 +96,7 @@ const CommandReceived = async (
 
 characterSheet(app);
 createCharacter(app);
+deleteCharacter(app);
 
 // app.event('app_mention', async (args) => {
 //   Shield$.next(args);

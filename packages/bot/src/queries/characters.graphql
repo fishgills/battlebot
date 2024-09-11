@@ -28,3 +28,7 @@ mutation createCharacter($input: CreateCharacterDto!) {
     ...CharacterParts
   }
 }
+
+mutation deleteCharacter($id: String!) {
+  deleteCharacter(id: $id)
+}

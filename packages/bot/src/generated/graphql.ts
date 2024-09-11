@@ -184,6 +184,13 @@ export type CreateCharacterMutationVariables = Exact<{
 
 export type CreateCharacterMutation = { __typename?: 'Mutation', createCharacter: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number } };
 
+export type DeleteCharacterMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteCharacterMutation = { __typename?: 'Mutation', deleteCharacter: any };
+
 export const CharacterPartsFragmentDoc = gql`
     fragment CharacterParts on Character {
   dexterity
@@ -218,6 +225,11 @@ export const CreateCharacterDocument = gql`
   }
 }
     ${CharacterPartsFragmentDoc}`;
+export const DeleteCharacterDocument = gql`
+    mutation deleteCharacter($id: String!) {
+  deleteCharacter(id: $id)
+}
+    `;
 export type Requester<C = {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C>(requester: Requester<C>) {
   return {
@@ -226,6 +238,9 @@ export function getSdk<C>(requester: Requester<C>) {
     },
     createCharacter(variables: CreateCharacterMutationVariables, options?: C): Promise<CreateCharacterMutation> {
       return requester<CreateCharacterMutation, CreateCharacterMutationVariables>(CreateCharacterDocument, variables, options) as Promise<CreateCharacterMutation>;
+    },
+    deleteCharacter(variables: DeleteCharacterMutationVariables, options?: C): Promise<DeleteCharacterMutation> {
+      return requester<DeleteCharacterMutation, DeleteCharacterMutationVariables>(DeleteCharacterDocument, variables, options) as Promise<DeleteCharacterMutation>;
     }
   };
 }

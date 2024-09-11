@@ -8,19 +8,19 @@ export function createCharacter(app: App) {
   onCommand('create').subscribe(async (value) => {
     Logger.info(`Creating a character...`);
     if (value.flags.length !== 1) {
-      return await value.args.respond(tl.t('common:create_update_invalid'));
+      return await value.args.respond(tl.t('ns1:create_update_invalid'));
     }
     try {
       const char = (
-        await sdk.getCharactersByOwner({
+        await sdk.getCharacterByOwner({
           userId: value.args.payload.user_id,
-          teamId: value.args.payload.team,
+          teamId: value.args.payload.team_id,
         })
-      ).getCharactersByOwner;
+      ).getCharacterByOwner;
 
-      if (char.length > 0) {
+      if (char) {
         return await value.args.respond(
-          tl.t('common:create_update_already_have_char'),
+          tl.t('ns1:create_update_already_have_char'),
         );
       }
     } catch (err) {
@@ -32,7 +32,7 @@ export function createCharacter(app: App) {
         },
       });
 
-      await value.args.respond(tl.t('common:create_update_char_created'));
+      await value.args.respond(tl.t('ns1:create_update_char_created'));
     }
   });
 }

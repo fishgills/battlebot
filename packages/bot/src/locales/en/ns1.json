@@ -1,6 +1,7 @@
 {
   "battlelog_header": "{{actor.name}} is fighting {{target.name}}!",
   "battlelog_initiative_header": "{{actor.name}} will strike first! {{target.name}}, pay attention.",
+  "character_not_found": "Character not found.",
   "character_defense_emoji": ":hear_no_evil:",
   "character_gold_emoji": ":moneybag:",
   "character_hp_emoji": ":heart:",
