@@ -1,49 +1,52 @@
 import { App } from '@slack/bolt';
 import { onCommand } from '../dispatcher';
 import { Logger } from '../logger';
-import api from '../utils/api';
-import t from '../i18n';
-import { characterSheet } from './character-sheet';
-import { Character } from '../swagger/Bot';
 import { getUsernames } from '../utils/helpers';
 import { battleLog } from '../views/character';
+import { Character } from '../generated/graphql';
+import { tl } from '../i18n';
+import { sdk } from '../utils/gql';
 
 export function combatHandler(app: App) {
-  onCommand('fight').subscribe(async ({ userId, flags: args, payload }) => {
+  onCommand('fight').subscribe(async (command) => {
     Logger.info(`requested combat`);
+
+    const payload = command.args.payload;
+    const userId = command.userId;
+
     let char: Character;
 
     try {
       char = (
-        await api.character.characterControllerGetCharactersByOwner(
-          payload.user_id,
-          payload.team_id,
-        )
-      ).data;
+        await sdk.getCharacterByOwner({
+          userId: payload.user_id,
+          teamId: payload.team_id,
+        })
+      ).getCharacterByOwner;
     } catch (e) {
       Logger.info(`character not found`);
-      await app.client.chat.postMessage({
+      app.client.chat.postMessage({
         token: payload.token,
         channel: userId,
-        text: t.t('common:combat_update_no_character'),
+        text: tl.t('ns1:combat_update_no_character'),
       });
       return;
     }
 
     if (!char.active) {
-      await app.client.chat.postMessage({
+      app.client.chat.postMessage({
         token: payload.token,
         channel: userId,
-        text: t.t('common:combat_update_unfinished_character'),
+        text: tl.t('ns1:combat_update_unfinished_character'),
       });
     }
     const targets = getUsernames(payload.text);
 
     if (targets.length > 1) {
-      await app.client.chat.postMessage({
+      app.client.chat.postMessage({
         token: payload.token,
         channel: userId,
-        text: t.t('common:combat_update_too_many_targets'),
+        text: tl.t('ns1:combat_update_too_many_targets'),
       });
       return;
     }
@@ -52,7 +55,7 @@ export function combatHandler(app: App) {
       await app.client.chat.postMessage({
         token: payload.token,
         channel: userId,
-        text: t.t('common:combat_no_target'),
+        text: tl.t('ns1:combat_no_target'),
       });
       return;
     }
@@ -63,22 +66,20 @@ export function combatHandler(app: App) {
 
     try {
       target = (
-        await api.character.characterControllerGetCharactersByOwner(
-          targetUser.id,
-          payload.team_id,
-        )
-      ).data;
+        await sdk.getCharacterByOwner({
+          userId: targetUser.id,
+          teamId: payload.team_id,
+        })
+      ).getCharacterByOwner;
     } catch (exception) {
       Logger.info('target has no character');
-      await app.client.chat.postMessage({
-        token: payload.token,
-        channel: userId,
-        text: t.t('common:combat_update_target_no_char', targetUser.id),
-      });
-      await app.client.chat.postMessage({
-        token: payload.token,
+
+      command.args.respond(
+        tl.t('common:combat_update_target_no_char', targetUser.id),
+      );
+      command.args.say({
         channel: targetUser.id,
-        text: t.t('common:combat_update_target_nochar_dm', userId),
+        text: tl.t('common:combat_update_target_nochar_dm', userId),
       });
       return;
     }

@@ -13,6 +13,8 @@ import {
   Modal,
   setIfTruthy,
 } from 'slack-block-builder';
+import { nextLevel } from '../utils/helpers.js';
+import { combatHandler } from '../mention_handler/combat.js';
 
 export const notifyLevelUp = (
   winner: Character,
@@ -25,7 +27,7 @@ export const notifyLevelUp = (
   if (winner.id === org_attacker.id && winner.level > org_attacker.level) {
     return attacker_resp({
       response_type: 'ephemeral',
-      text: tl.t('common:character_level_up'),
+      text: tl.t('ns1:character_level_up'),
     }).then();
   }
 
@@ -33,7 +35,7 @@ export const notifyLevelUp = (
     return event.chat
       .postMessage({
         channel: org_def_slack_id,
-        text: tl.t('common:character_level_up'),
+        text: tl.t('ns1:character_level_up'),
       })
       .then();
   }
@@ -52,7 +54,7 @@ const saveBlock = (char: Character) => {
     block.elements(
       Elements.Button({
         actionId: 'reroll',
-        text: tl.t('common:character_reroll_button'),
+        text: tl.t('ns1:character_reroll_button'),
       }),
     );
   }
@@ -60,7 +62,7 @@ const saveBlock = (char: Character) => {
   block.elements(
     Elements.Button({
       actionId: 'complete',
-      text: tl.t('common:character_done_button'),
+      text: tl.t('ns1:character_done_button'),
     }),
   );
 
@@ -71,29 +73,32 @@ export const statBlock = (character: Partial<Character>) => {
   const stats = [
     {
       id: 'strength',
-      emoji: tl.t('common:character_strength_emoji'),
+      emoji: tl.t('ns1:character_strength_emoji'),
       value: character.strength,
     },
     {
-      id: 'defense',
-      emoji: tl.t('common:character_defense_emoji'),
+      id: 'dexterity',
+      emoji: tl.t('ns1:character_defense_emoji'),
       value: character.dexterity,
     },
     {
-      id: 'vitality',
-      emoji: tl.t('common:character_vitality_emoji'),
+      id: 'constitution',
+      emoji: tl.t('ns1:character_vitality_emoji'),
       value: character.constitution,
     },
   ];
 
   return stats.map((stat) => {
     const block = Blocks.Section({
-      text: tl.t('common:key_pair'),
+      text: tl.t('ns1:key_pair', {
+        key: stat.emoji,
+        value: stat.value,
+      }),
     });
     if (character.extraPoints !== undefined && character.extraPoints > 0) {
       block.accessory(
         Elements.Button({
-          text: tl.t('common:character_stat_incr_button'),
+          text: tl.t('ns1:character_stat_incr_button'),
         })
           .value(stat.id)
           .actionId('stat-incr'),
@@ -105,26 +110,34 @@ export const statBlock = (character: Partial<Character>) => {
 
 export const characterSheetBlocks = (character: Character) => {
   return [
-    Blocks.Section({
-      text: tl.t('common:character_name', character.name),
-    }),
-    Blocks.Divider(),
     setIfTruthy(character.rolls < 5 && !character.active, [
       Blocks.Section({
-        text: tl.t('common:character_reroll'),
+        text: tl.t('ns1:character_reroll', {
+          character,
+        }),
       }),
     ]),
     statBlock(character),
     Blocks.Section({
-      text: tl.t('common:key_pair'),
+      text: tl.t('ns1:key_pair', {
+        key: tl.t('ns1:character_hp_emoji'),
+        value: character.hitPoints,
+      }),
     }),
     Blocks.Section({
-      text: tl.t('common:key_pair'),
+      text: tl.t('ns1:key_pair', {
+        key: tl.t('ns1:character_gold_emoji'),
+        value: character.gold,
+      }),
     }),
     saveBlock(character),
     Blocks.Divider(),
     Blocks.Section({
-      text: tl.t(`character_level_stats`),
+      text: tl.t(`ns1:character_level_stats`, {
+        character,
+        nextLevelXp: nextLevel(character.level),
+        nextLevel: character.level + 1,
+      }),
     }),
     Blocks.Divider(),
   ];
@@ -132,6 +145,11 @@ export const characterSheetBlocks = (character: Character) => {
 export const editCharacterModal = (character: Character): ModalView => {
   return Modal()
     .blocks(...characterSheetBlocks(character))
+    .title(
+      tl.t('ns1:character_sheet_title', {
+        character,
+      }),
+    )
     .buildToObject();
 };
 
@@ -140,10 +158,13 @@ export const battleLog = (options: { combat: CombatEnd; channel: string }) => {
   const defender = options.combat.logs[0].target;
   const blocks = [
     Blocks.Header({
-      text: tl.t('common:battlelog_header'),
+      text: tl.t('ns1:battlelog_header'),
     }),
     Blocks.Section({
-      text: tl.t('battlelog_initiative_header'),
+      text: tl.t('ns1:battlelog_initiative_header', {
+        actor: options.combat.logs[0].actor,
+        target: options.combat.logs[0].target,
+      }),
     }),
   ];
 
@@ -156,7 +177,7 @@ export const battleLog = (options: { combat: CombatEnd; channel: string }) => {
     const attackLog = log as AttackLog;
 
     if (attackLog.details.attackRoll === 20) {
-      blockStr = tl.t('common:battlelog_critical_roll');
+      blockStr = tl.t('ns1:battlelog_critical_roll');
     } else {
       blockStr = tl.t('battlelog_attack_roll');
     }
@@ -164,7 +185,7 @@ export const battleLog = (options: { combat: CombatEnd; channel: string }) => {
     if (attackLog.details.hit) {
       blockStr += tl.t('battlelog_hit');
     } else {
-      blockStr += ' ' + tl.t('common:battlelog_miss');
+      blockStr += ' ' + tl.t('ns1:battlelog_miss');
     }
     blocks.push(
       Blocks.Section({
@@ -181,7 +202,7 @@ export const battleLog = (options: { combat: CombatEnd; channel: string }) => {
     } else {
       blocks.push(
         Blocks.Section({
-          text: tl.t('common:battlelog_defeated', attackLog.target.name),
+          text: tl.t('ns1:battlelog_defeated', attackLog.target.name),
         }),
         Blocks.Section({
           text: tl.t('battlelog_gold_report'),

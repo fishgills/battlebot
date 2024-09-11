@@ -8,26 +8,22 @@ import { tl } from '../i18n.js';
 export function characterSheet(app: App) {
   onCommand('character').subscribe(async (command) => {
     Logger.info(`requested character sheet`);
+    Logger.debug(command.args.payload);
     try {
       const char = (
-        await sdk.getCharactersByOwner({
+        await sdk.getCharacterByOwner({
           userId: command.args.payload.user_id,
-          teamId: command.args.payload.team,
+          teamId: command.args.payload.team_id,
         })
-      ).getCharactersByOwner;
+      ).getCharacterByOwner;
 
-      await app.client.views.open({
-        token: command.args.payload.token,
+      app.client.views.open({
         trigger_id: command.args.payload.trigger_id,
-        view: editCharacterModal(char[0]),
+        view: editCharacterModal(char),
       });
     } catch (e) {
       Logger.info(`character not found`);
-      await app.client.chat.postMessage({
-        token: command.args.payload.token,
-        channel: command.userId,
-        text: tl.t('common:sheet_no_character'),
-      });
+      command.args.respond(tl.t('ns1:sheet_no_character'));
     }
   });
 }

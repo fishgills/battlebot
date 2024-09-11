@@ -38,8 +38,10 @@ export class CharacterService {
     return this.charactersRepository.find();
   }
 
-  async findCharactersByOwner(userId: string, teamId: string) {
-    return this.charactersRepository.find({ where: { userId, teamId } });
+  async findCharacterByOwner(userId: string, teamId: string) {
+    return this.charactersRepository.findOneOrFail({
+      where: { userId, teamId },
+    });
   }
 
   async findCharacterById(id: string) {

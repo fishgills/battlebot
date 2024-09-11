@@ -137,18 +137,18 @@ export type MutationDeleteCharacterArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  getCharacter: Character;
+  getCharacterById: Character;
+  getCharacterByOwner: Character;
   getCharacters: Array<Character>;
-  getCharactersByOwner: Array<Character>;
 };
 
 
-export type QueryGetCharacterArgs = {
+export type QueryGetCharacterByIdArgs = {
   id: Scalars['String']['input'];
 };
 
 
-export type QueryGetCharactersByOwnerArgs = {
+export type QueryGetCharacterByOwnerArgs = {
   id: Scalars['String']['input'];
   team: Scalars['String']['input'];
 };
@@ -169,13 +169,13 @@ export type XpGainLog = BaseLog & {
 
 export type CharacterPartsFragment = { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number };
 
-export type GetCharactersByOwnerQueryVariables = Exact<{
+export type GetCharacterByOwnerQueryVariables = Exact<{
   userId: Scalars['String']['input'];
   teamId: Scalars['String']['input'];
 }>;
 
 
-export type GetCharactersByOwnerQuery = { __typename?: 'Query', getCharactersByOwner: Array<{ __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number }> };
+export type GetCharacterByOwnerQuery = { __typename?: 'Query', getCharacterByOwner: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number } };
 
 export type CreateCharacterMutationVariables = Exact<{
   input: CreateCharacterDto;
@@ -204,9 +204,9 @@ export const CharacterPartsFragmentDoc = gql`
   wins
 }
     `;
-export const GetCharactersByOwnerDocument = gql`
-    query getCharactersByOwner($userId: String!, $teamId: String!) {
-  getCharactersByOwner(id: $userId, team: $teamId) {
+export const GetCharacterByOwnerDocument = gql`
+    query getCharacterByOwner($userId: String!, $teamId: String!) {
+  getCharacterByOwner(id: $userId, team: $teamId) {
     ...CharacterParts
   }
 }
@@ -221,8 +221,8 @@ export const CreateCharacterDocument = gql`
 export type Requester<C = {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C>(requester: Requester<C>) {
   return {
-    getCharactersByOwner(variables: GetCharactersByOwnerQueryVariables, options?: C): Promise<GetCharactersByOwnerQuery> {
-      return requester<GetCharactersByOwnerQuery, GetCharactersByOwnerQueryVariables>(GetCharactersByOwnerDocument, variables, options) as Promise<GetCharactersByOwnerQuery>;
+    getCharacterByOwner(variables: GetCharacterByOwnerQueryVariables, options?: C): Promise<GetCharacterByOwnerQuery> {
+      return requester<GetCharacterByOwnerQuery, GetCharacterByOwnerQueryVariables>(GetCharacterByOwnerDocument, variables, options) as Promise<GetCharacterByOwnerQuery>;
     },
     createCharacter(variables: CreateCharacterMutationVariables, options?: C): Promise<CreateCharacterMutation> {
       return requester<CreateCharacterMutation, CreateCharacterMutationVariables>(CreateCharacterDocument, variables, options) as Promise<CreateCharacterMutation>;

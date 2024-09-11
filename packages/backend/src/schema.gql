@@ -103,9 +103,9 @@ type Mutation {
 }
 
 type Query {
-  getCharacter(id: String!): Character!
+  getCharacterById(id: String!): Character!
+  getCharacterByOwner(id: String!, team: String!): Character!
   getCharacters: [Character!]!
-  getCharactersByOwner(id: String!, team: String!): [Character!]!
 }
 
 type XPGainDetails {

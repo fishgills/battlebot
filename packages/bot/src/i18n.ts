@@ -1,15 +1,15 @@
 import i18next from 'i18next';
-import { env } from './env.js';
-import * as enCommon from './locales/en/common.json';
-export const defaultNS = 'common';
+import enNs1 from './locales/en/ns1.json';
+
+export const defaultNS = 'ns1';
 
 i18next.init({
-  lng: 'en',
-  debug: env.isDevelopment,
+  debug: true,
   fallbackLng: 'en',
+  defaultNS,
   resources: {
     en: {
-      common: enCommon,
+      ns1: enNs1,
     },
   },
 });

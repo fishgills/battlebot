@@ -70,13 +70,13 @@ const app = new App({
   Logger.info(`Starting bolt with port: ${port}`);
 })();
 
-app.command(tl.t('common:command'), async (args) => {
+app.command(tl.t('ns1:command'), async (args) => {
   await CommandReceived(args.ack, args);
 });
 
-app.command(`${tl.t('common:command')}-dev`, async (args) => {
-  await CommandReceived(args.ack, args);
-});
+// app.command(`${tl.t('ns1:command')}-dev`, async (args) => {
+//   await CommandReceived(args.ack, args);
+// });
 
 const CommandReceived = async (
   ack: SlackCommandMiddlewareArgs['ack'],

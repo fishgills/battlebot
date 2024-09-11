@@ -115,4 +115,8 @@ export function getUsernames(text: string) {
   return unique_users.length ? unique_users : [];
 }
 
-export const nextLevel = (level: number) => level * 300;
+export const nextLevel = (level: number) => {
+  let toLevel = Math.pow(10, 1.4) * Math.pow(level, 3.5);
+  if (level > 10) toLevel = Math.pow(10, 1.4) * Math.pow(level, 2.4);
+  return Math.floor(toLevel);
+};

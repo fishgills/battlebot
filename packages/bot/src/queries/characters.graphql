@@ -17,8 +17,8 @@ fragment CharacterParts on Character {
   wins
 }
 
-query getCharactersByOwner($userId: String!, $teamId: String!) {
-  getCharactersByOwner(id: $userId, team: $teamId) {
+query getCharacterByOwner($userId: String!, $teamId: String!) {
+  getCharacterByOwner(id: $userId, team: $teamId) {
     ...CharacterParts
   }
 }

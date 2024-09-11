@@ -25,13 +25,13 @@ export class CharacterController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Query((returns) => [Character])
-  async getCharactersByOwner(
+  @Query((returns) => Character)
+  async getCharacterByOwner(
     @Args('id') id: string,
     @Args('team') team: string,
   ) {
     this.logger.log(`Getting characters for user ${id}`);
-    return await this.characterService.findCharactersByOwner(id, team);
+    return await this.characterService.findCharacterByOwner(id, team);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -43,7 +43,7 @@ export class CharacterController {
 
   @UseGuards(JwtAuthGuard)
   @Query((returns) => Character)
-  async getCharacter(@Args('id') id: string) {
+  async getCharacterById(@Args('id') id: string) {
     this.logger.log(`Getting character ${id}`);
     return await this.characterService.findCharacterById(id);
   }
