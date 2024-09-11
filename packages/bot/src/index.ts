@@ -14,6 +14,15 @@ import { characterSheet } from './mention_handler/character-sheet.js';
 import { createCharacter } from './mention_handler/create-character.js';
 import { StringIndexed } from '@slack/bolt/dist/types/helpers.js';
 import { deleteCharacter } from './mention_handler/delete-character.js';
+import {
+  combineAll,
+  combineLatest,
+  combineLatestAll,
+  forkJoin,
+  map,
+  Subject,
+} from 'rxjs';
+import { Blocks, Message, SectionBuilder } from 'slack-block-builder';
 
 tl.changeLanguage('en');
 
@@ -78,6 +87,11 @@ app.command(tl.t('ns1:command'), async (args) => {
 // app.command(`${tl.t('ns1:command')}-dev`, async (args) => {
 //   await CommandReceived(args.ack, args);
 // });
+const sources: Promise<SectionBuilder[]>[] = [
+  characterSheet(app),
+  createCharacter(app),
+  deleteCharacter(app),
+];
 
 const CommandReceived = async (
   ack: SlackCommandMiddlewareArgs['ack'],
@@ -91,12 +105,31 @@ const CommandReceived = async (
 
   const [action, ...flags] = text.split(' ');
 
+  if (flags.length === 0 || flags[0] === 'help') {
+    Promise.all(sources)
+      .then((values) => {
+        const blocks = values.reduce((acc, curr) => {
+          return acc.concat(curr);
+        }, []);
+
+        const helpBlocks = Message()
+          .blocks(
+            Blocks.Section({
+              text: tl.t('ns1:help_no_command'),
+            }),
+            ...blocks,
+          )
+          .buildToObject();
+
+        args.respond(helpBlocks);
+      })
+      .catch((e) => {
+        Logger.error(e);
+      });
+    return;
+  }
   dispatchCommand(action, flags, userId, triggerId, args);
 };
-
-characterSheet(app);
-createCharacter(app);
-deleteCharacter(app);
 
 // app.event('app_mention', async (args) => {
 //   Shield$.next(args);
