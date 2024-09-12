@@ -3,6 +3,7 @@ import 'dotenv/config';
 import {
   AllMiddlewareArgs,
   App,
+  onlyCommands,
   SlackCommandMiddlewareArgs,
 } from '@slack/bolt';
 import { tl } from './i18n.js';
@@ -14,14 +15,6 @@ import { characterSheet } from './mention_handler/character-sheet.js';
 import { createCharacter } from './mention_handler/create-character.js';
 import { StringIndexed } from '@slack/bolt/dist/types/helpers.js';
 import { deleteCharacter } from './mention_handler/delete-character.js';
-import {
-  combineAll,
-  combineLatest,
-  combineLatestAll,
-  forkJoin,
-  map,
-  Subject,
-} from 'rxjs';
 import { Blocks, Message, SectionBuilder } from 'slack-block-builder';
 
 tl.changeLanguage('en');
@@ -32,6 +25,8 @@ const app = new App({
   token: env.SLACK_APP_TOKEN,
   signingSecret: env.SLACK_SIGNING_SECRET,
   scopes,
+  extendedErrorHandler: true,
+  ignoreSelf: true,
 });
 
 // const error: ExtendedErrorHandler = async (error) => {
@@ -105,7 +100,8 @@ const CommandReceived = async (
 
   const [action, ...flags] = text.split(' ');
 
-  if (flags.length === 0 || flags[0] === 'help') {
+  if (action == '' || action == 'help') {
+    Logger.info('Help requested');
     Promise.all(sources)
       .then((values) => {
         const blocks = values.reduce((acc, curr) => {
@@ -193,6 +189,14 @@ app.event('app_uninstalled', async (args) => {
   // }
 });
 
+// app.view('view_1', async ({ ack, body, view, client, logger }) => {
+//   // Acknowledge the view_submission request
+//   await ack();
+
+//   const msg = 'There was an error with your submission';
+
+//   logger.info('View submission', view);
+// });
 // app.use(async ({ payload, next }) => {
 //   await tracer.trace(
 //     `bolt.${(payload as any).text}`,

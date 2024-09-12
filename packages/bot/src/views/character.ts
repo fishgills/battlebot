@@ -11,10 +11,10 @@ import {
   Elements,
   Message,
   Modal,
+  ModalBuilder,
   setIfTruthy,
 } from 'slack-block-builder';
 import { nextLevel } from '../utils/helpers.js';
-import { combatHandler } from '../mention_handler/combat.js';
 
 export const notifyLevelUp = (
   winner: Character,
@@ -69,6 +69,20 @@ const saveBlock = (char: Character) => {
   return block;
 };
 
+export const deleteCharacterModal = (char: Character) => {
+  const modal = Modal({
+    title: tl.t('ns1:character_delete_title'),
+    submit: tl.t('ns1:character_delete_submit'),
+    close: tl.t('ns1:character_delete_close'),
+  })
+    .callbackId('delete-char')
+    .blocks(
+      Blocks.Section({
+        text: tl.t('ns1:character_delete_confirm', char),
+      }),
+    );
+  return modal.buildToObject();
+};
 export const statBlock = (character: Partial<Character>) => {
   const stats = [
     {
