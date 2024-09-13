@@ -5,6 +5,7 @@ import { sdk } from '../utils/gql.js';
 import { editCharacterModal } from '../views/character.js';
 import { tl } from '../i18n.js';
 import { Blocks, SectionBuilder } from 'slack-block-builder';
+import { ApolloError } from '@apollo/client/core';
 
 export function characterSheet(app: App) {
   onCommand('sheet').subscribe(async (command) => {

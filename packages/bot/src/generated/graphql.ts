@@ -14,6 +14,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
   JSON: { input: any; output: any; }
 };
 
@@ -45,7 +46,7 @@ export type BaseLog = {
 
 export type Character = {
   __typename?: 'Character';
-  active: Scalars['Boolean']['output'];
+  active?: Maybe<Scalars['DateTime']['output']>;
   constitution: Scalars['Float']['output'];
   dexterity: Scalars['Float']['output'];
   experiencePoints: Scalars['Float']['output'];
@@ -173,7 +174,7 @@ export type XpGainLog = BaseLog & {
   type: CombatLogType;
 };
 
-export type CharacterPartsFragment = { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number };
+export type CharacterPartsFragment = { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active?: any | null, hitPoints: number, losses: number, wins: number };
 
 export type GetCharacterByOwnerQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -181,14 +182,14 @@ export type GetCharacterByOwnerQueryVariables = Exact<{
 }>;
 
 
-export type GetCharacterByOwnerQuery = { __typename?: 'Query', getCharacterByOwner: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number } };
+export type GetCharacterByOwnerQuery = { __typename?: 'Query', getCharacterByOwner: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active?: any | null, hitPoints: number, losses: number, wins: number } };
 
 export type CreateCharacterMutationVariables = Exact<{
   input: CreateCharacterDto;
 }>;
 
 
-export type CreateCharacterMutation = { __typename?: 'Mutation', createCharacter: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number } };
+export type CreateCharacterMutation = { __typename?: 'Mutation', createCharacter: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active?: any | null, hitPoints: number, losses: number, wins: number } };
 
 export type DeleteCharacterMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -202,7 +203,7 @@ export type RerollCharacterMutationVariables = Exact<{
 }>;
 
 
-export type RerollCharacterMutation = { __typename?: 'Mutation', reroll: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number } };
+export type RerollCharacterMutation = { __typename?: 'Mutation', reroll: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active?: any | null, hitPoints: number, losses: number, wins: number } };
 
 export const CharacterPartsFragmentDoc = gql`
     fragment CharacterParts on Character {

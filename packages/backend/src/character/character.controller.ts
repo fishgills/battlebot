@@ -71,6 +71,9 @@ export class CharacterController {
       throw new Error('You have already rerolled 5 times');
     }
     char.rollCharacter();
+    if (char.rolls === 5) {
+      char.active = new Date();
+    }
     await this.characterService.updateCharacterStats(id, char);
     return char;
   }

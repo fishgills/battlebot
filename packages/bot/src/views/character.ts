@@ -160,11 +160,7 @@ export const characterSheetBlocks = (character: Character) => {
 export const editCharacterModal = (character: Character): ModalView => {
   return Modal()
     .blocks(...characterSheetBlocks(character))
-    .title(
-      tl.t('ns1:character_sheet_title', {
-        character,
-      }),
-    )
+    .title(character.name)
     .buildToObject();
 };
 

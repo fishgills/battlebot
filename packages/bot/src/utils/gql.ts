@@ -13,6 +13,7 @@ import { env } from '../env.js';
 import { Logger } from '../logger.js';
 import { decode } from 'jsonwebtoken';
 import { TokenRefreshLink } from 'apollo-link-token-refresh';
+import { ErrorLink } from '@apollo/client/link/error';
 
 export type ApolloRequesterOptions<V, R> =
   | Omit<QueryOptions<V>, 'variables' | 'query'>
@@ -160,9 +161,28 @@ const httpLink = new HttpLink({
   uri: env.GRAPHQL_ENDPOINT,
 });
 
+const errorLink = new ErrorLink(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.map(({ message, locations, path }) => {
+      Logger.error(`[GraphQL error]: Message: ${message}, Path: ${path}`);
+    });
+    if (networkError) {
+      Logger.error(`[Network error]: ${networkError}`);
+    }
+  }
+});
+
 export const sdk = getSdkApollo(
   new ApolloClient({
+    defaultOptions: {
+      query: {
+        fetchPolicy: 'no-cache',
+      },
+      mutate: {
+        fetchPolicy: 'no-cache',
+      },
+    },
     cache: new InMemoryCache(),
-    link: ApolloLink.from([refreshToken, authLink, httpLink]),
+    link: ApolloLink.from([errorLink, refreshToken, authLink, httpLink]),
   }),
 );

@@ -1,12 +1,13 @@
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { modifier } from 'src/gamerules';
+import { modifier } from '../gamerules';
 import {
   Column,
+  CreateDateColumn,
   Entity,
-  ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @ObjectType()
@@ -26,7 +27,9 @@ export class Character {
   teamId: string;
 
   @Field()
-  @Column()
+  @Column({
+    length: 25,
+  })
   name: string;
 
   @Field()
@@ -84,12 +87,18 @@ export class Character {
   combatHitPoints: number;
 
   @Field({
-    nullable: false,
+    nullable: true,
   })
   @Column({
-    default: false,
+    type: 'datetime',
+    nullable: true,
   })
-  active: boolean;
+  active: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   initCombat() {
     this.combatHitPoints = this.hitPoints;
