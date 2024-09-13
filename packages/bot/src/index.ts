@@ -16,6 +16,7 @@ import { createCharacter } from './mention_handler/create-character.js';
 import { StringIndexed } from '@slack/bolt/dist/types/helpers.js';
 import { deleteCharacter } from './mention_handler/delete-character.js';
 import { Blocks, Message, SectionBuilder } from 'slack-block-builder';
+import { combatHandler } from './mention_handler/combat.js';
 
 tl.changeLanguage('en');
 
@@ -86,6 +87,7 @@ const sources: Promise<SectionBuilder[]>[] = [
   characterSheet(app),
   createCharacter(app),
   deleteCharacter(app),
+  combatHandler(app),
 ];
 
 const CommandReceived = async (

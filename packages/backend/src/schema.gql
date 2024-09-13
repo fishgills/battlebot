@@ -106,12 +106,22 @@ type Mutation {
   createCharacter(CreateCharacter: CreateCharacterDto!): Character!
   deleteCharacter(id: String!): JSON!
   reroll(id: String!): Character!
+  startCombat(id1: String!, id2: String!): CombatEnd!
+  updateCharacter(id: String!, input: UpdateCharacterDto!): Character!
 }
 
 type Query {
   getCharacterById(id: String!): Character!
   getCharacterByOwner(id: String!, team: String!): Character!
   getCharacters: [Character!]!
+}
+
+input UpdateCharacterDto {
+  active: DateTime
+  defense: Float
+  extraPoints: Float
+  strength: Float
+  vitality: Float
 }
 
 type XPGainDetails {

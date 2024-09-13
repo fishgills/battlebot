@@ -38,3 +38,70 @@ mutation rerollCharacter($id: String!) {
     ...CharacterParts
   }
 }
+
+mutation updateCharacter($id: String!, $input: UpdateCharacterDto!) {
+  updateCharacter(id: $id, input: $input) {
+    ...CharacterParts
+  }
+}
+
+mutation Combat($input: CombatInput!) {
+  combat(info: $input) {
+    logs {
+      ... on AttackLog {
+        round
+        type
+        actor {
+          name
+        }
+        target {
+          name
+        }
+        details {
+          attackModifier
+          attackRoll
+          damage
+          defenderAc
+          defenderHitPoints
+          hit
+        }
+      }
+      ... on InitiativeLog {
+        actor {
+          name
+        }
+        target {
+          name
+        }
+        round
+        type
+      }
+      ... on LevelUpLog {
+        actor {
+          name
+        }
+        target {
+          name
+        }
+        round
+        type
+      }
+      ... on XPGainLog {
+        actor {
+          name
+        }
+        target {
+          name
+        }
+        round
+        type
+      }
+    }
+    loser {
+      name
+    }
+    winner {
+      name
+    }
+  }
+}

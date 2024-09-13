@@ -1,12 +1,15 @@
-import { ModalView, RespondFn } from '@slack/bolt';
+import { Block, ModalView, RespondFn } from '@slack/bolt';
 import {
   AttackLog,
   Character,
   CombatEnd,
   CombatLogType,
+  CombatMutation,
+  InitiativeLog,
 } from '../generated/graphql.js';
 import { tl } from '../i18n.js';
 import {
+  BlockBuilder,
   Blocks,
   Elements,
   Message,
@@ -164,63 +167,92 @@ export const editCharacterModal = (character: Character): ModalView => {
     .buildToObject();
 };
 
-export const battleLog = (options: { combat: CombatEnd; channel: string }) => {
-  const attacker = options.combat.logs[0].actor;
-  const defender = options.combat.logs[0].target;
-  const blocks = [
-    Blocks.Header({
-      text: tl.t('ns1:battlelog_header'),
-    }),
-    Blocks.Section({
-      text: tl.t('ns1:battlelog_initiative_header', {
-        actor: options.combat.logs[0].actor,
-        target: options.combat.logs[0].target,
-      }),
-    }),
-  ];
+export const battleLog = (options: {
+  combat: CombatMutation['combat'];
+  channel: string;
+}) => {
+  let blocks: BlockBuilder[] = [];
 
-  for (const log of options.combat.logs) {
-    let blockStr: string;
-
-    if (log.type !== CombatLogType.Attack) {
-      continue;
-    }
-    const attackLog = log as AttackLog;
-
-    if (attackLog.details.attackRoll === 20) {
-      blockStr = tl.t('ns1:battlelog_critical_roll');
-    } else {
-      blockStr = tl.t('battlelog_attack_roll');
+  options.combat.logs.forEach((log) => {
+    if (log.type === CombatLogType.Attack) {
+      log = log as AttackLog;
     }
 
-    if (attackLog.details.hit) {
-      blockStr += tl.t('battlelog_hit');
-    } else {
-      blockStr += ' ' + tl.t('ns1:battlelog_miss');
-    }
-    blocks.push(
-      Blocks.Section({
-        text: blockStr,
-      }),
-    );
-
-    if (attackLog.details.damage > 0) {
+    if (log.type === CombatLogType.Initiative) {
+      log = log as InitiativeLog;
       blocks.push(
-        Blocks.Section({
-          text: tl.t('battlelog_hp_report'),
+        Blocks.Header({
+          text: tl.t('ns1:battlelog_header'),
         }),
       );
-    } else {
+
       blocks.push(
         Blocks.Section({
-          text: tl.t('ns1:battlelog_defeated', attackLog.target.name),
-        }),
-        Blocks.Section({
-          text: tl.t('battlelog_gold_report'),
+          text: tl.t('ns1:battlelog_initiative_header', {
+            actor: log.actor.name,
+            target: log.target.name,
+          }),
         }),
       );
     }
-  }
+  });
+
+  // const attacker = options.combat.logs[0].type
+  // const defender = options.combat.logs[0].target;
+  // const blocks = [
+  //   Blocks.Header({
+  //     text: tl.t('ns1:battlelog_header'),
+  //   }),
+  //   Blocks.Section({
+  //     text: tl.t('ns1:battlelog_initiative_header', {
+  //       actor: options.combat.logs[0].actor,
+  //       target: options.combat.logs[0].target,
+  //     }),
+  //   }),
+  // ];
+
+  // for (const log of options.combat.logs) {
+  //   let blockStr: string;
+
+  //   if (log.type !== CombatLogType.Attack) {
+  //     continue;
+  //   }
+  //   const attackLog = log as AttackLog;
+
+  //   if (attackLog.details.attackRoll === 20) {
+  //     blockStr = tl.t('ns1:battlelog_critical_roll');
+  //   } else {
+  //     blockStr = tl.t('battlelog_attack_roll');
+  //   }
+
+  //   if (attackLog.details.hit) {
+  //     blockStr += tl.t('battlelog_hit');
+  //   } else {
+  //     blockStr += ' ' + tl.t('ns1:battlelog_miss');
+  //   }
+  //   blocks.push(
+  //     Blocks.Section({
+  //       text: blockStr,
+  //     }),
+  //   );
+
+  //   if (attackLog.details.damage > 0) {
+  //     blocks.push(
+  //       Blocks.Section({
+  //         text: tl.t('battlelog_hp_report'),
+  //       }),
+  //     );
+  //   } else {
+  //     blocks.push(
+  //       Blocks.Section({
+  //         text: tl.t('ns1:battlelog_defeated', attackLog.target.name),
+  //       }),
+  //       Blocks.Section({
+  //         text: tl.t('battlelog_gold_report'),
+  //       }),
+  //     );
+  //   }
+  // }
 
   return Message()
     .channel(options.channel)

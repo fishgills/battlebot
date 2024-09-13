@@ -120,6 +120,8 @@ export type Mutation = {
   createCharacter: Character;
   deleteCharacter: Scalars['JSON']['output'];
   reroll: Character;
+  startCombat: CombatEnd;
+  updateCharacter: Character;
 };
 
 
@@ -142,6 +144,18 @@ export type MutationRerollArgs = {
   id: Scalars['String']['input'];
 };
 
+
+export type MutationStartCombatArgs = {
+  id1: Scalars['String']['input'];
+  id2: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateCharacterArgs = {
+  id: Scalars['String']['input'];
+  input: UpdateCharacterDto;
+};
+
 export type Query = {
   __typename?: 'Query';
   getCharacterById: Character;
@@ -158,6 +172,14 @@ export type QueryGetCharacterByIdArgs = {
 export type QueryGetCharacterByOwnerArgs = {
   id: Scalars['String']['input'];
   team: Scalars['String']['input'];
+};
+
+export type UpdateCharacterDto = {
+  active?: InputMaybe<Scalars['DateTime']['input']>;
+  defense?: InputMaybe<Scalars['Float']['input']>;
+  extraPoints?: InputMaybe<Scalars['Float']['input']>;
+  strength?: InputMaybe<Scalars['Float']['input']>;
+  vitality?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type XpGainDetails = {
@@ -205,6 +227,21 @@ export type RerollCharacterMutationVariables = Exact<{
 
 export type RerollCharacterMutation = { __typename?: 'Mutation', reroll: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active?: any | null, hitPoints: number, losses: number, wins: number } };
 
+export type UpdateCharacterMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  input: UpdateCharacterDto;
+}>;
+
+
+export type UpdateCharacterMutation = { __typename?: 'Mutation', updateCharacter: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active?: any | null, hitPoints: number, losses: number, wins: number } };
+
+export type CombatMutationVariables = Exact<{
+  input: CombatInput;
+}>;
+
+
+export type CombatMutation = { __typename?: 'Mutation', combat: { __typename?: 'CombatEnd', logs: Array<{ __typename?: 'AttackLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target: { __typename?: 'Character', name: string }, details: { __typename?: 'AttackDetails', attackModifier: number, attackRoll: number, damage: number, defenderAc: number, defenderHitPoints: number, hit: boolean } } | { __typename?: 'InitiativeLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target: { __typename?: 'Character', name: string } } | { __typename?: 'LevelUpLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target: { __typename?: 'Character', name: string } } | { __typename?: 'XPGainLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target: { __typename?: 'Character', name: string } }>, loser: { __typename?: 'Character', name: string }, winner: { __typename?: 'Character', name: string } } };
+
 export const CharacterPartsFragmentDoc = gql`
     fragment CharacterParts on Character {
   dexterity
@@ -251,6 +288,75 @@ export const RerollCharacterDocument = gql`
   }
 }
     ${CharacterPartsFragmentDoc}`;
+export const UpdateCharacterDocument = gql`
+    mutation updateCharacter($id: String!, $input: UpdateCharacterDto!) {
+  updateCharacter(id: $id, input: $input) {
+    ...CharacterParts
+  }
+}
+    ${CharacterPartsFragmentDoc}`;
+export const CombatDocument = gql`
+    mutation Combat($input: CombatInput!) {
+  combat(info: $input) {
+    logs {
+      ... on AttackLog {
+        round
+        type
+        actor {
+          name
+        }
+        target {
+          name
+        }
+        details {
+          attackModifier
+          attackRoll
+          damage
+          defenderAc
+          defenderHitPoints
+          hit
+        }
+      }
+      ... on InitiativeLog {
+        actor {
+          name
+        }
+        target {
+          name
+        }
+        round
+        type
+      }
+      ... on LevelUpLog {
+        actor {
+          name
+        }
+        target {
+          name
+        }
+        round
+        type
+      }
+      ... on XPGainLog {
+        actor {
+          name
+        }
+        target {
+          name
+        }
+        round
+        type
+      }
+    }
+    loser {
+      name
+    }
+    winner {
+      name
+    }
+  }
+}
+    `;
 export type Requester<C = {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C>(requester: Requester<C>) {
   return {
@@ -265,6 +371,12 @@ export function getSdk<C>(requester: Requester<C>) {
     },
     rerollCharacter(variables: RerollCharacterMutationVariables, options?: C): Promise<RerollCharacterMutation> {
       return requester<RerollCharacterMutation, RerollCharacterMutationVariables>(RerollCharacterDocument, variables, options) as Promise<RerollCharacterMutation>;
+    },
+    updateCharacter(variables: UpdateCharacterMutationVariables, options?: C): Promise<UpdateCharacterMutation> {
+      return requester<UpdateCharacterMutation, UpdateCharacterMutationVariables>(UpdateCharacterDocument, variables, options) as Promise<UpdateCharacterMutation>;
+    },
+    Combat(variables: CombatMutationVariables, options?: C): Promise<CombatMutation> {
+      return requester<CombatMutation, CombatMutationVariables>(CombatDocument, variables, options) as Promise<CombatMutation>;
     }
   };
 }

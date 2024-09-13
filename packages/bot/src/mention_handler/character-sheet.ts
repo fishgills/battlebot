@@ -5,7 +5,6 @@ import { sdk } from '../utils/gql.js';
 import { editCharacterModal } from '../views/character.js';
 import { tl } from '../i18n.js';
 import { Blocks, SectionBuilder } from 'slack-block-builder';
-import { ApolloError } from '@apollo/client/core';
 
 export function characterSheet(app: App) {
   onCommand('sheet').subscribe(async (command) => {
@@ -27,6 +26,35 @@ export function characterSheet(app: App) {
       Logger.info(`character not found`);
       command.args.respond(tl.t('ns1:sheet_no_character'));
     }
+  });
+
+  app.action<BlockButtonAction>('complete', async (args) => {
+    if (!args.context.teamId) {
+      return;
+    }
+    const char = (
+      await sdk.getCharacterByOwner({
+        userId: args.body.user.id,
+        teamId: args.context.teamId,
+      })
+    ).getCharacterByOwner;
+
+    if (char.active) {
+      return;
+    }
+
+    char.active = new Date();
+    await sdk.updateCharacter({
+      id: char.id,
+      input: {
+        active: char.active,
+      },
+    });
+    args.client.views.update({
+      view_id: args.body.view?.id,
+      hash: args.body.view?.hash,
+      view: editCharacterModal(char),
+    });
   });
 
   app.action<BlockButtonAction>('reroll', async (args) => {
@@ -58,12 +86,11 @@ export function characterSheet(app: App) {
       })
     ).reroll;
 
-    const result = args.client.views.update({
+    args.client.views.update({
       view_id: args.body.view?.id,
       hash: args.body.view?.hash,
       view: editCharacterModal(char),
     });
-    Logger.info(result);
   });
 
   return new Promise<SectionBuilder[]>((resolve) => {

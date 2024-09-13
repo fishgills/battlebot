@@ -48,6 +48,7 @@
   "combat_update_target_nochar_dm": "<@{{userId}}> would to like to battle you... but you have no character!",
   "combat_update_throttle": "Woah! You're trying to fight too many people at once. Take a break and try again later.",
   "combat_update_too_many_targets": "You can only fight one person at a time.",
+  "combat_update_target_unfinished": "<@{{userId}}> needs to finish their character before you can fight them.",
   "character_reroll_button": "Reroll Stats",
   "character_done_button": "Done with Stats",
   "character_level_up": "You have attained a new level!",

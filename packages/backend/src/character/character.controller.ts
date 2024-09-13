@@ -7,6 +7,7 @@ import { Character } from './character.entity';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { CombatEnd } from './combat-type.dto';
 import GraphQLJSON from 'graphql-type-json';
+import { UpdateCharacterDto } from './DTO/update-character.dto';
 
 @Resolver((of) => Character)
 export class CharacterController {
@@ -76,5 +77,22 @@ export class CharacterController {
     }
     await this.characterService.updateCharacterStats(id, char);
     return char;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation((returns) => Character)
+  async updateCharacter(
+    @Args('id') id: string,
+    @Args('input') input: UpdateCharacterDto,
+  ) {
+    this.logger.log(`Updating character ${id}`);
+    return await this.characterService.updateCharacterStats(id, input);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => CombatEnd)
+  async startCombat(@Args('id1') id1: string, @Args('id2') id2: string) {
+    this.logger.log(`Starting combat`);
+    return await this.characterService.combat(id1, id2);
   }
 }

@@ -6,6 +6,7 @@ import { battleLog } from '../views/character';
 import { Character } from '../generated/graphql';
 import { tl } from '../i18n';
 import { sdk } from '../utils/gql';
+import { Blocks, SectionBuilder } from 'slack-block-builder';
 
 export function combatHandler(app: App) {
   onCommand('fight').subscribe(async (command) => {
@@ -75,11 +76,11 @@ export function combatHandler(app: App) {
       Logger.info('target has no character');
 
       command.args.respond(
-        tl.t('common:combat_update_target_no_char', targetUser.id),
+        tl.t('ns1:combat_update_target_no_char', targetUser.id),
       );
       command.args.say({
         channel: targetUser.id,
-        text: tl.t('common:combat_update_target_nochar_dm', userId),
+        text: tl.t('ns1:combat_update_target_nochar_dm', userId),
       });
       return;
     }
@@ -88,12 +89,19 @@ export function combatHandler(app: App) {
       return;
     }
 
+    if (!target.active)
+      command.args.respond(
+        tl.t('ns1:combat_update_target_unfinished', targetUser.id),
+      );
+
     const combat = (
-      await api.character.characterControllerCombat({
-        attackerId: char.id,
-        defenderId: target.id,
+      await sdk.Combat({
+        input: {
+          attackerId: char.id,
+          defenderId: target.id,
+        },
       })
-    ).data;
+    ).combat;
 
     const log = battleLog({
       combat,
@@ -103,6 +111,18 @@ export function combatHandler(app: App) {
     await app.client.chat.postMessage({
       channel: userId,
     });
+  });
+
+  return new Promise<SectionBuilder[]>((resolve) => {
+    const help = [
+      Blocks.Section({
+        text: tl.t('ns1:sheet_help_description'),
+      }),
+      Blocks.Section({
+        text: tl.t('sheet_help_command'),
+      }),
+    ];
+    resolve(help);
   });
 }
 
