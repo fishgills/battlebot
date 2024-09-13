@@ -118,6 +118,7 @@ export type Mutation = {
   combat: CombatEnd;
   createCharacter: Character;
   deleteCharacter: Scalars['JSON']['output'];
+  reroll: Character;
 };
 
 
@@ -132,6 +133,11 @@ export type MutationCreateCharacterArgs = {
 
 
 export type MutationDeleteCharacterArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationRerollArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -191,6 +197,13 @@ export type DeleteCharacterMutationVariables = Exact<{
 
 export type DeleteCharacterMutation = { __typename?: 'Mutation', deleteCharacter: any };
 
+export type RerollCharacterMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type RerollCharacterMutation = { __typename?: 'Mutation', reroll: { __typename?: 'Character', dexterity: number, constitution: number, strength: number, name: string, experiencePoints: number, rolls: number, level: number, userId: string, id: string, gold: number, teamId: string, extraPoints: number, active: boolean, hitPoints: number, losses: number, wins: number } };
+
 export const CharacterPartsFragmentDoc = gql`
     fragment CharacterParts on Character {
   dexterity
@@ -230,6 +243,13 @@ export const DeleteCharacterDocument = gql`
   deleteCharacter(id: $id)
 }
     `;
+export const RerollCharacterDocument = gql`
+    mutation rerollCharacter($id: String!) {
+  reroll(id: $id) {
+    ...CharacterParts
+  }
+}
+    ${CharacterPartsFragmentDoc}`;
 export type Requester<C = {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C>(requester: Requester<C>) {
   return {
@@ -241,6 +261,9 @@ export function getSdk<C>(requester: Requester<C>) {
     },
     deleteCharacter(variables: DeleteCharacterMutationVariables, options?: C): Promise<DeleteCharacterMutation> {
       return requester<DeleteCharacterMutation, DeleteCharacterMutationVariables>(DeleteCharacterDocument, variables, options) as Promise<DeleteCharacterMutation>;
+    },
+    rerollCharacter(variables: RerollCharacterMutationVariables, options?: C): Promise<RerollCharacterMutation> {
+      return requester<RerollCharacterMutation, RerollCharacterMutationVariables>(RerollCharacterDocument, variables, options) as Promise<RerollCharacterMutation>;
     }
   };
 }

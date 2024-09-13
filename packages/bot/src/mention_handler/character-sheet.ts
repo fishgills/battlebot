@@ -1,4 +1,4 @@
-import { App } from '@slack/bolt';
+import { App, BlockButtonAction } from '@slack/bolt';
 import { onCommand } from '../dispatcher.js';
 import { Logger } from '../logger.js';
 import { sdk } from '../utils/gql.js';
@@ -26,6 +26,43 @@ export function characterSheet(app: App) {
       Logger.info(`character not found`);
       command.args.respond(tl.t('ns1:sheet_no_character'));
     }
+  });
+
+  app.action<BlockButtonAction>('reroll', async (args) => {
+    await args.ack();
+
+    Logger.info(`Rerolling character`);
+
+    if (!args.context.teamId) {
+      return;
+    }
+    let char = (
+      await sdk.getCharacterByOwner({
+        userId: args.body.user.id,
+        teamId: args.context.teamId,
+      })
+    ).getCharacterByOwner;
+
+    if (!char) {
+      args.client.chat.postMessage({
+        channel: args.body.user.id,
+        text: tl.t('ns1:character_not_found'),
+      });
+      return;
+    }
+
+    char = (
+      await sdk.rerollCharacter({
+        id: char.id,
+      })
+    ).reroll;
+
+    const result = args.client.views.update({
+      view_id: args.body.view?.id,
+      hash: args.body.view?.hash,
+      view: editCharacterModal(char),
+    });
+    Logger.info(result);
   });
 
   return new Promise<SectionBuilder[]>((resolve) => {

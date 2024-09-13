@@ -21,16 +21,13 @@ export class CharacterService {
   ) {}
 
   async createCharacter(name: string, userId: string, teamId: string) {
-    const con = new DiceRoll('4d6kh3').total;
     const character = this.charactersRepository.create({
       name,
       userId,
       teamId,
-      strength: new DiceRoll('4d6kh3').total,
-      constitution: con,
-      dexterity: new DiceRoll('4d6kh3').total,
-      hitPoints: 10 + modifier(con),
     });
+    character.rollCharacter();
+
     return this.charactersRepository.save(character);
   }
 

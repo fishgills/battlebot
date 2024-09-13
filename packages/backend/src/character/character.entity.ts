@@ -1,4 +1,6 @@
+import { DiceRoll } from '@dice-roller/rpg-dice-roller';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { modifier } from 'src/gamerules';
 import {
   Column,
   Entity,
@@ -91,5 +93,13 @@ export class Character {
 
   initCombat() {
     this.combatHitPoints = this.hitPoints;
+  }
+
+  public rollCharacter() {
+    this.strength = new DiceRoll('4d6kh3').total;
+    this.constitution = new DiceRoll('4d6kh3').total;
+    this.dexterity = new DiceRoll('4d6kh3').total;
+    this.hitPoints = 10 + modifier(this.constitution);
+    this.rolls = this.rolls ? ++this.rolls : 1;
   }
 }

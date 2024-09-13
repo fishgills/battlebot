@@ -32,3 +32,9 @@ mutation createCharacter($input: CreateCharacterDto!) {
 mutation deleteCharacter($id: String!) {
   deleteCharacter(id: $id)
 }
+
+mutation rerollCharacter($id: String!) {
+  reroll(id: $id) {
+    ...CharacterParts
+  }
+}

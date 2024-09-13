@@ -61,4 +61,17 @@ export class CharacterController {
     this.logger.log(`Deleting character ${id}`);
     return await this.characterService.deleteCharacter(id);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation((returns) => Character)
+  async reroll(@Args('id') id: string) {
+    this.logger.log(`Rerolling character ${id}`);
+    const char = await this.characterService.findCharacterById(id);
+    if (char.rolls >= 5) {
+      throw new Error('You have already rerolled 5 times');
+    }
+    char.rollCharacter();
+    await this.characterService.updateCharacterStats(id, char);
+    return char;
+  }
 }

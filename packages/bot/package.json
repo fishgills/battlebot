@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.11.8",
-    "@slack/bolt": "^3.21.2",
+    "@slack/bolt": "^3.21.4",
     "@slack/oauth": "^3.0.1",
     "@tsconfig/node22": "^22.0.0",
     "@types/i18next": "^13.0.0",

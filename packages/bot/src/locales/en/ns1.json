@@ -7,7 +7,7 @@
   "character_hp_emoji": ":heart:",
   "character_level_stats": "{{character.name}} is level {{character.level}}. Currently {{character.name}} needs *{{nextLevelXp}}* more experience points to increase their level to {{nextLevel}}.",
   "character_name": "*Name*: {{character.name}}",
-  "character_reroll": "You can reroll your character stats {{character.rolls}} times. Better make it count!",
+  "character_reroll": "You have rerolled your character's stats {{character.rolls}} times. You have {{left}} rolls left.",
   "character_stat_incr_button": ":heavy_plus_sign:",
   "character_strength_emoji": ":heart_eyes:",
   "character_vitality_emoji": ":book:",

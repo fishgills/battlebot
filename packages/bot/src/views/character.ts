@@ -128,6 +128,7 @@ export const characterSheetBlocks = (character: Character) => {
       Blocks.Section({
         text: tl.t('ns1:character_reroll', {
           character,
+          left: 5 - character.rolls,
         }),
       }),
     ]),
