@@ -15,14 +15,14 @@ type AttackLog implements BaseLog {
   actor: Character!
   details: AttackDetails!
   round: Float!
-  target: Character!
+  target: Character
   type: CombatLogType!
 }
 
 interface BaseLog {
   actor: Character!
   round: Float!
-  target: Character!
+  target: Character
   type: CombatLogType!
 }
 
@@ -78,7 +78,7 @@ scalar DateTime
 type InitiativeLog implements BaseLog {
   actor: Character!
   round: Float!
-  target: Character!
+  target: Character
   type: CombatLogType!
 }
 
@@ -95,7 +95,7 @@ type LevelUpLog implements BaseLog {
   actor: Character!
   details: LevelUpDetails!
   round: Float!
-  target: Character!
+  target: Character
   type: CombatLogType!
 }
 
@@ -132,6 +132,6 @@ type XPGainLog implements BaseLog {
   actor: Character!
   details: XPGainDetails!
   round: Float!
-  target: Character!
+  target: Character
   type: CombatLogType!
 }

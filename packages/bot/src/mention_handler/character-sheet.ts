@@ -7,24 +7,26 @@ import { tl } from '../i18n.js';
 import { Blocks, SectionBuilder } from 'slack-block-builder';
 
 export function characterSheet(app: App) {
-  onCommand('sheet').subscribe(async (command) => {
+  onCommand('sheet').subscribe(async (args) => {
     Logger.info(`requested character sheet`);
-    Logger.debug(command.args.payload);
+    Logger.debug(args.args.payload);
     try {
       const char = (
         await sdk.getCharacterByOwner({
-          userId: command.args.payload.user_id,
-          teamId: command.args.payload.team_id,
+          userId: args.args.payload.user_id,
+          teamId: args.args.payload.team_id,
         })
       ).getCharacterByOwner;
 
       app.client.views.open({
-        trigger_id: command.args.payload.trigger_id,
+        trigger_id: args.args.payload.trigger_id,
         view: editCharacterModal(char),
       });
+
+      await args.args.ack();
     } catch (e) {
       Logger.info(`character not found`);
-      command.args.respond(tl.t('ns1:sheet_no_character'));
+      args.args.respond(tl.t('ns1:sheet_no_character'));
     }
   });
 
@@ -58,8 +60,6 @@ export function characterSheet(app: App) {
   });
 
   app.action<BlockButtonAction>('reroll', async (args) => {
-    await args.ack();
-
     Logger.info(`Rerolling character`);
 
     if (!args.context.teamId) {
@@ -91,6 +91,7 @@ export function characterSheet(app: App) {
       hash: args.body.view?.hash,
       view: editCharacterModal(char),
     });
+    await args.ack();
   });
 
   return new Promise<SectionBuilder[]>((resolve) => {

@@ -77,7 +77,7 @@ const app = new App({
 })();
 
 app.command(tl.t('ns1:command'), async (args) => {
-  await CommandReceived(args.ack, args);
+  await CommandReceived(args);
 });
 
 // app.command(`${tl.t('ns1:command')}-dev`, async (args) => {
@@ -91,11 +91,8 @@ const sources: Promise<SectionBuilder[]>[] = [
 ];
 
 const CommandReceived = async (
-  ack: SlackCommandMiddlewareArgs['ack'],
   args: SlackCommandMiddlewareArgs & AllMiddlewareArgs<StringIndexed>,
 ) => {
-  await ack();
-
   const userId = args.body.user_id;
   const triggerId = args.body.trigger_id;
   const text = args.body.text.trim();
@@ -127,6 +124,7 @@ const CommandReceived = async (
     return;
   }
   dispatchCommand(action, flags, userId, triggerId, args);
+  args.ack();
 };
 
 // app.event('app_mention', async (args) => {

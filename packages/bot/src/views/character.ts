@@ -18,6 +18,7 @@ import {
   setIfTruthy,
 } from 'slack-block-builder';
 import { nextLevel } from '../utils/helpers.js';
+import { Logger } from '../logger.js';
 
 export const notifyLevelUp = (
   winner: Character,
@@ -174,85 +175,74 @@ export const battleLog = (options: {
   let blocks: BlockBuilder[] = [];
 
   options.combat.logs.forEach((log) => {
-    if (log.type === CombatLogType.Attack) {
-      log = log as AttackLog;
-    }
-
-    if (log.type === CombatLogType.Initiative) {
-      log = log as InitiativeLog;
-      blocks.push(
-        Blocks.Header({
-          text: tl.t('ns1:battlelog_header'),
-        }),
-      );
-
-      blocks.push(
-        Blocks.Section({
-          text: tl.t('ns1:battlelog_initiative_header', {
-            actor: log.actor.name,
-            target: log.target.name,
+    switch (log.type) {
+      case CombatLogType.Initiative:
+        const initLog = log as InitiativeLog;
+        Logger.info('initiative log');
+        blocks.push(
+          Blocks.Section({
+            text: tl.t('ns1:battlelog_initiative_header', {
+              actor: initLog.actor,
+              target: initLog.target,
+            }),
           }),
-        }),
-      );
+        );
+
+        break;
+      case CombatLogType.Attack:
+        const attackLog = log as AttackLog;
+        Logger.info('attack log');
+
+        if (attackLog.details.attackRoll === 20) {
+          blocks.push(
+            Blocks.Section({
+              text: tl.t('ns1:battlelog_critical_roll', {
+                target: attackLog.target,
+                actor: attackLog.actor,
+              }),
+            }),
+          );
+        } else {
+          blocks.push(
+            Blocks.Section({
+              text: tl.t('battlelog_attack_roll', {
+                details: attackLog.details,
+                actor: attackLog.actor,
+                target: attackLog.target,
+              }),
+            }),
+          );
+        }
+
+        if (attackLog.details.hit) {
+          blocks.push(
+            Blocks.Section({
+              text: tl.t('battlelog_hit', {
+                target: attackLog.target,
+                actor: attackLog.actor,
+                damage: attackLog.details.damage,
+              }),
+            }),
+          );
+        } else {
+          blocks.push(
+            Blocks.Section({
+              text: tl.t('ns1:battlelog_miss', {
+                target: attackLog.target,
+                actor: attackLog.actor,
+              }),
+            }),
+          );
+        }
+        break;
+      case CombatLogType.Levelup:
+        Logger.info('level up log');
+        break;
+      case CombatLogType.Xpgain:
+        Logger.info('xp gain log');
+        break;
     }
   });
-
-  // const attacker = options.combat.logs[0].type
-  // const defender = options.combat.logs[0].target;
-  // const blocks = [
-  //   Blocks.Header({
-  //     text: tl.t('ns1:battlelog_header'),
-  //   }),
-  //   Blocks.Section({
-  //     text: tl.t('ns1:battlelog_initiative_header', {
-  //       actor: options.combat.logs[0].actor,
-  //       target: options.combat.logs[0].target,
-  //     }),
-  //   }),
-  // ];
-
-  // for (const log of options.combat.logs) {
-  //   let blockStr: string;
-
-  //   if (log.type !== CombatLogType.Attack) {
-  //     continue;
-  //   }
-  //   const attackLog = log as AttackLog;
-
-  //   if (attackLog.details.attackRoll === 20) {
-  //     blockStr = tl.t('ns1:battlelog_critical_roll');
-  //   } else {
-  //     blockStr = tl.t('battlelog_attack_roll');
-  //   }
-
-  //   if (attackLog.details.hit) {
-  //     blockStr += tl.t('battlelog_hit');
-  //   } else {
-  //     blockStr += ' ' + tl.t('ns1:battlelog_miss');
-  //   }
-  //   blocks.push(
-  //     Blocks.Section({
-  //       text: blockStr,
-  //     }),
-  //   );
-
-  //   if (attackLog.details.damage > 0) {
-  //     blocks.push(
-  //       Blocks.Section({
-  //         text: tl.t('battlelog_hp_report'),
-  //       }),
-  //     );
-  //   } else {
-  //     blocks.push(
-  //       Blocks.Section({
-  //         text: tl.t('ns1:battlelog_defeated', attackLog.target.name),
-  //       }),
-  //       Blocks.Section({
-  //         text: tl.t('battlelog_gold_report'),
-  //       }),
-  //     );
-  //   }
-  // }
 
   return Message()
     .channel(options.channel)

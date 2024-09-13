@@ -9,11 +9,11 @@ import { sdk } from '../utils/gql';
 import { Blocks, SectionBuilder } from 'slack-block-builder';
 
 export function combatHandler(app: App) {
-  onCommand('fight').subscribe(async (command) => {
+  onCommand('fight').subscribe(async (args) => {
     Logger.info(`requested combat`);
 
-    const payload = command.args.payload;
-    const userId = command.userId;
+    const payload = args.args.payload;
+    const userId = args.userId;
 
     let char: Character;
 
@@ -75,10 +75,10 @@ export function combatHandler(app: App) {
     } catch (exception) {
       Logger.info('target has no character');
 
-      command.args.respond(
+      args.args.respond(
         tl.t('ns1:combat_update_target_no_char', targetUser.id),
       );
-      command.args.say({
+      args.args.say({
         channel: targetUser.id,
         text: tl.t('ns1:combat_update_target_nochar_dm', userId),
       });
@@ -90,7 +90,7 @@ export function combatHandler(app: App) {
     }
 
     if (!target.active)
-      command.args.respond(
+      args.args.respond(
         tl.t('ns1:combat_update_target_unfinished', targetUser.id),
       );
 
@@ -108,8 +108,12 @@ export function combatHandler(app: App) {
       channel: payload.channel,
     });
 
+    await args.args.respond({
+      ...log,
+    });
+
     await app.client.chat.postMessage({
-      channel: userId,
+      ...log,
     });
   });
 

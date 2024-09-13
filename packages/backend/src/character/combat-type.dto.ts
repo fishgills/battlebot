@@ -27,7 +27,9 @@ abstract class BaseLog {
   round: number;
   @Field((returns) => Character)
   actor: Character;
-  @Field((returns) => Character)
+  @Field(() => Character, {
+    nullable: true,
+  })
   target: Character;
 }
 
