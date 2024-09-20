@@ -10,7 +10,7 @@ import { tl } from './i18n.js';
 import { env } from './env.js';
 import { Logger } from './logger.js';
 import { dispatchCommand } from './dispatcher.js';
-import { characterSheet } from './mention_handler/character-sheet.js';
+import { characterHandler } from './mention_handler/character-handler.js';
 // import tracer from './tracer.js';
 import { createCharacter } from './mention_handler/create-character.js';
 import { StringIndexed } from '@slack/bolt/dist/types/helpers.js';
@@ -26,8 +26,11 @@ const app = new App({
   token: env.SLACK_APP_TOKEN,
   signingSecret: env.SLACK_SIGNING_SECRET,
   scopes,
+  logger: Logger,
   extendedErrorHandler: true,
   ignoreSelf: true,
+  developerMode: env.isDevelopment,
+  appToken: env.isDevelopment ? env.SLACK_SOCKET_TOKEN : undefined,
 });
 
 // const error: ExtendedErrorHandler = async (error) => {
@@ -84,7 +87,7 @@ app.command(tl.t('ns1:command'), async (args) => {
 //   await CommandReceived(args.ack, args);
 // });
 const sources: Promise<SectionBuilder[]>[] = [
-  characterSheet(app),
+  characterHandler(app),
   createCharacter(app),
   deleteCharacter(app),
   combatHandler(app),

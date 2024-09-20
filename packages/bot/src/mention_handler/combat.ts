@@ -114,6 +114,7 @@ export function combatHandler(app: App) {
 
     await app.client.chat.postMessage({
       ...log,
+      channel: targetUser.id,
     });
   });
 

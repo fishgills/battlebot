@@ -6,7 +6,7 @@ import { editCharacterModal } from '../views/character.js';
 import { tl } from '../i18n.js';
 import { Blocks, SectionBuilder } from 'slack-block-builder';
 
-export function characterSheet(app: App) {
+export function characterHandler(app: App) {
   onCommand('sheet').subscribe(async (args) => {
     Logger.info(`requested character sheet`);
     Logger.debug(args.args.payload);

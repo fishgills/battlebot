@@ -6,6 +6,8 @@ import {
   CombatLogType,
   CombatMutation,
   InitiativeLog,
+  LevelUpLog,
+  XpGainLog,
 } from '../generated/graphql.js';
 import { tl } from '../i18n.js';
 import {
@@ -17,7 +19,7 @@ import {
   ModalBuilder,
   setIfTruthy,
 } from 'slack-block-builder';
-import { nextLevel } from '../utils/helpers.js';
+import { nextLevel, numToEmoji } from '../utils/helpers.js';
 import { Logger } from '../logger.js';
 
 export const notifyLevelUp = (
@@ -206,9 +208,15 @@ export const battleLog = (options: {
           blocks.push(
             Blocks.Section({
               text: tl.t('battlelog_attack_roll', {
-                details: attackLog.details,
                 actor: attackLog.actor,
                 target: attackLog.target,
+                attackEmoji: numToEmoji(attackLog.details.attackRoll),
+                attackBonusEmoji: numToEmoji(attackLog.details.attackModifier),
+                targetDefenseEmoji: numToEmoji(attackLog.details.defenderAc),
+                attackTotalEmoji: numToEmoji(
+                  attackLog.details.attackModifier +
+                    attackLog.details.attackRoll,
+                ),
               }),
             }),
           );
@@ -236,10 +244,26 @@ export const battleLog = (options: {
         }
         break;
       case CombatLogType.Levelup:
+        const levelUp = log as LevelUpLog;
         Logger.info('level up log');
+        blocks.push(
+          Blocks.Section({
+            text: tl.t('ns1:character_level_up', { actor: log.actor }),
+          }),
+        );
         break;
       case CombatLogType.Xpgain:
-        Logger.info('xp gain log');
+        const xpLog = log as XpGainLog;
+        Logger.info(xpLog.details);
+        Logger.info('xp gain log', xpLog.details.xp);
+        blocks.push(
+          Blocks.Section({
+            text: tl.t('ns1:xp_gain', {
+              actor: xpLog.actor,
+              xp: xpLog.details.xp,
+            }),
+          }),
+        );
         break;
     }
   });

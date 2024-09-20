@@ -10,6 +10,7 @@ import {
   CombatEnd,
   CombatLog,
   CombatLogType,
+  XPGainLog,
 } from './combat-type.dto';
 
 @Injectable()
@@ -128,17 +129,17 @@ export class CharacterService {
     );
     winner.experiencePoints += xpGain;
 
-    logs.push({
-      type: CombatLogType.XPGAIN,
-      actor: winner,
-      target: loser,
-      round: rounds,
-      details: {
-        xp: xpGain,
-      },
-    });
+    const log = new XPGainLog();
+    log.actor = winner;
+    log.target = loser;
+    log.round = rounds;
+    log.details = { xp: xpGain };
 
-    this.logger.log(`${winner.name} gained ${xpGain} experience points`);
+    logs.push(log);
+
+    this.logger.log(
+      `${winner.name} gained ${log.details.xp} experience points`,
+    );
 
     loser.losses += 1;
 

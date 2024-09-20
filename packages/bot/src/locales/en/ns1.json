@@ -29,7 +29,7 @@
   "battlelog_hp_report": "*{{actor.name}}* has {{health}} left.",
   "battlelog_defeated": "*{{actor.name}}* is defeated",
   "battlelog_gold_report": "*{{actor.name}}* gets {{gold}} gold.",
-  "battlelog_attack_roll": "*{{actor.name}* is attacking.. They roll a {{attackRoll. bullet point slide, then add {2} GIFs for a total slide power of {3}. *{4}* finds {5} of the bullets points meaningless.",
+  "battlelog_attack_roll": "*{{actor.name}}* rolls their dice and gets a {{attackEmoji}}, then adds their attack modifier of {{attackBonusEmoji}} for a total of {{attackTotalEmoji}}. {{target.name}} has a defense of {{targetDefenseEmoji}}.",
   "create_help_description": "To create a character:",
   "create_help_command": "`/battleforge create <CharacterName>`",
   "create_update_invalid": "Invalid command. Should be `create <CharacterName>`. For example: `/battleforge create John`",
@@ -61,5 +61,6 @@
   "leaderboard_defends": "Battles received.",
   "reward_help_description": "Also, you can give out rewards to other players/characters. To give a reward:",
   "reward_help_example": "><@{{userId}}>, @Bob and @Joe did a great job, give them a {0}!",
-  "battle_stats": "Your character statistics:"
+  "battle_stats": "Your character statistics:",
+  "ns1:xp_gain": "{{actor.name}} has gained {{xp}} experience points."
 }

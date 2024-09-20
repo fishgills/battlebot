@@ -13,6 +13,9 @@ export const env = cleanEnv(process.env, {
   SLACK_APP_TOKEN: str({
     default: 'xapp-1234567890-1234567890-1234567890-1234567890',
   }),
+  SLACK_SOCKET_TOKEN: str({
+    default: 'xapp-1234567890-1234567890-1234567890-1234567890',
+  }),
   PORT: port({
     default: 4000,
   }),

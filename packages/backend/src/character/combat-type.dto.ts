@@ -51,7 +51,7 @@ export class LevelUpLog extends BaseLog {
 
 @ObjectType()
 class XPGainDetails {
-  @Field()
+  @Field((type) => Number)
   xp: number;
 }
 
