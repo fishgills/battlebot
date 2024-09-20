@@ -1,4 +1,4 @@
-import { App, BlockButtonAction } from '@slack/bolt';
+import { App, BlockButtonAction, HTTPResponseAck } from '@slack/bolt';
 import { onCommand } from '../dispatcher.js';
 import { Logger } from '../logger.js';
 import { sdk } from '../utils/gql.js';
@@ -53,6 +53,61 @@ export function characterHandler(app: App) {
       },
     });
     args.client.views.update({
+      view_id: args.body.view?.id,
+      hash: args.body.view?.hash,
+      view: editCharacterModal(char),
+    });
+  });
+
+  app.action('stat-incr', async (args) => {
+    Logger.info(`Incrementing stat`);
+    args.ack();
+
+    if (args.body.type !== 'block_actions' || !args.body.view) {
+      return;
+    }
+
+    if (args.action.type !== 'button') {
+      return;
+    }
+
+    if (!args.context.teamId) {
+      return;
+    }
+
+    if (!args.action.value) {
+      Logger.error('No action value');
+      return;
+    }
+    let char = (
+      await sdk.getCharacterByOwner({
+        userId: args.body.user.id,
+        teamId: args.context.teamId,
+      })
+    ).getCharacterByOwner;
+
+    if (char.extraPoints <= 0) {
+      Logger.error('No extra points');
+      return;
+    }
+
+    Logger.debug(`Character Points: ${char.extraPoints}`);
+
+    const statKey = args.action.value as
+      | 'constitution'
+      | 'strength'
+      | 'dexterity';
+
+    char[statKey] += 1;
+    char.extraPoints -= 1;
+    await sdk.updateCharacter({
+      id: char.id,
+      input: {
+        [statKey]: char[statKey],
+        extraPoints: char.extraPoints,
+      },
+    });
+    await args.client.views.update({
       view_id: args.body.view?.id,
       hash: args.body.view?.hash,
       view: editCharacterModal(char),

@@ -6,6 +6,7 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import { Character } from './character.entity';
+import { Logger } from '@nestjs/common';
 
 export enum CombatLogType {
   ATTACK = 'ATTACK',
@@ -44,7 +45,7 @@ class LevelUpDetails {
 })
 export class LevelUpLog extends BaseLog {
   @Field((type) => CombatLogType)
-  type: CombatLogType.LEVELUP;
+  readonly type = CombatLogType.LEVELUP;
   @Field()
   details: LevelUpDetails;
 }
@@ -60,7 +61,7 @@ class XPGainDetails {
 })
 export class XPGainLog extends BaseLog {
   @Field((type) => CombatLogType)
-  type: CombatLogType.XPGAIN;
+  readonly type = CombatLogType.XPGAIN;
   @Field()
   details: XPGainDetails;
 }
@@ -70,7 +71,7 @@ export class XPGainLog extends BaseLog {
 })
 export class InitiativeLog extends BaseLog {
   @Field((type) => CombatLogType)
-  type: CombatLogType.INITIATIVE;
+  readonly type = CombatLogType.INITIATIVE;
 }
 
 @ObjectType()
@@ -94,7 +95,7 @@ export class AttackDetails {
 })
 export class AttackLog extends BaseLog {
   @Field((type) => CombatLogType)
-  type: CombatLogType.ATTACK;
+  readonly type = CombatLogType.ATTACK;
   @Field()
   details: AttackDetails;
 }
@@ -109,23 +110,23 @@ export class CombatEnd {
   logs: (typeof LogUnion)[];
 }
 
-const LogUnion = createUnionType({
+export const LogUnion = createUnionType({
   name: 'LogUnion',
   types: () => [LevelUpLog, XPGainLog, InitiativeLog, AttackLog] as const,
   resolveType: (value: BaseLog) => {
-    if (value.type === CombatLogType.LEVELUP) {
-      return LevelUpLog;
+    Logger.debug(`Resolving type for ${value.type}`);
+    switch (value.type) {
+      case CombatLogType.LEVELUP:
+        return LevelUpLog;
+      case CombatLogType.XPGAIN:
+        return XPGainLog;
+      case CombatLogType.INITIATIVE:
+        return InitiativeLog;
+      case CombatLogType.ATTACK:
+        return AttackLog;
+      default:
+        return null;
     }
-    if (value.type === CombatLogType.XPGAIN) {
-      return XPGainLog;
-    }
-    if (value.type === CombatLogType.INITIATIVE) {
-      return InitiativeLog;
-    }
-    if (value.type === CombatLogType.ATTACK) {
-      return AttackLog;
-    }
-    return null;
   },
 });
 

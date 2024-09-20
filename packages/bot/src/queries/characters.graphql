@@ -87,6 +87,9 @@ mutation Combat($input: CombatInput!) {
         type
       }
       ... on XPGainLog {
+        details {
+          xp
+        }
         actor {
           name
         }

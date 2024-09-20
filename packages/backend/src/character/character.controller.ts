@@ -89,10 +89,10 @@ export class CharacterController {
     return await this.characterService.updateCharacterStats(id, input);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => CombatEnd)
-  async startCombat(@Args('id1') id1: string, @Args('id2') id2: string) {
-    this.logger.log(`Starting combat`);
-    return await this.characterService.combat(id1, id2);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Mutation(() => CombatEnd)
+  // async startCombat(@Args('id1') id1: string, @Args('id2') id2: string) {
+  //   this.logger.log(`Starting combat`);
+  //   return await this.characterService.combat(id1, id2);
+  // }
 }

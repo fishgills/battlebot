@@ -120,7 +120,6 @@ export type Mutation = {
   createCharacter: Character;
   deleteCharacter: Scalars['JSON']['output'];
   reroll: Character;
-  startCombat: CombatEnd;
   updateCharacter: Character;
 };
 
@@ -142,12 +141,6 @@ export type MutationDeleteCharacterArgs = {
 
 export type MutationRerollArgs = {
   id: Scalars['String']['input'];
-};
-
-
-export type MutationStartCombatArgs = {
-  id1: Scalars['String']['input'];
-  id2: Scalars['String']['input'];
 };
 
 
@@ -176,10 +169,10 @@ export type QueryGetCharacterByOwnerArgs = {
 
 export type UpdateCharacterDto = {
   active?: InputMaybe<Scalars['DateTime']['input']>;
-  defense?: InputMaybe<Scalars['Float']['input']>;
+  constitution?: InputMaybe<Scalars['Float']['input']>;
+  dexterity?: InputMaybe<Scalars['Float']['input']>;
   extraPoints?: InputMaybe<Scalars['Float']['input']>;
   strength?: InputMaybe<Scalars['Float']['input']>;
-  vitality?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type XpGainDetails = {
@@ -240,7 +233,7 @@ export type CombatMutationVariables = Exact<{
 }>;
 
 
-export type CombatMutation = { __typename?: 'Mutation', combat: { __typename?: 'CombatEnd', logs: Array<{ __typename?: 'AttackLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null, details: { __typename?: 'AttackDetails', attackModifier: number, attackRoll: number, damage: number, defenderAc: number, defenderHitPoints: number, hit: boolean } } | { __typename?: 'InitiativeLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null } | { __typename?: 'LevelUpLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null } | { __typename?: 'XPGainLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null }>, loser: { __typename?: 'Character', name: string }, winner: { __typename?: 'Character', name: string } } };
+export type CombatMutation = { __typename?: 'Mutation', combat: { __typename?: 'CombatEnd', logs: Array<{ __typename?: 'AttackLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null, details: { __typename?: 'AttackDetails', attackModifier: number, attackRoll: number, damage: number, defenderAc: number, defenderHitPoints: number, hit: boolean } } | { __typename?: 'InitiativeLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null } | { __typename?: 'LevelUpLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null } | { __typename?: 'XPGainLog', round: number, type: CombatLogType, details: { __typename?: 'XPGainDetails', xp: number }, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null }>, loser: { __typename?: 'Character', name: string }, winner: { __typename?: 'Character', name: string } } };
 
 export const CharacterPartsFragmentDoc = gql`
     fragment CharacterParts on Character {
@@ -338,6 +331,9 @@ export const CombatDocument = gql`
         type
       }
       ... on XPGainLog {
+        details {
+          xp
+        }
         actor {
           name
         }

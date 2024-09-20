@@ -254,7 +254,6 @@ export const battleLog = (options: {
         break;
       case CombatLogType.Xpgain:
         const xpLog = log as XpGainLog;
-        Logger.info(xpLog.details);
         Logger.info('xp gain log', xpLog.details.xp);
         blocks.push(
           Blocks.Section({

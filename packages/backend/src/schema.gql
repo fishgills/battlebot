@@ -106,7 +106,6 @@ type Mutation {
   createCharacter(CreateCharacter: CreateCharacterDto!): Character!
   deleteCharacter(id: String!): JSON!
   reroll(id: String!): Character!
-  startCombat(id1: String!, id2: String!): CombatEnd!
   updateCharacter(id: String!, input: UpdateCharacterDto!): Character!
 }
 
@@ -118,10 +117,10 @@ type Query {
 
 input UpdateCharacterDto {
   active: DateTime
-  defense: Float
+  constitution: Float
+  dexterity: Float
   extraPoints: Float
   strength: Float
-  vitality: Float
 }
 
 type XPGainDetails {

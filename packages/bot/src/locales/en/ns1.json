@@ -16,6 +16,7 @@
   "character_delete_confirm": "Are you sure you want to delete your character?",
   "character_delete_close": "Close",
   "character_delete_submit": "Delete",
+  "character_no_points": "You have no points left to distribute.",
   "command": "/battleforge",
   "received_reward_score_board": "Who has received the most {{rewards}}.",
   "given_reward_score_board": "Who has given the most {{rewards}}",
@@ -62,5 +63,5 @@
   "reward_help_description": "Also, you can give out rewards to other players/characters. To give a reward:",
   "reward_help_example": "><@{{userId}}>, @Bob and @Joe did a great job, give them a {0}!",
   "battle_stats": "Your character statistics:",
-  "ns1:xp_gain": "{{actor.name}} has gained {{xp}} experience points."
+  "xp_gain": "{{actor.name}} has gained {{xp}} experience points."
 }

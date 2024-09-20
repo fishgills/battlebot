@@ -1,7 +1,8 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { Character } from '../character.entity';
 
 @InputType()
-export class UpdateCharacterDto {
+export class UpdateCharacterDto implements Partial<Character> {
   @Field({
     nullable: true,
   })
@@ -9,11 +10,11 @@ export class UpdateCharacterDto {
   @Field({
     nullable: true,
   })
-  vitality?: number;
+  constitution?: number;
   @Field({
     nullable: true,
   })
-  defense?: number;
+  dexterity?: number;
   @Field({
     nullable: true,
   })
