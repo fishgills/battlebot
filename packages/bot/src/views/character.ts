@@ -207,7 +207,7 @@ export const battleLog = (options: {
         } else {
           blocks.push(
             Blocks.Section({
-              text: tl.t('battlelog_attack_roll', {
+              text: tl.t('ns1:battlelog_attack_roll', {
                 actor: attackLog.actor,
                 target: attackLog.target,
                 attackEmoji: numToEmoji(attackLog.details.attackRoll),
@@ -225,7 +225,7 @@ export const battleLog = (options: {
         if (attackLog.details.hit) {
           blocks.push(
             Blocks.Section({
-              text: tl.t('battlelog_hit', {
+              text: tl.t('ns1:battlelog_hit', {
                 target: attackLog.target,
                 actor: attackLog.actor,
                 damage: attackLog.details.damage,

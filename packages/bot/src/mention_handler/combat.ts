@@ -124,7 +124,7 @@ export function combatHandler(app: App) {
         text: tl.t('ns1:sheet_help_description'),
       }),
       Blocks.Section({
-        text: tl.t('sheet_help_command'),
+        text: tl.t('ns1:sheet_help_command'),
       }),
     ];
     resolve(help);

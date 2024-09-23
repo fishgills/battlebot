@@ -72,10 +72,10 @@ export function deleteCharacter(app: App) {
   return new Promise<SectionBuilder[]>((resolve) => {
     const help = [
       Blocks.Section({
-        text: tl.t('delete_help_description'),
+        text: tl.t('ns1:delete_help_description'),
       }),
       Blocks.Section({
-        text: tl.t('delete_help_command', tl.t('command')),
+        text: tl.t('ns1:delete_help_command'),
       }),
     ];
     resolve(help);

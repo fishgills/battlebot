@@ -1,9 +1,9 @@
 import tracer from 'dd-trace';
-import { Logger, LogLevel } from '@slack/bolt';
+import { Logger as sLogger, LogLevel } from '@slack/bolt';
 import { pino, Logger as pLogger } from 'pino';
 import { env } from './env';
 
-export class BotLogger implements Logger {
+export class BotLogger implements sLogger {
   private log: pLogger;
   /** Setting for level */
 

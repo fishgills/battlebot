@@ -6,7 +6,7 @@ import {
   MutationOptions,
   OperationVariables,
   QueryOptions,
-} from '@apollo/client/core/index.js';
+} from '@apollo/client/core';
 import { DocumentNode } from 'graphql';
 import { getSdk, Requester } from '../generated/graphql.js';
 import { env } from '../env.js';

@@ -39,10 +39,10 @@ export function createCharacter(app: App) {
   return new Promise<SectionBuilder[]>((resolve) => {
     const help = [
       Blocks.Section({
-        text: tl.t('create_help_description'),
+        text: tl.t('ns1:create_help_description'),
       }),
       Blocks.Section({
-        text: tl.t('create_help_command', tl.t('command')),
+        text: tl.t('ns1:create_help_command'),
       }),
     ];
     resolve(help);
