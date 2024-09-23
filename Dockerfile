@@ -6,12 +6,13 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json .
 COPY yarn.lock .
+COPY .yarnrc.yml .
 COPY ./packages/$APP/package.json packages/$APP/
+COPY .yarn/releases/ .yarn/releases/
 RUN yarn install
 COPY ./packages/$APP packages/$APP
 
-WORKDIR /app/packages/$APP
-RUN yarn build
+RUN yarn build:$APP
 
 FROM public.ecr.aws/docker/library/node:lts-alpine as runner
 ARG NODE_ENV
@@ -45,10 +46,11 @@ COPY --from=builder /app/packages/$APP/docker-entrypoint.sh /app/packages/$APP/
 RUN chmod +x /app/packages/$APP/docker-entrypoint.sh
 
 COPY --from=builder /app/packages/$APP/dist/ /app/packages/$APP/
+COPY .yarnrc.yml .
 
-WORKDIR /app/packages/$APP/
 RUN corepack enable
-RUN yarn install
+COPY .yarn/releases/ .yarn/releases/
+RUN yarn workspaces focus --production --all
 RUN apk add curl 
 
 EXPOSE $PORT

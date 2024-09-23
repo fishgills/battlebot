@@ -32,7 +32,9 @@
     "prepare": "husky install",
     "lint": "eslint \"packages/*/{src,apps,libs,test}/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\"",
-    "codegen": "graphql-codegen --config codegen.yml"
+    "codegen": "graphql-codegen --config codegen.yml",
+    "build:bot": "yarn workspace @battlebot/bot build",
+    "build:backend": "yarn workspace @battlebot/server build"
   },
   "repository": {
     "type": "git",
