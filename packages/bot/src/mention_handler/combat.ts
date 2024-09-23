@@ -1,6 +1,5 @@
 import { App } from '@slack/bolt';
 import { onCommand } from '../dispatcher';
-import { Logger } from '../logger';
 import { getUsernames } from '../utils/helpers';
 import { battleLog } from '../views/character';
 import { Character } from '../generated/graphql';
@@ -10,7 +9,7 @@ import { Blocks, SectionBuilder } from 'slack-block-builder';
 
 export function combatHandler(app: App) {
   onCommand('fight').subscribe(async (args) => {
-    Logger.info(`requested combat`);
+    args.args.logger.info(`requested combat`);
 
     const payload = args.args.payload;
     const userId = args.userId;
@@ -25,7 +24,7 @@ export function combatHandler(app: App) {
         })
       ).getCharacterByOwner;
     } catch (e) {
-      Logger.info(`character not found`);
+      args.args.logger.info(`character not found`);
       app.client.chat.postMessage({
         token: payload.token,
         channel: userId,
@@ -73,7 +72,7 @@ export function combatHandler(app: App) {
         })
       ).getCharacterByOwner;
     } catch (exception) {
-      Logger.info('target has no character');
+      args.args.logger.info('target has no character');
 
       args.args.respond(
         tl.t('ns1:combat_update_target_no_char', targetUser.id),
@@ -106,6 +105,7 @@ export function combatHandler(app: App) {
     const log = battleLog({
       combat,
       channel: payload.channel,
+      logger: args.args.logger,
     });
 
     await args.args.respond({

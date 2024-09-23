@@ -3,12 +3,12 @@ import 'dotenv/config';
 import {
   AllMiddlewareArgs,
   App,
+  LogLevel,
   onlyCommands,
   SlackCommandMiddlewareArgs,
 } from '@slack/bolt';
 import { tl } from './i18n.js';
 import { env } from './env.js';
-import { Logger } from './logger.js';
 import { dispatchCommand } from './dispatcher.js';
 import { characterHandler } from './mention_handler/character-handler.js';
 // import tracer from './tracer.js';
@@ -17,6 +17,7 @@ import { StringIndexed } from '@slack/bolt/dist/types/helpers.js';
 import { deleteCharacter } from './mention_handler/delete-character.js';
 import { Blocks, Message, SectionBuilder } from 'slack-block-builder';
 import { combatHandler } from './mention_handler/combat.js';
+import { Logger } from './logger.js';
 
 tl.changeLanguage('en');
 
@@ -31,6 +32,7 @@ const app = new App({
   ignoreSelf: true,
   developerMode: env.isDevelopment,
   appToken: env.isDevelopment ? env.SLACK_SOCKET_TOKEN : undefined,
+  logLevel: env.isDevelopment ? LogLevel.INFO : LogLevel.WARN,
 });
 
 // const error: ExtendedErrorHandler = async (error) => {
@@ -71,12 +73,12 @@ const app = new App({
 
 (async () => {
   const port = env.PORT;
-  Logger.info(`Got ${port} for port.`);
+  console.info(`Got ${port} for port.`);
   await app.start({
     port: port,
   });
-  Logger.info(`Starting mode: ${env.NODE_ENV}`);
-  Logger.info(`Starting bolt with port: ${port}`);
+  console.info(`Starting mode: ${env.NODE_ENV}`);
+  console.info(`Starting bolt with port: ${port}`);
 })();
 
 app.command(tl.t('ns1:command'), async (args) => {
@@ -103,7 +105,7 @@ const CommandReceived = async (
   const [action, ...flags] = text.split(' ');
 
   if (action == '' || action == 'help') {
-    Logger.info('Help requested');
+    args.logger.info('Help requested');
     Promise.all(sources)
       .then((values) => {
         const blocks = values.reduce((acc, curr) => {
@@ -122,7 +124,7 @@ const CommandReceived = async (
         args.respond(helpBlocks);
       })
       .catch((e) => {
-        Logger.error(e);
+        args.logger.error(e);
       });
     return;
   }
@@ -178,8 +180,8 @@ app.use(async (args: any) => {
 });
 
 app.event('app_uninstalled', async (args) => {
-  Logger.info('app_uninstalled received');
-  Logger.info(args.context);
+  args.logger.info('app_uninstalled received');
+  args.logger.info(args.context);
   // try {
   //   await new Store().deleteInstallation({
   //     isEnterpriseInstall: args.context.enterpriseId ? true : false,

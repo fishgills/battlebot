@@ -1,16 +1,14 @@
 import { App } from '@slack/bolt';
 import { onCommand } from '../dispatcher';
 import { sdk } from '../utils/gql';
-import { Logger } from '../logger';
 import { tl } from '../i18n';
 import { Character } from '../generated/graphql';
-import { BlockBuilder, Blocks, SectionBuilder } from 'slack-block-builder';
+import { Blocks, SectionBuilder } from 'slack-block-builder';
 import { deleteCharacterModal } from '../views/character';
-import { env } from '../env';
 
 export function deleteCharacter(app: App) {
   onCommand('delete').subscribe(async (value) => {
-    Logger.info(`Delete Character Prompt...`);
+    value.args.logger.info(`Delete Character Prompt...`);
     let char: Character;
     try {
       char = (
@@ -30,19 +28,18 @@ export function deleteCharacter(app: App) {
     }
   });
 
-  Logger.info(`Registering delete character view`);
   app.view(
     {
       callback_id: 'delete-char',
       type: 'view_closed',
     },
-    async ({ ack }) => {
-      Logger.info(`Delete character view closed`);
+    async ({ ack, logger }) => {
+      logger.info(`Delete character view closed`);
       ack();
     },
   );
   app.view('delete-char', async (args) => {
-    Logger.info(`Deleting character `);
+    args.logger.info(`Deleting character `);
     args.ack();
 
     console.log(args);

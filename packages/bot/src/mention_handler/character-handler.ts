@@ -8,8 +8,8 @@ import { Blocks, SectionBuilder } from 'slack-block-builder';
 
 export function characterHandler(app: App) {
   onCommand('sheet').subscribe(async (args) => {
-    Logger.info(`requested character sheet`);
-    Logger.debug(args.args.payload);
+    args.args.logger.info(`requested character sheet`);
+    args.args.logger.debug(args.args.payload);
     try {
       const char = (
         await sdk.getCharacterByOwner({
@@ -25,7 +25,7 @@ export function characterHandler(app: App) {
 
       await args.args.ack();
     } catch (e) {
-      Logger.info(`character not found`);
+      args.args.logger.info(`character not found`);
       args.args.respond(tl.t('ns1:sheet_no_character'));
     }
   });
@@ -60,7 +60,7 @@ export function characterHandler(app: App) {
   });
 
   app.action('stat-incr', async (args) => {
-    Logger.info(`Incrementing stat`);
+    args.logger.info(`Incrementing stat`);
     args.ack();
 
     if (args.body.type !== 'block_actions' || !args.body.view) {
@@ -91,7 +91,7 @@ export function characterHandler(app: App) {
       return;
     }
 
-    Logger.debug(`Character Points: ${char.extraPoints}`);
+    args.logger.debug(`Character Points: ${char.extraPoints}`);
 
     const statKey = args.action.value as
       | 'constitution'
@@ -115,7 +115,7 @@ export function characterHandler(app: App) {
   });
 
   app.action<BlockButtonAction>('reroll', async (args) => {
-    Logger.info(`Rerolling character`);
+    args.logger.info(`Rerolling character`);
 
     if (!args.context.teamId) {
       return;

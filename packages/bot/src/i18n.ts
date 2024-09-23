@@ -4,7 +4,7 @@ import enNs1 from './locales/en/ns1.json';
 export const defaultNS = 'ns1';
 
 i18next.init({
-  debug: true,
+  debug: false,
   fallbackLng: 'en',
   defaultNS,
   resources: {

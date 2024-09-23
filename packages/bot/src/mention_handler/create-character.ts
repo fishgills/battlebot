@@ -1,13 +1,12 @@
 import { App } from '@slack/bolt';
 import { onCommand } from '../dispatcher';
-import { Logger } from '../logger';
 import { tl } from '../i18n';
 import { sdk } from '../utils/gql';
 import { Blocks, SectionBuilder } from 'slack-block-builder';
 
 export function createCharacter(app: App) {
   onCommand('create').subscribe(async (args) => {
-    Logger.info(`Creating a character...`);
+    args.args.logger.info(`Creating a character...`);
     if (args.flags.length !== 1) {
       return await args.args.respond(tl.t('ns1:create_update_invalid'));
     }

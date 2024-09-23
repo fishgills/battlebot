@@ -1,4 +1,4 @@
-import { Block, ModalView, RespondFn } from '@slack/bolt';
+import { Block, Logger, ModalView, RespondFn } from '@slack/bolt';
 import {
   AttackLog,
   Character,
@@ -20,7 +20,6 @@ import {
   setIfTruthy,
 } from 'slack-block-builder';
 import { nextLevel, numToEmoji } from '../utils/helpers.js';
-import { Logger } from '../logger.js';
 
 export const notifyLevelUp = (
   winner: Character,
@@ -173,6 +172,7 @@ export const editCharacterModal = (character: Character): ModalView => {
 export const battleLog = (options: {
   combat: CombatMutation['combat'];
   channel: string;
+  logger: Logger;
 }) => {
   let blocks: BlockBuilder[] = [];
 
@@ -180,7 +180,7 @@ export const battleLog = (options: {
     switch (log.type) {
       case CombatLogType.Initiative:
         const initLog = log as InitiativeLog;
-        Logger.info('initiative log');
+        options.logger.info('initiative log');
         blocks.push(
           Blocks.Section({
             text: tl.t('ns1:battlelog_initiative_header', {
@@ -193,7 +193,7 @@ export const battleLog = (options: {
         break;
       case CombatLogType.Attack:
         const attackLog = log as AttackLog;
-        Logger.info('attack log');
+        options.logger.info('attack log');
 
         if (attackLog.details.attackRoll === 20) {
           blocks.push(
@@ -245,7 +245,7 @@ export const battleLog = (options: {
         break;
       case CombatLogType.Levelup:
         const levelUp = log as LevelUpLog;
-        Logger.info('level up log');
+        options.logger.info('level up log');
         blocks.push(
           Blocks.Section({
             text: tl.t('ns1:character_level_up', { actor: log.actor }),
@@ -254,7 +254,7 @@ export const battleLog = (options: {
         break;
       case CombatLogType.Xpgain:
         const xpLog = log as XpGainLog;
-        Logger.info('xp gain log', xpLog.details.xp);
+        options.logger.info('xp gain log', xpLog.details.xp);
         blocks.push(
           Blocks.Section({
             text: tl.t('ns1:xp_gain', {

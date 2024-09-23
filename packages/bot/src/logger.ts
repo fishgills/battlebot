@@ -6,19 +6,43 @@ import { env } from './env';
 export class BotLogger implements Logger {
   private log: pLogger;
   /** Setting for level */
-  private level: LogLevel;
 
   public constructor() {
     console.log('creating logger');
 
-    this.level = env.isProduction ? LogLevel.INFO : LogLevel.DEBUG;
-
-    this.log = pino({
-      level: this.level,
-    });
+    this.log = pino();
   }
   public getLevel(): LogLevel {
-    return this.level;
+    switch (this.log.level) {
+      case 'trace': {
+        return LogLevel.DEBUG;
+        break;
+      }
+      case 'debug': {
+        return LogLevel.DEBUG;
+        break;
+      }
+      case 'info': {
+        return LogLevel.INFO;
+        break;
+      }
+      case 'warn': {
+        return LogLevel.WARN;
+        break;
+      }
+      case 'error': {
+        return LogLevel.ERROR;
+        break;
+      }
+      case 'fatal': {
+        return LogLevel.ERROR;
+        break;
+      }
+      default: {
+        return LogLevel.DEBUG;
+        break;
+      }
+    }
   }
 
   private injectDDTrace(record: any) {
@@ -28,7 +52,6 @@ export class BotLogger implements Logger {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
   private record(record: any) {
     this.injectDDTrace(record);
     return record;
@@ -38,6 +61,8 @@ export class BotLogger implements Logger {
    * Sets the instance's log level so that only messages which are equal or more severe are output to the console.
    */
   public setLevel(level: LogLevel): void {
+    console.log(`setting log level to ${level}`);
+    this.log.level = level;
     return;
   }
 

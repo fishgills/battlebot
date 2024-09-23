@@ -4,7 +4,6 @@ import { t } from '../locale';
 import { characterSheetBlocks } from './character';
 import { CharacterEntity, RewardEntity, RewardScore } from '../swagger/Bot';
 import api from '../utils/api';
-import { Logger } from '../logger';
 
 const characterStats = (character: CharacterEntity, home: HomeTabBuilder) => {
   home.blocks(
