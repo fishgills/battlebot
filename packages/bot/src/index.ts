@@ -18,6 +18,7 @@ import { deleteCharacter } from './mention_handler/delete-character.js';
 import { Blocks, Message, SectionBuilder } from 'slack-block-builder';
 import { combatHandler } from './mention_handler/combat.js';
 import { Logger } from './logger.js';
+import { BotStore } from './convo-store.js';
 
 tl.changeLanguage('en');
 
@@ -31,6 +32,7 @@ const app = new App({
   extendedErrorHandler: true,
   ignoreSelf: true,
   developerMode: env.isDevelopment,
+  convoStore: new BotStore(),
   appToken: env.isDevelopment ? env.SLACK_SOCKET_TOKEN : undefined,
   logLevel: env.isDevelopment ? LogLevel.INFO : LogLevel.WARN,
 });

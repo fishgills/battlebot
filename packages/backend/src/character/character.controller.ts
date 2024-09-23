@@ -10,11 +10,11 @@ import GraphQLJSON from 'graphql-type-json';
 import { UpdateCharacterDto } from './DTO/update-character.dto';
 
 @Resolver((of) => Character)
+@UseGuards(JwtAuthGuard)
 export class CharacterController {
   private readonly logger = new Logger(CharacterController.name);
   constructor(private readonly characterService: CharacterService) {}
 
-  @UseGuards(JwtAuthGuard)
   @Mutation((returns) => Character)
   async createCharacter(@Args('CreateCharacter') body: CreateCharacterDto) {
     this.logger.log(`Creating character for user ${body.userId}`);
@@ -25,7 +25,6 @@ export class CharacterController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
   @Query((returns) => Character)
   async getCharacterByOwner(
     @Args('id') id: string,
@@ -35,35 +34,30 @@ export class CharacterController {
     return await this.characterService.findCharacterByOwner(id, team);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Query((returns) => [Character])
   async getCharacters() {
     this.logger.log('Getting all characters');
     return await this.characterService.findAllCharacters();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Query((returns) => Character)
   async getCharacterById(@Args('id') id: string) {
     this.logger.log(`Getting character ${id}`);
     return await this.characterService.findCharacterById(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Mutation((returns) => CombatEnd)
   async combat(@Args('info') body: CombatInput) {
     this.logger.log(`Combat between ${body.attackerId} and ${body.defenderId}`);
     return await this.characterService.combat(body.attackerId, body.defenderId);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Mutation((returns) => GraphQLJSON)
   async deleteCharacter(@Args('id') id: string) {
     this.logger.log(`Deleting character ${id}`);
     return await this.characterService.deleteCharacter(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Mutation((returns) => Character)
   async reroll(@Args('id') id: string) {
     this.logger.log(`Rerolling character ${id}`);
@@ -79,7 +73,6 @@ export class CharacterController {
     return char;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Mutation((returns) => Character)
   async updateCharacter(
     @Args('id') id: string,

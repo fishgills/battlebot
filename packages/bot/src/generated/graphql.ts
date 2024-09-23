@@ -14,8 +14,10 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  DateTime: { input: any; output: any; }
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: { input: any; output: any; }
+  /** `Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch. */
+  Timestamp: { input: any; output: any; }
 };
 
 export type AttackDetails = {
@@ -46,7 +48,7 @@ export type BaseLog = {
 
 export type Character = {
   __typename?: 'Character';
-  active?: Maybe<Scalars['DateTime']['output']>;
+  active?: Maybe<Scalars['Timestamp']['output']>;
   constitution: Scalars['Float']['output'];
   dexterity: Scalars['Float']['output'];
   experiencePoints: Scalars['Float']['output'];
@@ -84,6 +86,20 @@ export enum CombatLogType {
   Xpgain = 'XPGAIN'
 }
 
+/** A conversation between two users */
+export type Conversation = {
+  __typename?: 'Conversation';
+  body: Scalars['String']['output'];
+  expiresAt: Scalars['Float']['output'];
+  id: Scalars['String']['output'];
+};
+
+export type ConversationInput = {
+  body: Scalars['String']['input'];
+  expiresAt?: InputMaybe<Scalars['Float']['input']>;
+  id: Scalars['String']['input'];
+};
+
 export type CreateCharacterDto = {
   name: Scalars['String']['input'];
   teamId: Scalars['String']['input'];
@@ -118,7 +134,9 @@ export type Mutation = {
   __typename?: 'Mutation';
   combat: CombatEnd;
   createCharacter: Character;
+  createConversation: Conversation;
   deleteCharacter: Scalars['JSON']['output'];
+  deleteConversation: Conversation;
   reroll: Character;
   updateCharacter: Character;
 };
@@ -134,7 +152,17 @@ export type MutationCreateCharacterArgs = {
 };
 
 
+export type MutationCreateConversationArgs = {
+  CreateConversation: ConversationInput;
+};
+
+
 export type MutationDeleteCharacterArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteConversationArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -154,6 +182,7 @@ export type Query = {
   getCharacterById: Character;
   getCharacterByOwner: Character;
   getCharacters: Array<Character>;
+  getConversation?: Maybe<Conversation>;
 };
 
 
@@ -167,8 +196,13 @@ export type QueryGetCharacterByOwnerArgs = {
   team: Scalars['String']['input'];
 };
 
+
+export type QueryGetConversationArgs = {
+  id: Scalars['String']['input'];
+};
+
 export type UpdateCharacterDto = {
-  active?: InputMaybe<Scalars['DateTime']['input']>;
+  active?: InputMaybe<Scalars['Timestamp']['input']>;
   constitution?: InputMaybe<Scalars['Float']['input']>;
   dexterity?: InputMaybe<Scalars['Float']['input']>;
   extraPoints?: InputMaybe<Scalars['Float']['input']>;
@@ -234,6 +268,29 @@ export type CombatMutationVariables = Exact<{
 
 
 export type CombatMutation = { __typename?: 'Mutation', combat: { __typename?: 'CombatEnd', logs: Array<{ __typename?: 'AttackLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null, details: { __typename?: 'AttackDetails', attackModifier: number, attackRoll: number, damage: number, defenderAc: number, defenderHitPoints: number, hit: boolean } } | { __typename?: 'InitiativeLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null } | { __typename?: 'LevelUpLog', round: number, type: CombatLogType, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null } | { __typename?: 'XPGainLog', round: number, type: CombatLogType, details: { __typename?: 'XPGainDetails', xp: number }, actor: { __typename?: 'Character', name: string }, target?: { __typename?: 'Character', name: string } | null }>, loser: { __typename?: 'Character', name: string }, winner: { __typename?: 'Character', name: string } } };
+
+export type CreateConversationMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  body: Scalars['String']['input'];
+  expiresAt?: InputMaybe<Scalars['Float']['input']>;
+}>;
+
+
+export type CreateConversationMutation = { __typename?: 'Mutation', createConversation: { __typename?: 'Conversation', id: string } };
+
+export type DeleteConversationMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteConversationMutation = { __typename?: 'Mutation', deleteConversation: { __typename?: 'Conversation', id: string } };
+
+export type GetConversationQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type GetConversationQuery = { __typename?: 'Query', getConversation?: { __typename?: 'Conversation', id: string, body: string, expiresAt: number } | null };
 
 export const CharacterPartsFragmentDoc = gql`
     fragment CharacterParts on Character {
@@ -353,6 +410,31 @@ export const CombatDocument = gql`
   }
 }
     `;
+export const CreateConversationDocument = gql`
+    mutation CreateConversation($id: String!, $body: String!, $expiresAt: Float) {
+  createConversation(
+    CreateConversation: {body: $body, expiresAt: $expiresAt, id: $id}
+  ) {
+    id
+  }
+}
+    `;
+export const DeleteConversationDocument = gql`
+    mutation DeleteConversation($id: String!) {
+  deleteConversation(id: $id) {
+    id
+  }
+}
+    `;
+export const GetConversationDocument = gql`
+    query GetConversation($id: String!) {
+  getConversation(id: $id) {
+    id
+    body
+    expiresAt
+  }
+}
+    `;
 export type Requester<C = {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C>(requester: Requester<C>) {
   return {
@@ -373,6 +455,15 @@ export function getSdk<C>(requester: Requester<C>) {
     },
     Combat(variables: CombatMutationVariables, options?: C): Promise<CombatMutation> {
       return requester<CombatMutation, CombatMutationVariables>(CombatDocument, variables, options) as Promise<CombatMutation>;
+    },
+    CreateConversation(variables: CreateConversationMutationVariables, options?: C): Promise<CreateConversationMutation> {
+      return requester<CreateConversationMutation, CreateConversationMutationVariables>(CreateConversationDocument, variables, options) as Promise<CreateConversationMutation>;
+    },
+    DeleteConversation(variables: DeleteConversationMutationVariables, options?: C): Promise<DeleteConversationMutation> {
+      return requester<DeleteConversationMutation, DeleteConversationMutationVariables>(DeleteConversationDocument, variables, options) as Promise<DeleteConversationMutation>;
+    },
+    GetConversation(variables: GetConversationQueryVariables, options?: C): Promise<GetConversationQuery> {
+      return requester<GetConversationQuery, GetConversationQueryVariables>(GetConversationDocument, variables, options) as Promise<GetConversationQuery>;
     }
   };
 }

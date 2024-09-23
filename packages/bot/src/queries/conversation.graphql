@@ -1,0 +1,21 @@
+mutation CreateConversation($id: String!, $body: String!, $expiresAt: Float) {
+  createConversation(
+    CreateConversation: { body: $body, expiresAt: $expiresAt, id: $id }
+  ) {
+    id
+  }
+}
+
+mutation DeleteConversation($id: String!) {
+  deleteConversation(id: $id) {
+    id
+  }
+}
+
+query GetConversation($id: String!) {
+  getConversation(id: $id) {
+    id
+    body
+    expiresAt
+  }
+}
