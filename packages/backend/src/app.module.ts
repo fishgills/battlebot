@@ -43,7 +43,7 @@ import { ConversationModule } from './conversations/conversation.module';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: join(__dirname, 'src/schema.gql'),
       sortSchema: true,
 
       buildSchemaOptions: {

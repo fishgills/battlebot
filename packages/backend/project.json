@@ -21,6 +21,10 @@
           "buildTarget": "backend:build:production"
         }
       }
+    },
+    "docker-build": {
+      "dependsOn": ["build:production"],
+      "command": "docker build -f packages/backend/Dockerfile . -t backend"
     }
   }
 }

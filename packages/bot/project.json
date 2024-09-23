@@ -64,6 +64,10 @@
           "buildTarget": "bot:build:production"
         }
       }
-    }
+    },
+    "docker-build": {
+      "dependsOn": ["build:production"],
+      "command": "docker build -f packages/bot/Dockerfile . -t bot"
+    }    
   }
 }

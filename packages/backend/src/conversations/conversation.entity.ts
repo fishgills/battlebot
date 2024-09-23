@@ -1,11 +1,5 @@
 import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
-import {
-  Column,
-  Entity,
-  PrimaryColumn,
-  PrimaryColumnCannotBeNullableError,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, PrimaryColumn } from 'typeorm';
 
 @ObjectType({
   description: 'A conversation between two users',
