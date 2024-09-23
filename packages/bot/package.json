@@ -52,6 +52,7 @@
     "dotenv": "^16.4.5",
     "envalid": "^8.0.0",
     "graphql": "^16.9.0",
+    "graphql-tag": "^2.12.6",
     "i18next": "^23.14.0",
     "jsonwebtoken": "^9.0.2",
     "pino": "^9.4.0",
