@@ -16,21 +16,21 @@ RUN yarn build:$APP
 
 FROM public.ecr.aws/docker/library/node:lts-alpine as runner
 ARG NODE_ENV
-ENV NODE_ENV $NODE_ENV
+ENV NODE_ENV ${NODE_ENV:+${NODE_ENV}}
 
 ARG PORT
-ENV PORT $PORT
+ENV PORT ${PORT:+${PORT}}
 
 ARG DB_HOST
-ENV DB_HOST $DB_HOST
+ENV DB_HOST ${DB_HOST:+${DB_HOST}}
 
 ARG DB_PASSWORD
-ENV DB_PASSWORD $DB_PASSWORD
+ENV DB_PASSWORD ${DB_PASSWORD:+${DB_PASSWORD}}
 ARG APP
-ENV APP $APP
+ENV APP ${APP:+${APP}}
 
 ARG SHA1
-ENV SHA1 $SHA1
+ENV SHA1 ${SHA1:+${SHA1}}
 
 LABEL com.datadoghq.tags.env=production
 LABEL com.datadoghq.tags.service=$APP
