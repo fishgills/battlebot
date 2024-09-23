@@ -7,7 +7,7 @@
     "start": "tsx watch --clear-screen=false --inspect=9230 src/index.ts | pino-pretty",
     "startt": "concurrently --kill-others --names \"TS,NM\" -c \"bgBlue.bold,bgMagenta.bold\" \"tsc -w --preserveWatchOutput\" \"DEBUG=* nodemon --respawn --no-colors --inspect -q -w dist dist/index.js\"",
     "start:prod": "node dist/index.js",
-    "build": "tsup",
+    "build": "tsup src/index.ts",
     "lint": "eslint . --ext .ts",
     "sta": "swagger-typescript-api -p http://localhost:3000/api-json -o ./src/swagger -n Bot.ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
@@ -33,6 +33,7 @@
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
+    "tsup": "^8.3.0",
     "tsx": "^4.19.0",
     "typescript": "^5.5.4",
     "yarn": "^1.22.22"
