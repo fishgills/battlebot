@@ -19,3 +19,7 @@ yarn-error.log
 .next
 .esbuild
 .DS_Store
+
+
+.nx/cache
+.nx/workspace-data

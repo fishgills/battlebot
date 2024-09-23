@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/node:lts-alpine as builder
+FROM public.ecr.aws/docker/library/node:lts-alpine AS builder
 ARG APP
 
 WORKDIR /app
@@ -9,28 +9,27 @@ COPY yarn.lock .
 COPY .yarnrc.yml .
 COPY ./packages/$APP/package.json packages/$APP/
 COPY .yarn/releases/ .yarn/releases/
-RUN yarn install
+RUN yarn install && yarn cache clean
 COPY ./packages/$APP packages/$APP
 
 RUN yarn build:$APP
 
-FROM public.ecr.aws/docker/library/node:lts-alpine as runner
+FROM public.ecr.aws/docker/library/node:lts-alpine AS runner
 ARG NODE_ENV
-ENV NODE_ENV ${NODE_ENV:+${NODE_ENV}}
-
+ENV NODE_ENV=${NODE_ENV}
 ARG PORT
-ENV PORT ${PORT:+${PORT}}
+ENV PORT=${PORT}
 
 ARG DB_HOST
-ENV DB_HOST ${DB_HOST:+${DB_HOST}}
+ENV DB_HOST=$DB_HOST
 
 ARG DB_PASSWORD
-ENV DB_PASSWORD ${DB_PASSWORD:+${DB_PASSWORD}}
+ENV DB_PASSWORD=${DB_PASSWORD}
 ARG APP
-ENV APP ${APP:+${APP}}
+ENV APP=${APP}
 
 ARG SHA1
-ENV SHA1 ${SHA1:+${SHA1}}
+ENV SHA1=${SHA1}
 
 LABEL com.datadoghq.tags.env=production
 LABEL com.datadoghq.tags.service=$APP
@@ -50,9 +49,10 @@ COPY .yarnrc.yml .
 
 RUN corepack enable
 COPY .yarn/releases/ .yarn/releases/
-RUN yarn workspaces focus --production --all
+COPY yarn.lock .
+RUN yarn install && yarn cache clean
 RUN apk add curl 
 
 EXPOSE $PORT
 HEALTHCHECK CMD curl -f http://localhost:${PORT}/health || exit 1
-ENTRYPOINT /app/packages/$APP/docker-entrypoint.sh
+ENTRYPOINT ["/app/packages/$APP/docker-entrypoint.sh"]

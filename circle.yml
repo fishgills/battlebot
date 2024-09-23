@@ -1,3 +1,0 @@
-orbs:
-  aws-ecr: circleci/aws-ecr@7.3.0
-  aws-ecs: circleci/aws-ecs@2.2.1
