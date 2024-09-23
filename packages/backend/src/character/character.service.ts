@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Character } from './character.entity';
 import { DiceRoll } from '@dice-roller/rpg-dice-roller';
-import { modifier } from 'src/gamerules';
 import {
   AttackDetails,
   AttackLog,
@@ -12,6 +11,7 @@ import {
   CombatLogType,
   XPGainLog,
 } from './combat-type.dto';
+import { modifier } from '../gamerules';
 
 @Injectable()
 export class CharacterService {

@@ -1,8 +1,8 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Conversation, ConversationInput } from './conversation.entity';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Logger, UseGuards } from '@nestjs/common';
 import { ConversationService } from './conversation.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Resolver((of) => Conversation)

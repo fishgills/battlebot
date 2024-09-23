@@ -2,12 +2,12 @@ import { UseGuards, Logger } from '@nestjs/common';
 import { CharacterService } from './character.service';
 import { CreateCharacterDto } from './DTO/create-character.dto';
 import { CombatInput } from './DTO/combat.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Character } from './character.entity';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { CombatEnd } from './combat-type.dto';
 import GraphQLJSON from 'graphql-type-json';
 import { UpdateCharacterDto } from './DTO/update-character.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Resolver((of) => Character)
 @UseGuards(JwtAuthGuard)

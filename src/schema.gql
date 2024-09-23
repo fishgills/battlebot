@@ -1,0 +1,152 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AttackDetails {
+  attackModifier: Float!
+  attackRoll: Float!
+  damage: Float!
+  defenderAc: Float!
+  defenderHitPoints: Float!
+  hit: Boolean!
+}
+
+type AttackLog implements BaseLog {
+  actor: Character!
+  details: AttackDetails!
+  round: Float!
+  target: Character
+  type: CombatLogType!
+}
+
+interface BaseLog {
+  actor: Character!
+  round: Float!
+  target: Character
+  type: CombatLogType!
+}
+
+type Character {
+  active: Timestamp
+  constitution: Float!
+  dexterity: Float!
+  experiencePoints: Float!
+  extraPoints: Float!
+  gold: Float!
+  hitPoints: Float!
+  id: ID!
+  level: Float!
+  losses: Float!
+  name: String!
+  rolls: Float!
+  strength: Float!
+  teamId: String!
+  userId: String!
+  wins: Float!
+}
+
+type CombatEnd {
+  logs: [LogUnion!]!
+  loser: Character!
+  winner: Character!
+}
+
+input CombatInput {
+  attackerId: String!
+  defenderId: String!
+}
+
+"""The type of combat log"""
+enum CombatLogType {
+  ATTACK
+  INITIATIVE
+  LEVELUP
+  XPGAIN
+}
+
+"""A conversation between two users"""
+type Conversation {
+  body: String!
+  expiresAt: Float!
+  id: String!
+}
+
+input ConversationInput {
+  body: String!
+  expiresAt: Float
+  id: String!
+}
+
+input CreateCharacterDto {
+  name: String!
+  teamId: String!
+  userId: String!
+}
+
+type InitiativeLog implements BaseLog {
+  actor: Character!
+  round: Float!
+  target: Character
+  type: CombatLogType!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type LevelUpDetails {
+  newLevel: Float!
+}
+
+type LevelUpLog implements BaseLog {
+  actor: Character!
+  details: LevelUpDetails!
+  round: Float!
+  target: Character
+  type: CombatLogType!
+}
+
+union LogUnion = AttackLog | InitiativeLog | LevelUpLog | XPGainLog
+
+type Mutation {
+  combat(info: CombatInput!): CombatEnd!
+  createCharacter(CreateCharacter: CreateCharacterDto!): Character!
+  createConversation(CreateConversation: ConversationInput!): Conversation!
+  deleteCharacter(id: String!): JSON!
+  deleteConversation(id: String!): Conversation!
+  reroll(id: String!): Character!
+  updateCharacter(id: String!, input: UpdateCharacterDto!): Character!
+}
+
+type Query {
+  getCharacterById(id: String!): Character!
+  getCharacterByOwner(id: String!, team: String!): Character!
+  getCharacters: [Character!]!
+  getConversation(id: String!): Conversation
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+input UpdateCharacterDto {
+  active: Timestamp
+  constitution: Float
+  dexterity: Float
+  extraPoints: Float
+  strength: Float
+}
+
+type XPGainDetails {
+  xp: Float!
+}
+
+type XPGainLog implements BaseLog {
+  actor: Character!
+  details: XPGainDetails!
+  round: Float!
+  target: Character
+  type: CombatLogType!
+}
