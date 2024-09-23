@@ -3,6 +3,7 @@ ARG APP
 
 WORKDIR /app
 
+RUN corepack enable
 COPY package.json .
 COPY yarn.lock .
 COPY ./packages/$APP/package.json packages/$APP/
@@ -46,6 +47,7 @@ RUN chmod +x /app/packages/$APP/docker-entrypoint.sh
 COPY --from=builder /app/packages/$APP/dist/ /app/packages/$APP/
 
 WORKDIR /app/packages/$APP/
+RUN corepack enable
 RUN yarn install --prod
 RUN apk add curl 
 
