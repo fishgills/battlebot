@@ -7,7 +7,7 @@ RUN corepack enable
 COPY package.json .
 COPY yarn.lock .
 COPY ./packages/$APP/package.json packages/$APP/
-RUN yarn install
+RUN yarn install --immutable
 COPY ./packages/$APP packages/$APP
 
 WORKDIR /app/packages/$APP
@@ -48,7 +48,7 @@ COPY --from=builder /app/packages/$APP/dist/ /app/packages/$APP/
 
 WORKDIR /app/packages/$APP/
 RUN corepack enable
-RUN yarn install --prod
+RUN yarn install --immutable
 RUN apk add curl 
 
 EXPOSE $PORT
