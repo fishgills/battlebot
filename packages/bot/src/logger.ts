@@ -8,9 +8,19 @@ export class BotLogger implements sLogger {
   /** Setting for level */
 
   public constructor() {
-    console.log('creating logger');
-
-    this.log = pino();
+    if (env.isDevelopment)
+      this.log = pino({
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+          },
+        },
+      });
+    else {
+      this.log = pino();
+    }
+    this.log.info('🛠️  Logger initialized');
   }
   public getLevel(): LogLevel {
     switch (this.log.level) {

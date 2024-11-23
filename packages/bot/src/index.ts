@@ -75,12 +75,14 @@ const app = new App({
 
 (async () => {
   const port = env.PORT;
-  console.info(`Got ${port} for port.`);
   await app.start({
     port: port,
   });
-  console.info(`Starting mode: ${env.NODE_ENV}`);
-  console.info(`Starting bolt with port: ${port}`);
+  Logger.info(
+    `⚡️ Bolt app is running on port ${port}! ${
+      env.isDevelopment ? 'in dev mode' : ''
+    }`
+  );
 })();
 
 app.command(tl.t('ns1:command'), async (args) => {
@@ -98,7 +100,7 @@ const sources: Promise<SectionBuilder[]>[] = [
 ];
 
 const CommandReceived = async (
-  args: SlackCommandMiddlewareArgs & AllMiddlewareArgs<StringIndexed>,
+  args: SlackCommandMiddlewareArgs & AllMiddlewareArgs<StringIndexed>
 ) => {
   const userId = args.body.user_id;
   const triggerId = args.body.trigger_id;
@@ -119,7 +121,7 @@ const CommandReceived = async (
             Blocks.Section({
               text: tl.t('ns1:help_no_command'),
             }),
-            ...blocks,
+            ...blocks
           )
           .buildToObject();
 
