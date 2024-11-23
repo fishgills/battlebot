@@ -186,7 +186,7 @@ export class CharacterService {
       this.logger.log('Hit!');
       let roll = '1d6';
 
-      if (attackRoll == 20) roll = '2d6';
+      if (attackRoll === 20) roll = '2d6';
 
       const damage = Math.max(new DiceRoll(roll).total + attackModifer, 0);
 

@@ -27,7 +27,7 @@ export const notifyLevelUp = (
   org_defender: Character,
   attacker_resp: RespondFn,
   org_def_slack_id: string,
-  event: any,
+  event: any
 ) => {
   if (winner.id === org_attacker.id && winner.level > org_attacker.level) {
     return attacker_resp({
@@ -60,7 +60,7 @@ const saveBlock = (char: Character) => {
       Elements.Button({
         actionId: 'reroll',
         text: tl.t('ns1:character_reroll_button'),
-      }),
+      })
     );
   }
 
@@ -68,7 +68,7 @@ const saveBlock = (char: Character) => {
     Elements.Button({
       actionId: 'complete',
       text: tl.t('ns1:character_done_button'),
-    }),
+    })
   );
 
   return block;
@@ -84,7 +84,7 @@ export const deleteCharacterModal = (char: Character) => {
     .blocks(
       Blocks.Section({
         text: tl.t('ns1:character_delete_confirm', char),
-      }),
+      })
     );
   return modal.buildToObject();
 };
@@ -120,7 +120,7 @@ export const statBlock = (character: Partial<Character>) => {
           text: tl.t('ns1:character_stat_incr_button'),
         })
           .value(stat.id)
-          .actionId('stat-incr'),
+          .actionId('stat-incr')
       );
     }
     return block;
@@ -169,6 +169,73 @@ export const editCharacterModal = (character: Character): ModalView => {
     .buildToObject();
 };
 
+export const battleLogJson = (options: {
+  combat: CombatMutation['combat'];
+  channel: string;
+  logger: Logger;
+}) => {
+  const resp = {
+    combatRounds: [],
+  };
+  options.combat.logs.forEach((log) => {
+    switch (log.type) {
+      case CombatLogType.Initiative:
+        const initLog = log as InitiativeLog;
+        options.logger.info('initiative log');
+        resp['initiativeResult'] = {
+          attacker: {
+            name: initLog.actor.name,
+            health: initLog.actor.hitPoints,
+          },
+          defender: {
+            name: initLog.target.name,
+            health: initLog.target.hitPoints,
+          },
+        };
+        break;
+      case CombatLogType.Attack:
+        const attackLog = log as AttackLog;
+        options.logger.info('attack log');
+        resp['combatRounds'].push({
+          attackerName: attackLog.actor.name,
+          defenderName: attackLog.target.name,
+          attackRoll: attackLog.details.attackRoll,
+          attackModifier: attackLog.details.attackModifier,
+          defenderAc: attackLog.details.defenderAc,
+          hit: attackLog.details.hit,
+          damage: attackLog.details.damage,
+          criticalHit: attackLog.details.attackRoll === 20,
+        });
+        break;
+      case CombatLogType.Levelup:
+        const levelUp = log as LevelUpLog;
+        options.logger.info('level up log');
+        options.logger.debug(levelUp);
+        resp['levelUp'] = {
+          character: levelUp.actor.name,
+          // level: levelUp.details.newLevel,
+        };
+        break;
+      case CombatLogType.Xpgain:
+        const xpLog = log as XpGainLog;
+        options.logger.info('xp gain log', xpLog.details.xp);
+        resp['xpGain'] = {
+          character: xpLog.actor.name,
+          xp: xpLog.details.xp,
+        };
+        break;
+    }
+  });
+  resp['winner'] = {
+    name: options.combat.winner.name,
+  };
+  resp['loser'] = {
+    name: options.combat.loser.name,
+  };
+
+  return resp;
+};
+
 export const battleLog = (options: {
   combat: CombatMutation['combat'];
   channel: string;
@@ -187,7 +254,7 @@ export const battleLog = (options: {
               actor: initLog.actor,
               target: initLog.target,
             }),
-          }),
+          })
         );
 
         break;
@@ -202,7 +269,7 @@ export const battleLog = (options: {
                 target: attackLog.target,
                 actor: attackLog.actor,
               }),
-            }),
+            })
           );
         } else {
           blocks.push(
@@ -215,10 +282,10 @@ export const battleLog = (options: {
                 targetDefenseEmoji: numToEmoji(attackLog.details.defenderAc),
                 attackTotalEmoji: numToEmoji(
                   attackLog.details.attackModifier +
-                    attackLog.details.attackRoll,
+                    attackLog.details.attackRoll
                 ),
               }),
-            }),
+            })
           );
         }
 
@@ -230,7 +297,7 @@ export const battleLog = (options: {
                 actor: attackLog.actor,
                 damage: attackLog.details.damage,
               }),
-            }),
+            })
           );
         } else {
           blocks.push(
@@ -239,7 +306,7 @@ export const battleLog = (options: {
                 target: attackLog.target,
                 actor: attackLog.actor,
               }),
-            }),
+            })
           );
         }
         break;
@@ -249,7 +316,7 @@ export const battleLog = (options: {
         blocks.push(
           Blocks.Section({
             text: tl.t('ns1:character_level_up', { actor: log.actor }),
-          }),
+          })
         );
         break;
       case CombatLogType.Xpgain:
@@ -261,7 +328,7 @@ export const battleLog = (options: {
               actor: xpLog.actor,
               xp: xpLog.details.xp,
             }),
-          }),
+          })
         );
         break;
     }
@@ -270,7 +337,7 @@ export const battleLog = (options: {
   return Message()
     .channel(options.channel)
     .text(
-      `${options.combat.winner.name} has defeated ${options.combat.loser.name}`,
+      `${options.combat.winner.name} has defeated ${options.combat.loser.name}`
     )
     .blocks(...blocks)
     .buildToObject();

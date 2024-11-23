@@ -21,7 +21,8 @@
             "input": "packages/bot/src",
             "glob": "locales/**/*.json",
             "output": "/"
-          }, {
+          },
+          {
             "input": "packages/bot",
             "glob": ".env",
             "output": "/"
@@ -68,6 +69,6 @@
     "docker-build": {
       "dependsOn": ["build:production"],
       "command": "docker build -f packages/bot/Dockerfile . -t bot"
-    }    
+    }
   }
 }

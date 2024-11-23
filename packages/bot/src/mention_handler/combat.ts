@@ -1,18 +1,32 @@
 import { App } from '@slack/bolt';
 import { onCommand } from '../dispatcher';
 import { getUsernames } from '../utils/helpers';
-import { battleLog } from '../views/character';
+import { battleLogJson } from '../views/character';
 import { Character } from '../generated/graphql';
 import { tl } from '../i18n';
 import { sdk } from '../utils/gql';
 import { Blocks, SectionBuilder } from 'slack-block-builder';
-
+import { gptSlackCombatResponse, gptSlackMessage } from '../chat-gpt';
 export function combatHandler(app: App) {
   onCommand('fight').subscribe(async (args) => {
     args.args.logger.info(`requested combat`);
 
     const payload = args.args.payload;
     const userId = args.userId;
+
+    const targets = getUsernames(payload.text);
+    const targetUser = targets[0];
+
+    await args.args.ack();
+    if (payload.user_id === targetUser.id) {
+      const blocks = await gptSlackMessage(
+        'Generate a message that a user cannot fight themselves.'
+      );
+
+      args.args.respond(blocks);
+
+      return;
+    }
 
     let char: Character;
 
@@ -28,7 +42,9 @@ export function combatHandler(app: App) {
       app.client.chat.postMessage({
         token: payload.token,
         channel: userId,
-        text: tl.t('ns1:combat_update_no_character'),
+        ...(await gptSlackMessage(
+          'A character was not found for the current user.'
+        )),
       });
       return;
     }
@@ -40,7 +56,6 @@ export function combatHandler(app: App) {
         text: tl.t('ns1:combat_update_unfinished_character'),
       });
     }
-    const targets = getUsernames(payload.text);
 
     if (targets.length > 1) {
       app.client.chat.postMessage({
@@ -52,16 +67,13 @@ export function combatHandler(app: App) {
     }
 
     if (targets.length === 0) {
-      await app.client.chat.postMessage({
+      app.client.chat.postMessage({
         token: payload.token,
         channel: userId,
         text: tl.t('ns1:combat_no_target'),
       });
       return;
     }
-
-    const targetUser = targets[0];
-
     let target: Character;
 
     try {
@@ -75,7 +87,7 @@ export function combatHandler(app: App) {
       args.args.logger.info('target has no character');
 
       args.args.respond(
-        tl.t('ns1:combat_update_target_no_char', targetUser.id),
+        tl.t('ns1:combat_update_target_no_char', targetUser.id)
       );
       args.args.say({
         channel: targetUser.id,
@@ -90,8 +102,14 @@ export function combatHandler(app: App) {
 
     if (!target.active)
       args.args.respond(
-        tl.t('ns1:combat_update_target_unfinished', targetUser.id),
+        tl.t('ns1:combat_update_target_unfinished', targetUser.id)
       );
+
+    args.args.respond(
+      await gptSlackMessage(
+        `Generate a short message that the combat is starting while you do the math between ${char.name} and ${target.name}`
+      )
+    );
 
     const combat = (
       await sdk.Combat({
@@ -102,29 +120,31 @@ export function combatHandler(app: App) {
       })
     ).combat;
 
-    const log = battleLog({
+    const log = battleLogJson({
       combat,
       channel: payload.channel,
       logger: args.args.logger,
     });
 
-    await args.args.respond({
-      ...log,
-    });
+    args.args.logger.debug(log);
+    const message = await gptSlackCombatResponse(log);
 
-    await app.client.chat.postMessage({
-      ...log,
+    args.args.respond(message);
+
+    app.client.chat.postMessage({
       channel: targetUser.id,
+      text: `You have been challenged to a fight by <@${userId}>`,
+      ...message,
     });
   });
 
   return new Promise<SectionBuilder[]>((resolve) => {
     const help = [
       Blocks.Section({
-        text: tl.t('ns1:sheet_help_description'),
+        text: tl.t('ns1:combat_help_description'),
       }),
       Blocks.Section({
-        text: tl.t('ns1:sheet_help_command'),
+        text: tl.t('ns1:combat_help_command'),
       }),
     ];
     resolve(help);

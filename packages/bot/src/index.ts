@@ -32,9 +32,9 @@ const app = new App({
   extendedErrorHandler: true,
   ignoreSelf: true,
   developerMode: env.isDevelopment,
-  convoStore: new BotStore(),
+  // convoStore: new BotStore(),
   appToken: env.isDevelopment ? env.SLACK_SOCKET_TOKEN : undefined,
-  logLevel: env.isDevelopment ? LogLevel.INFO : LogLevel.WARN,
+  logLevel: env.isDevelopment ? LogLevel.DEBUG : LogLevel.WARN,
 });
 
 // const error: ExtendedErrorHandler = async (error) => {
@@ -111,7 +111,7 @@ const CommandReceived = async (
   if (action == '' || action == 'help') {
     args.logger.info('Help requested');
     Promise.all(sources)
-      .then((values) => {
+      .then(async (values) => {
         const blocks = values.reduce((acc, curr) => {
           return acc.concat(curr);
         }, []);
@@ -126,6 +126,7 @@ const CommandReceived = async (
           .buildToObject();
 
         args.respond(helpBlocks);
+        await args.ack();
       })
       .catch((e) => {
         args.logger.error(e);
@@ -133,6 +134,7 @@ const CommandReceived = async (
     return;
   }
   dispatchCommand(action, flags, userId, triggerId, args);
+  args.logger.debug('Command dispatched');
   args.ack();
 };
 
