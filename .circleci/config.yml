@@ -18,7 +18,7 @@ version: 2.1
 executors:
   docker-executor:
     docker:
-      - image: circleci/node:18-browsers
+      - image: circleci/node:16-browsers # Replace with the Node.js version you need
     working_directory: ~/repo
 
 jobs:
@@ -38,37 +38,72 @@ jobs:
             echo $GCLOUD_SERVICE_KEY | base64 --decode > gcloud-service-key.json
             gcloud auth activate-service-account --key-file=gcloud-service-key.json
             gcloud auth configure-docker
+
   detect-affected:
     executor: docker-executor
     steps:
       - checkout
       - run:
-        name: Install Dependencies
-        command: npm ci
+          name: Install Dependencies
+          command: npm ci
       - run:
-        name: Check for changes
-        command: |
-          npx nx print-affected --base=master --head=$CIRCLE_SHA1 > affected.json
+          name: Check Affected Projects
+          command: |
+            npx nx print-affected --base=origin/main --target=build > affected.json
       - persist_to_workspace:
           root: ~/repo
           paths:
             - affected.json
 
-build-backend:
-  executor: docker-executor
-  steps:
-    - checkout
-    - attach_workspace:
-        at: ~/repo
-    - run:
-        name: Install Dependencies
-        command: npm ci
-    - run:
-        name: Build Backend
-        command: |
-          if grep -q '"project": "backend"' affected.json; then
+  build-and-push-backend:
+    executor: docker-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Build and Push Backend Docker Image
+          command: |
+            if grep -q '"project": "backend"' affected.json; then
               docker build -t gcr.io/slack-battle-bot/backend:latest packages/backend
               docker push gcr.io/slack-battle-bot/backend:latest
-          else
-            echo "No changes in backend"
-          fi
+            else
+              echo "Backend not affected. Skipping build and push."
+            fi
+
+  build-and-push-bot:
+    executor: docker-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Build and Push Bot Docker Image
+          command: |
+            if grep -q '"project": "bot"' affected.json; then
+              docker build -t gcr.io/slack-battle-bot/bot:latest packages/bot
+              docker push gcr.io/slack-battle-bot/bot:latest
+            else
+              echo "Bot not affected. Skipping build and push."
+            fi
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - authenticate-gcr
+      - detect-affected:
+          requires:
+            - authenticate-gcr
+      - build-and-push-backend:
+          requires:
+            - detect-affected
+      - build-and-push-bot:
+          requires:
+            - detect-affected
