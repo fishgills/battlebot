@@ -5,14 +5,12 @@ WORKDIR /app
 
 RUN corepack enable
 COPY package.json .
-COPY yarn.lock .
-COPY .yarnrc.yml .
+COPY package-lock.json .
 COPY ./packages/$APP/package.json packages/$APP/
-COPY .yarn/releases/ .yarn/releases/
-RUN yarn install && yarn cache clean
+RUN npm ci
 COPY ./packages/$APP packages/$APP
 
-RUN yarn build:$APP
+RUN npx nx run $APP:build
 
 FROM public.ecr.aws/docker/library/node:lts-alpine AS runner
 ARG NODE_ENV
@@ -37,7 +35,6 @@ LABEL com.datadoghq.tags.version=$SHA1
 
 WORKDIR /app
 
-COPY --from=builder /app/yarn.lock /app/yarn.lock
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/packages/$APP/package.json /app/packages/$APP/package.json
 
@@ -45,12 +42,11 @@ COPY --from=builder /app/packages/$APP/docker-entrypoint.sh /app/packages/$APP/
 RUN chmod +x /app/packages/$APP/docker-entrypoint.sh
 
 COPY --from=builder /app/packages/$APP/dist/ /app/packages/$APP/
-COPY .yarnrc.yml .
 
 RUN corepack enable
-COPY .yarn/releases/ .yarn/releases/
-COPY yarn.lock .
-RUN yarn install && yarn cache clean
+COPY package.json .
+COPY package-lock.json .
+RUN npm ci
 RUN apk add curl 
 
 EXPOSE $PORT
