@@ -127,7 +127,10 @@ export function combatHandler(app: App) {
     });
 
     args.args.logger.debug(log);
-    const message = await gptSlackCombatResponse(log);
+    const message = await gptSlackMessage(
+      'Convert this JSON block into Slack Blot Kit JSON. It is a battle between fighters. Make it into a short story, with some emojis and include the combat information in paraenthesis. Do not include any actions the user can take. No buttons or external images.' +
+        JSON.stringify(log)
+    );
 
     args.args.respond(message);
 
