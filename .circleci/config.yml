@@ -1,44 +1,15 @@
-# version: 2.1
-# setup: true
-# orbs:
-#   path-filtering: circleci/path-filtering@1.1.0
-
-# workflows:
-#   always-run:
-#     jobs:
-#       - path-filtering/filter:
-#           mapping: |
-#             packages/bot/.* bot true
-#             packages/backend/.* backend true
-#             packages/web/.* web true
-#           base-revision: master
-
 version: 2.1
+
+orbs:
+  gcp-gcr: circleci/gcp-gcr@1.7.1 # Import the GCP GCR orb
 
 executors:
   docker-executor:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:16-browsers # Replace with the Node.js version you need
     working_directory: ~/repo
 
 jobs:
-  authenticate-gcr:
-    executor: docker-executor
-    steps:
-      - checkout
-      - run:
-          name: Install gcloud CLI
-          command: |
-            curl -sSL https://sdk.cloud.google.com | bash
-            /bin/bash -c "exec -l $SHELL"
-            gcloud --version
-      - run:
-          name: Authenticate to GCR
-          command: |
-            echo $GCLOUD_SERVICE_KEY | base64 --decode > gcloud-service-key.json
-            gcloud auth activate-service-account --key-file=gcloud-service-key.json
-            gcloud auth configure-docker
-
   detect-affected:
     executor: docker-executor
     steps:
@@ -64,6 +35,8 @@ jobs:
       - run:
           name: Install Dependencies
           command: npm ci
+      - gcp-gcr/auth:
+          key: $GCLOUD_SERVICE_KEY
       - run:
           name: Build and Push Backend Docker Image
           command: |
@@ -83,6 +56,8 @@ jobs:
       - run:
           name: Install Dependencies
           command: npm ci
+      - gcp-gcr/auth:
+          key: $GCLOUD_SERVICE_KEY
       - run:
           name: Build and Push Bot Docker Image
           command: |
@@ -97,10 +72,7 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - authenticate-gcr
-      - detect-affected:
-          requires:
-            - authenticate-gcr
+      - detect-affected
       - build-and-push-backend:
           requires:
             - detect-affected
