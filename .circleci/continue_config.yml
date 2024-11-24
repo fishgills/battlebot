@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  gcp-gcr: circleci/gcp-gcr@0.16.4
+  gcp-gcr: circleci/gcp-gcr@0.16.9
   gcp-cloud-run: livup/gcp-cloud-run@1.0.32
 parameters:
   backend:

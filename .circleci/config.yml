@@ -1,81 +1,14 @@
 version: 2.1
-
+setup: true
 orbs:
-  gcp-gcr: circleci/gcp-gcr@0.16.9
-
-executors:
-  docker-executor:
-    docker:
-      - image: circleci/node:16-browsers # Replace with the Node.js version you need
-    working_directory: ~/repo
-
-jobs:
-  detect-affected:
-    executor: docker-executor
-    steps:
-      - checkout
-      - run:
-          name: Install Dependencies
-          command: npm ci
-      - run:
-          name: Check Affected Projects
-          command: |
-            npx nx print-affected --base=origin/main --target=build > affected.json
-      - persist_to_workspace:
-          root: ~/repo
-          paths:
-            - affected.json
-
-  build-and-push-backend:
-    executor: docker-executor
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/repo
-      - run:
-          name: Install Dependencies
-          command: npm ci
-      - gcp-gcr/auth:
-          key: $GCLOUD_SERVICE_KEY
-      - run:
-          name: Build and Push Backend Docker Image
-          command: |
-            if grep -q '"project": "backend"' affected.json; then
-              docker build -t gcr.io/slack-battle-bot/backend:latest packages/backend
-              docker push gcr.io/slack-battle-bot/backend:latest
-            else
-              echo "Backend not affected. Skipping build and push."
-            fi
-
-  build-and-push-bot:
-    executor: docker-executor
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/repo
-      - run:
-          name: Install Dependencies
-          command: npm ci
-      - gcp-gcr/auth:
-          key: $GCLOUD_SERVICE_KEY
-      - run:
-          name: Build and Push Bot Docker Image
-          command: |
-            if grep -q '"project": "bot"' affected.json; then
-              docker build -t gcr.io/slack-battle-bot/bot:latest packages/bot
-              docker push gcr.io/slack-battle-bot/bot:latest
-            else
-              echo "Bot not affected. Skipping build and push."
-            fi
+  path-filtering: circleci/path-filtering@1.1.0
 
 workflows:
-  version: 2
-  build-and-deploy:
+  always-run:
     jobs:
-      - detect-affected
-      - build-and-push-backend:
-          requires:
-            - detect-affected
-      - build-and-push-bot:
-          requires:
-            - detect-affected
+      - path-filtering/filter:
+          mapping: |
+            packages/bot/.* bot true
+            packages/backend/.* backend true
+            packages/web/.* web true
+          base-revision: master
