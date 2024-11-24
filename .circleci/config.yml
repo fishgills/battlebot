@@ -18,7 +18,7 @@ version: 2.1
 executors:
   docker-executor:
     docker:
-      - image: circleci/node:16-browsers # Replace with the Node.js version you need
+      - image: circleci/node:latest
     working_directory: ~/repo
 
 jobs:
