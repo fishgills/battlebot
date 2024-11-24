@@ -6,7 +6,7 @@ WORKDIR /app
 RUN corepack enable
 COPY package.json .
 COPY package-lock.json .
-COPY ./packages/$APP/package.json packages/$APP/
+COPY nx.json .
 RUN npm ci
 COPY ./packages/$APP packages/$APP
 
@@ -36,7 +36,6 @@ LABEL com.datadoghq.tags.version=$SHA1
 WORKDIR /app
 
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/packages/$APP/package.json /app/packages/$APP/package.json
 
 COPY --from=builder /app/packages/$APP/docker-entrypoint.sh /app/packages/$APP/
 RUN chmod +x /app/packages/$APP/docker-entrypoint.sh
@@ -47,6 +46,8 @@ RUN corepack enable
 COPY package.json .
 COPY package-lock.json .
 RUN npm ci
+COPY nx.json .
+
 RUN apk add curl 
 
 EXPOSE $PORT
