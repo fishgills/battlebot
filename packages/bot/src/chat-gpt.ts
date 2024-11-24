@@ -8,7 +8,7 @@ export const gpt = new OpenAI({
 const systemMessage =
   'Two players are fighting in a text-based game like dungeons and dragons through a slack bot. Response must ALWAYS be in JSON and in Slack Block Kit format. You are a dungeon master. Do not be afraid to use emojis.';
 
-export const gptSlackMessage = async (message: string): Promise<object> => {
+export const gptSlackMessage = async (message: string) => {
   try {
     const completion = await gpt.chat.completions.create({
       model: 'gpt-4o-mini',

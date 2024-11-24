@@ -1,14 +1,74 @@
-version: 2.1
-setup: true
-orbs:
-  path-filtering: circleci/path-filtering@1.1.0
+# version: 2.1
+# setup: true
+# orbs:
+#   path-filtering: circleci/path-filtering@1.1.0
 
-workflows:
-  always-run:
-    jobs:
-      - path-filtering/filter:
-          mapping: |
-            packages/bot/.* bot true
-            packages/backend/.* backend true
-            packages/web/.* web true
-          base-revision: master
+# workflows:
+#   always-run:
+#     jobs:
+#       - path-filtering/filter:
+#           mapping: |
+#             packages/bot/.* bot true
+#             packages/backend/.* backend true
+#             packages/web/.* web true
+#           base-revision: master
+
+version: 2.1
+
+executors:
+  docker-executor:
+    docker:
+      - image: circleci/node:18-browsers
+    working_directory: ~/repo
+
+jobs:
+  authenticate-gcr:
+    executor: docker-executor
+    steps:
+      - checkout
+      - run:
+          name: Install gcloud CLI
+          command: |
+            curl -sSL https://sdk.cloud.google.com | bash
+            /bin/bash -c "exec -l $SHELL"
+            gcloud --version
+      - run:
+          name: Authenticate to GCR
+          command: |
+            echo $GCLOUD_SERVICE_KEY | base64 --decode > gcloud-service-key.json
+            gcloud auth activate-service-account --key-file=gcloud-service-key.json
+            gcloud auth configure-docker
+  detect-affected:
+    executor: docker-executor
+    steps:
+      - checkout
+      - run:
+        name: Install Dependencies
+        command: npm ci
+      - run:
+        name: Check for changes
+        command: |
+          npx nx print-affected --base=master --head=$CIRCLE_SHA1 > affected.json
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - affected.json
+
+build-backend:
+  executor: docker-executor
+  steps:
+    - checkout
+    - attach_workspace:
+        at: ~/repo
+    - run:
+        name: Install Dependencies
+        command: npm ci
+    - run:
+        name: Build Backend
+        command: |
+          if grep -q '"project": "backend"' affected.json; then
+              docker build -t gcr.io/slack-battle-bot/backend:latest packages/backend
+              docker push gcr.io/slack-battle-bot/backend:latest
+          else
+            echo "No changes in backend"
+          fi
