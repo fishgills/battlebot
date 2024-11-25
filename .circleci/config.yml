@@ -6,7 +6,7 @@ orbs:
 executors:
   docker-executor:
     docker:
-      - image: circleci/node:lts
+      - image: public.ecr.aws/docker/library/node:lts-alpine
     working_directory: ~/repo
 
 jobs:
