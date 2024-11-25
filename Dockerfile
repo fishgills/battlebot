@@ -18,6 +18,7 @@ ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV}
 ARG PORT
 ENV PORT=${PORT}
+ARG APP
 
 ARG DB_HOST
 ENV DB_HOST=$DB_HOST
@@ -37,6 +38,7 @@ LABEL com.datadoghq.tags.version=$SHA1
 WORKDIR /app
 
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/package-lock.json ./package-lock.json
 
 COPY --from=builder /app/packages/$APP/docker-entrypoint.sh /app/packages/$APP/
 RUN chmod +x /app/packages/$APP/docker-entrypoint.sh
@@ -44,10 +46,7 @@ RUN chmod +x /app/packages/$APP/docker-entrypoint.sh
 COPY --from=builder /app/dist/packages/$APP/ /app/packages/$APP/
 
 RUN corepack enable
-COPY package.json .
-COPY package-lock.json .
 RUN npm ci
-COPY nx.json .
 
 RUN apk add curl 
 

@@ -1,14 +1,102 @@
 version: 2.1
-setup: true
+
 orbs:
-  path-filtering: circleci/path-filtering@1.1.0
+  gcp-gcr: circleci/gcp-gcr@0.16.9
+
+executors:
+  docker-executor:
+    docker:
+      - image: circleci/node:lts
+    working_directory: ~/repo
+
+jobs:
+  detect-affected:
+    executor: docker-executor
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Check Affected Projects
+          command: |
+            npx nx print-affected --base=origin/main --target=build > affected.json
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - affected.json
+
+  build-and-push-backend:
+    executor: docker-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Build Backend Application
+          command: |
+            if grep -q '"project": "backend"' affected.json; then
+              npx nx build backend
+            else
+              echo "Backend not affected. Skipping build."
+              exit 0
+            fi
+      - gcp-gcr/gcr-auth
+      - gcp-gcr/build-image:
+          image: backend
+          dockerfile: packages/backend/Dockerfile
+          extra_build_args: --build-arg SHA1=$CIRCLE_SHA1 --build-arg APP=backend
+          tag: $CIRCLE_SHA1
+      - gcp-gcr/push-image:
+          image: backend
+          tag: $CIRCLE_SHA1
+      - gcp-gcr/tag-image:
+          image: backend
+          source-tag: $CIRCLE_SHA1
+          target-tag: latest
+
+  build-and-push-bot:
+    executor: docker-executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Build Bot Application
+          command: |
+            if grep -q '"project": "bot"' affected.json; then
+              npx nx build bot
+            else
+              echo "Bot not affected. Skipping build."
+              exit 0
+            fi
+      - gcp-gcr/gcr-auth
+      - gcp-gcr/build-image:
+          image: bot
+          dockerfile: packages/bot/Dockerfile
+          extra_build_args: --build-arg SHA1=$CIRCLE_SHA1 --build-arg APP=bot
+          tag: $CIRCLE_SHA1
+      - gcp-gcr/push-image:
+          image: bot
+          tag: $CIRCLE_SHA1
+      - gcp-gcr/tag-image:
+          image: bot
+          source-tag: $CIRCLE_SHA1
+          target-tag: latest
 
 workflows:
-  always-run:
+  build-and-deploy:
     jobs:
-      - path-filtering/filter:
-          mapping: |
-            packages/bot/.* bot true
-            packages/backend/.* backend true
-            packages/web/.* web true
-          base-revision: master
+      - detect-affected
+      - build-and-push-backend:
+          requires:
+            - detect-affected
+      - build-and-push-bot:
+          requires:
+            - detect-affected
