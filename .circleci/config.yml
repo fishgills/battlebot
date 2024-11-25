@@ -15,9 +15,18 @@ jobs:
     executor: docker-executor
     steps:
       - checkout
+      - restore_cache:
+          name: Restore Cached Dependencies
+          keys:
+            - v1-deps-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
-          command: npm ci
+          command: npm install
+      - save_cache:
+          name: Save Cached Dependencies
+          key: v1-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
       - nx/set-shas
       - run:
           name: Check Affected Projects
@@ -34,9 +43,13 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/repo
+      - restore_cache:
+          name: Restore Cached Dependencies
+          keys:
+            - v1-deps-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
-          command: npm ci
+          command: npm install
       - run:
           name: Build Backend Application
           command: |
@@ -66,6 +79,10 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/repo
+      - restore_cache:
+          name: Restore Cached Dependencies
+          keys:
+            - v1-deps-{{ checksum "package-lock.json" }}
       - run:
           name: Install Dependencies
           command: npm ci
