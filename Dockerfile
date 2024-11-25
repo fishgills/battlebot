@@ -9,7 +9,8 @@ COPY package-lock.json .
 COPY nx.json .
 RUN npm ci
 COPY ./packages/$APP packages/$APP
-
+COPY tsconfig.base.json .
+COPY eslint.config.js .
 RUN npx nx run $APP:build
 
 FROM public.ecr.aws/docker/library/node:lts-alpine AS runner
@@ -40,7 +41,7 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/packages/$APP/docker-entrypoint.sh /app/packages/$APP/
 RUN chmod +x /app/packages/$APP/docker-entrypoint.sh
 
-COPY --from=builder /app/packages/$APP/dist/ /app/packages/$APP/
+COPY --from=builder /app/dist/packages/$APP/ /app/packages/$APP/
 
 RUN corepack enable
 COPY package.json .
