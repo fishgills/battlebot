@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.16.9
+  nx: nrwl/nx@1.6.2
 
 executors:
   docker-executor:
@@ -17,10 +18,11 @@ jobs:
       - run:
           name: Install Dependencies
           command: npm ci
+      - nx/set-shas
       - run:
           name: Check Affected Projects
           command: |
-            npx nx print-affected --base=origin/main --target=build > affected.json
+            npx nx graph --affected --base=master --head=$NX_BASE --file=affected.json
       - persist_to_workspace:
           root: ~/repo
           paths:
